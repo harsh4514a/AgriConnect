@@ -1,0 +1,22 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Potatoes">
+  <defs>
+    <linearGradient id="potatoBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FCE7F3"/>
+    </linearGradient>
+    <radialGradient id="potato1" cx="0.4" cy="0.35" r="1.1">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#potatoBg)"/>
+  <ellipse cx="140" cy="170" rx="78" ry="60" fill="url(#potato1)" transform="rotate(-15 140 170)"/>
+  <ellipse cx="270" cy="150" rx="64" ry="48" fill="#EAB308" transform="rotate(10 270 150)"/>
+  <ellipse cx="205" cy="235" rx="52" ry="38" fill="#F59E0B" transform="rotate(-5 205 235)"/>
+  <g fill="#92400E">
+    <circle cx="112" cy="140" r="3"/>
+    <circle cx="150" cy="196" r="3"/>
+    <circle cx="182" cy="148" r="3"/>
+  </g>
+</svg>
+

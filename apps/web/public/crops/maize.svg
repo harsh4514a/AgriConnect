@@ -1,0 +1,30 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Maize crop">
+  <defs>
+    <linearGradient id="maizeBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF9C3"/>
+      <stop offset="1" stop-color="#FDE047"/>
+    </linearGradient>
+    <linearGradient id="cob" x1="200" y1="300" x2="200" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CA8A04"/>
+      <stop offset="1" stop-color="#EAB308"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#maizeBg)"/>
+  <g stroke="#4D7C0F" stroke-width="5" stroke-linecap="round">
+    <path d="M200 300 C200 250 200 160 200 60"/>
+  </g>
+  <g fill="#65A30D">
+    <path d="M200 60 C160 60 120 80 100 110 C140 100 180 90 200 90 Z"/>
+    <path d="M200 60 C240 60 280 80 300 110 C260 100 220 90 200 90 Z"/>
+  </g>
+  <ellipse cx="200" cy="160" rx="40" ry="70" fill="url(#cob)"/>
+  <g fill="#FACC15">
+    <ellipse cx="178" cy="120" rx="8" ry="16" transform="rotate(-20 178 120)"/>
+    <ellipse cx="222" cy="120" rx="8" ry="16" transform="rotate(20 222 120)"/>
+    <ellipse cx="180" cy="160" rx="8" ry="16" transform="rotate(-15 180 160)"/>
+    <ellipse cx="220" cy="160" rx="8" ry="16" transform="rotate(15 220 160)"/>
+    <ellipse cx="182" cy="200" rx="8" ry="16" transform="rotate(-20 182 200)"/>
+    <ellipse cx="218" cy="200" rx="8" ry="16" transform="rotate(20 218 200)"/>
+  </g>
+  <path d="M192 90 C196 70 196 50 200 30 C204 50 204 70 208 90 L200 100 Z" fill="#A16207"/>
+</svg>

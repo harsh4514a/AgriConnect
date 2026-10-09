@@ -1,0 +1,28 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wheat crop">
+  <defs>
+    <linearGradient id="wheatBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+    <linearGradient id="stalk" x1="200" y1="300" x2="200" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CA8A04"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#wheatBg)"/>
+  <path d="M200 290 C180 220 160 120 200 40" stroke="url(#stalk)" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#B45309">
+    <ellipse cx="178" cy="70" rx="8" ry="24" transform="rotate(-35 178 70)"/>
+    <ellipse cx="222" cy="66" rx="8" ry="24" transform="rotate(35 222 66)"/>
+    <ellipse cx="196" cy="52" rx="8" ry="22" transform="rotate(-15 196 52)"/>
+    <ellipse cx="204" cy="48" rx="8" ry="22" transform="rotate(15 204 48)"/>
+    <circle cx="200" cy="34" r="10"/>
+  </g>
+  <g fill="#D97706" opacity="0.85">
+    <ellipse cx="168" cy="120" rx="6" ry="18" transform="rotate(-30 168 120)"/>
+    <ellipse cx="234" cy="118" rx="6" ry="18" transform="rotate(30 234 118)"/>
+    <ellipse cx="172" cy="170" rx="6" ry="18" transform="rotate(-25 172 170)"/>
+    <ellipse cx="230" cy="168" rx="6" ry="18" transform="rotate(25 230 168)"/>
+  </g>
+</svg>
+

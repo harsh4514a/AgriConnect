@@ -1,0 +1,36 @@
+# Logs
+logs
+*.log
+
+# Node
+node_modules
+.pnpm-store
+
+# Next.js
+.next
+.next-dev
+out
+
+# NestJS
+dist
+coverage
+
+# Prisma
+prisma/dev.db
+apps/api/localization-inventory.json
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+
+# Build cache and dependencies
+.turbo/
+**/.turbo/
+node_modules/
+**/node_modules/

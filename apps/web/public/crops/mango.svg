@@ -1,0 +1,21 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mangoes">
+  <defs>
+    <linearGradient id="mangoBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+    <radialGradient id="mango1" cx="0.4" cy="0.35" r="1.1">
+      <stop stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#mangoBg)"/>
+  <path d="M130 170 C110 120 140 70 210 60 C180 120 150 180 130 170 Z" fill="url(#mango1)"/>
+  <path d="M250 150 C230 100 260 55 320 50 C295 110 270 165 250 150 Z" fill="#F59E0B"/>
+  <g fill="#16A34A">
+    <path d="M210 60 l12 22 h-24 z"/>
+    <path d="M320 50 l10 18 h-20 z"/>
+  </g>
+  <path d="M210 60 C200 42 216 28 238 34" stroke="#15803D" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
+

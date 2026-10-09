@@ -1,0 +1,21 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rice crop">
+  <defs>
+    <linearGradient id="riceBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DCFCE7"/>
+      <stop offset="1" stop-color="#BBF7D0"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#riceBg)"/>
+  <path d="M140 300 C150 210 150 130 140 50" stroke="#16A34A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M260 300 C250 210 250 130 260 50" stroke="#16A34A" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#FDE68A" stroke="#D97706" stroke-width="1">
+    <ellipse cx="150" cy="90" rx="7" ry="16" transform="rotate(-20 150 90)"/>
+    <ellipse cx="138" cy="120" rx="7" ry="16" transform="rotate(-30 138 120)"/>
+    <ellipse cx="158" cy="150" rx="7" ry="16" transform="rotate(-15 158 150)"/>
+    <ellipse cx="250" cy="90" rx="7" ry="16" transform="rotate(20 250 90)"/>
+    <ellipse cx="262" cy="120" rx="7" ry="16" transform="rotate(30 262 120)"/>
+    <ellipse cx="242" cy="150" rx="7" ry="16" transform="rotate(15 242 150)"/>
+  </g>
+  <ellipse cx="200" cy="262" rx="110" ry="26" fill="#86EFAC" opacity="0.5"/>
+</svg>
+

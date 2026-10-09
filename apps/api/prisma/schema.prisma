@@ -1,0 +1,502 @@
+// AgriConnect Prisma Schema
+// Module: Authentication
+// Mobile Number + OTP based passwordless authentication.
+// Full onboarding (name, language, location) completed post-OTP verification.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Stores registered user accounts.
+// A user record is created when OTP is verified for a new mobile number.
+// Full onboarding (name, language, location) can be completed later via /auth/complete-profile.
+model User {
+  id                String  @id @default(uuid()) @db.Uuid
+  mobileNumber      String  @unique @db.VarChar(15)
+  firstName         String? @db.VarChar(50)
+  lastName          String? @db.VarChar(50)
+  preferredLanguage String? @db.VarChar(20)
+  role              String  @default("farmer") @db.VarChar(20)
+
+  stateId    String? @db.Uuid
+  districtId String? @db.Uuid
+  talukaId   String? @db.Uuid
+  villageId  String? @db.Uuid
+
+  latitude   Float?
+  longitude  Float?
+  isVerified Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  state    State?    @relation(fields: [stateId], references: [id])
+  district District? @relation(fields: [districtId], references: [id])
+  taluka   Taluka?   @relation(fields: [talukaId], references: [id])
+  village  Village?  @relation(fields: [villageId], references: [id])
+
+  refreshTokens     RefreshToken[]
+  listings          Listing[]
+  buyerRequirements BuyerRequirement[]
+  transportProviders TransportProvider[]
+  notifications     Notification[]
+
+  @@index([mobileNumber])
+  @@map("users")
+}
+
+// Stores OTPs for passwordless authentication.
+// OTP references mobileNumber (not userId) because the user may not exist yet.
+// Each OTP is hashed, has an expiry, and is single-use.
+// Expired records are cleaned up by a scheduled job or on read.
+model Otp {
+  id                   String   @id @default(uuid()) @db.Uuid
+  mobileNumber         String   @db.VarChar(15)
+  hashedOtp            String   @db.VarChar(255)
+  expiresAt            DateTime
+  verificationAttempts Int      @default(0)
+  resendAttempts       Int      @default(0)
+  isUsed               Boolean  @default(false)
+  createdAt            DateTime @default(now())
+
+  @@index([mobileNumber])
+  @@index([expiresAt])
+  @@map("otps")
+}
+
+// Stores JWT refresh tokens.
+// Tokens are hashed before storage.
+// Can be revoked individually or all tokens for a user.
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique @db.VarChar(500)
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+// Indian States / Provinces.
+model State {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique @db.VarChar(100)
+
+  // Relationships
+  districts District[]
+  users     User[]
+
+  @@map("states")
+}
+
+// Districts within a State.
+model District {
+  id      String @id @default(uuid()) @db.Uuid
+  stateId String @db.Uuid
+  name    String @db.VarChar(100)
+
+  // Relationships
+  state   State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  talukas Taluka[]
+  users   User[]
+  transportProviders TransportProvider[]
+
+  @@unique([stateId, name])
+  @@index([stateId])
+  @@map("districts")
+}
+
+// Talukas (Tehsils) within a District.
+model Taluka {
+  id         String @id @default(uuid()) @db.Uuid
+  districtId String @db.Uuid
+  name       String @db.VarChar(100)
+
+  // Relationships
+  district District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  villages Village[]
+  users    User[]
+  transportProviders TransportProvider[]
+
+  @@unique([districtId, name])
+  @@index([districtId])
+  @@map("talukas")
+}
+
+// Villages within a Taluka.
+model Village {
+  id       String @id @default(uuid()) @db.Uuid
+  talukaId String @db.Uuid
+  name     String @db.VarChar(100)
+
+  // Relationships
+  taluka Taluka @relation(fields: [talukaId], references: [id], onDelete: Cascade)
+  users  User[]
+  transportProviders TransportProvider[]
+
+  @@unique([talukaId, name])
+  @@index([talukaId])
+  @@map("villages")
+}
+
+// Marketplace crop listings posted by farmers.
+// Fields mirror the CropListing TypeScript interface in the web app.
+model Listing {
+  id                 String  @id @default(uuid()) @db.Uuid
+  cropKey            String  @db.VarChar(30)
+  image              String  @db.VarChar(300)
+  imageAlt           String  @db.VarChar(200)
+  farmerName         String  @db.VarChar(100)
+  farmerNameShort    String  @db.VarChar(60)
+  district           String  @db.VarChar(100)
+  village            String  @db.VarChar(100)
+  taluka             String  @db.VarChar(100)
+  state              String  @default("Gujarat") @db.VarChar(100)
+  quantity           Float
+  unit               String  @db.VarChar(20)
+  price              Float
+  primaryUnit        String  @db.VarChar(40)
+  secondaryUnit      String  @db.VarChar(40)
+  marketPrice        Float
+  distanceKm         Float   @default(0)
+  postedHoursAgo     Float   @default(0)
+  availability       String  @default("available") @db.VarChar(20)
+  verified           Boolean @default(false)
+  mobileNumber       String  @db.VarChar(15)
+  phoneLabel         String  @db.VarChar(60)
+  readyToSell        Boolean @default(true)
+  lat                Float   @default(22.03)
+  lng                Float   @default(71.2)
+  description        String? @db.Text
+  variety            String? @db.VarChar(100)
+  customCropName     String? @db.VarChar(100)
+  qualityGrade       String? @db.VarChar(50)
+  cropDate           String? @db.VarChar(20)
+  farmerMemberSince  Int?
+  farmerListingCount Int?
+  additionalImages   Json?
+  status             String  @default("active") @db.VarChar(20)
+  isUserCreated      Boolean @default(false)
+
+  // Optional link to the User who created this listing
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cropKey])
+  @@index([district])
+  @@index([status])
+  @@index([userId])
+  @@map("listings")
+}
+
+// Government mandi prices fetched from the official data.gov.in daily dataset.
+model MarketPrice {
+  id              String   @id @default(uuid()) @db.Uuid
+  sourceRecordKey String   @unique @db.VarChar(64)
+  state           String   @db.VarChar(100)
+  district        String   @db.VarChar(100)
+  market          String   @db.VarChar(150)
+  commodity       String   @db.VarChar(150)
+  variety         String   @default("") @db.VarChar(150)
+  grade           String   @default("") @db.VarChar(100)
+  dataDate        DateTime @db.Date
+  minimumPrice    Float
+  maximumPrice    Float
+  modalPrice      Float
+  source          String   @default("data.gov.in") @db.VarChar(50)
+  fetchedAt       DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([state, dataDate])
+  @@index([district, dataDate])
+  @@index([market, dataDate])
+  @@index([commodity, dataDate])
+  @@index([variety, dataDate])
+  @@map("market_prices")
+}
+
+// AgriConnect product-level grouping used by the farmer-facing Gujarat market browser.
+// This is intentionally separate from government administrative classifications.
+model GujaratMarketRegion {
+  id        String   @id @default(uuid()) @db.Uuid
+  region    String   @db.VarChar(50)
+  district  String   @unique @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([region])
+  @@map("gujarat_market_regions")
+}
+
+// Buyer requests for crops/commodities.
+// Kept separate from farmer marketplace listings.
+model BuyerRequirement {
+  id                     String   @id @default(uuid()) @db.Uuid
+  buyerId                String   @db.Uuid
+
+  cropKey                String   @db.VarChar(30)
+  customCropName         String?  @db.VarChar(100)
+  variety                String?  @db.VarChar(100)
+
+  quantity               Float
+  unit                   String   @db.VarChar(20)
+
+  district               String   @db.VarChar(100)
+  taluka                 String?  @db.VarChar(100)
+  village                String?  @db.VarChar(100)
+
+  contactNumber          String   @db.VarChar(20)
+
+  additionalRequirements String?  @db.VarChar(1000)
+
+  status                 String   @default("active") @db.VarChar(20)
+  submissionKey          String?  @unique @db.VarChar(64)
+
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  buyer User @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+
+  @@index([buyerId])
+  @@index([status])
+  @@index([cropKey])
+  @@index([district])
+  @@index([createdAt])
+  @@map("buyer_requirements")
+}
+
+
+// Farmer-facing crop cultivation guides. Content is versioned by locale and
+// kept separate from government market-price/commodity records.
+model CropGuide {
+  id          String             @id @default(uuid()) @db.Uuid
+  slug        String             @unique @db.VarChar(80)
+  image       String             @db.VarChar(300)
+  imageAlt    String             @db.VarChar(200)
+  category    String             @db.VarChar(60)
+  seasonKeys  String[]           @default([])
+  sortOrder   Int                @default(0)
+  isPublished Boolean            @default(true)
+  sourceName  String             @db.VarChar(200)
+  sourceUrl   String             @db.VarChar(500)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  contents CropGuideContent[]
+
+  @@index([category, isPublished, sortOrder])
+  @@map("crop_guides")
+}
+
+model CropGuideContent {
+  id                  String    @id @default(uuid()) @db.Uuid
+  cropGuideId         String    @db.Uuid
+  locale              String    @db.VarChar(10)
+  name                String    @db.VarChar(120)
+  aliases             String[]  @default([])
+  searchText          String    @db.VarChar(500)
+  shortDescription    String    @db.VarChar(300)
+  suitableSeason      String?   @db.VarChar(200)
+  sections            Json
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  cropGuide CropGuide @relation(fields: [cropGuideId], references: [id], onDelete: Cascade)
+
+  @@unique([cropGuideId, locale])
+  @@index([locale, searchText])
+  @@index([cropGuideId, locale])
+  @@map("crop_guide_contents")
+}
+
+
+// Farmer-facing government schemes. Scheme facts are stored in the database so
+// content can be reviewed and updated without changing frontend code.
+model GovernmentScheme {
+  id                  String                    @id @default(uuid()) @db.Uuid
+  slug                String                    @unique @db.VarChar(100)
+  governmentLevel     String                    @db.VarChar(20)
+  department          String                    @db.VarChar(200)
+  category            String                    @db.VarChar(60)
+  status              String                    @default("active") @db.VarChar(20)
+  availableStates     String[]                  @default(["Gujarat"])
+  applicationUrl      String?                   @db.VarChar(500)
+  sourceUrl           String                    @db.VarChar(500)
+  lastVerifiedAt      DateTime?
+  isPublished         Boolean                   @default(true)
+  sortOrder           Int                       @default(0)
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+
+  contents GovernmentSchemeContent[]
+
+  @@index([governmentLevel, status, isPublished, sortOrder])
+  @@index([category, isPublished, sortOrder])
+  @@map("government_schemes")
+}
+
+model GovernmentSchemeContent {
+  id                  String           @id @default(uuid()) @db.Uuid
+  schemeId            String           @db.Uuid
+  locale              String           @db.VarChar(10)
+  name                String           @db.VarChar(200)
+  shortDescription    String           @db.VarChar(500)
+  description         String           @db.Text
+  benefits            Json
+  eligibility         Json
+  documents           Json
+  applicationSteps    Json
+  conditions          Json
+  keywords            String[]         @default([])
+  searchText          String           @db.Text
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  scheme GovernmentScheme @relation(fields: [schemeId], references: [id], onDelete: Cascade)
+
+  @@unique([schemeId, locale])
+  @@index([locale, schemeId])
+  @@index([schemeId, locale])
+  @@map("government_scheme_contents")
+}
+
+
+model TransportProvider {
+  id               String   @id @default(uuid()) @db.Uuid
+  ownerId          String?  @db.Uuid
+  businessName     String   @db.VarChar(120)
+  contactName      String?  @db.VarChar(100)
+  phoneNumber      String   @db.VarChar(15)
+  vehicleType      String   @db.VarChar(40)
+  customVehicleType String?  @db.VarChar(100)
+  additionalDetails String? @db.VarChar(500)
+
+  districtId String  @db.Uuid
+  talukaId   String? @db.Uuid
+  villageId  String? @db.Uuid
+
+  latitude  Float?
+  longitude Float?
+
+  isAvailable Boolean @default(true)
+  isVerified  Boolean @default(false)
+  isActive    Boolean @default(true)
+
+  owner    User?    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  district District @relation(fields: [districtId], references: [id], onDelete: Restrict)
+  taluka   Taluka?  @relation(fields: [talukaId], references: [id], onDelete: Restrict)
+  village  Village? @relation(fields: [villageId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId, isActive, createdAt])
+  @@index([districtId, isActive, isAvailable])
+  @@index([talukaId, isActive, isAvailable])
+  @@index([villageId, isActive, isAvailable])
+  @@index([vehicleType, isActive, isAvailable])
+  @@index([businessName])
+  @@unique([businessName, phoneNumber, vehicleType, districtId, talukaId, villageId])
+  @@map("transport_providers")
+}
+
+
+// User-scoped in-app notifications generated by real business events.
+// Titles and messages are stored as i18n keys so the same notification can
+// be rendered in English, Gujarati, or Hindi without duplicating content.
+model Notification {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @db.Uuid
+  type         String    @db.VarChar(40)
+  titleKey     String    @db.VarChar(160)
+  messageKey   String    @db.VarChar(160)
+  data         Json?
+  relatedPath  String?   @db.VarChar(300)
+  relatedType  String?   @db.VarChar(60)
+  relatedId    String?   @db.VarChar(100)
+  dedupeKey    String?   @unique @db.VarChar(200)
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt, createdAt])
+  @@index([type, createdAt])
+  @@map("notifications")
+}
+
+// Dedicated administrator accounts.
+// Completely separate from the farmer/user model.
+model Admin {
+  id           String   @id @default(uuid()) @db.Uuid
+  username     String   @unique @db.VarChar(50)
+  passwordHash String   @db.VarChar(255)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens AdminRefreshToken[]
+  auditLogs     AuditLog[]
+
+  @@index([username])
+  @@map("admins")
+}
+
+// Stores hashed JWT refresh tokens for administrators.
+model AdminRefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  adminId   String   @db.Uuid
+  token     String   @unique @db.VarChar(500)
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([token])
+  @@map("admin_refresh_tokens")
+}
+
+// Immutable audit trail recording administrative and sensitive system actions.
+// Records are strictly read-only and preserved for accountability and security.
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorId     String?  @db.Uuid
+  actorType   String   @default("admin") @db.VarChar(30)
+  actorName   String?  @db.VarChar(100)
+  action      String   @db.VarChar(80)
+  resource    String   @db.VarChar(80)
+  resourceId  String?  @db.VarChar(120)
+  description String   @db.VarChar(500)
+  metadata    Json?
+  ipAddress   String?  @db.VarChar(45)
+  userAgent   String?  @db.VarChar(255)
+  status      String   @default("SUCCESS") @db.VarChar(20)
+  createdAt   DateTime @default(now())
+
+  admin Admin? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([action, createdAt])
+  @@index([resource, createdAt])
+  @@index([actorId, createdAt])
+  @@map("audit_logs")
+}

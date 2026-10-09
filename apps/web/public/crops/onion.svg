@@ -1,0 +1,24 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Onions">
+  <defs>
+    <linearGradient id="onionBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+    <radialGradient id="onion1" cx="0.45" cy="0.35" r="1">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#B45309"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#onionBg)"/>
+  <g>
+    <ellipse cx="140" cy="190" rx="70" ry="78" fill="url(#onion1)"/>
+    <path d="M140 112 C140 88 120 76 96 80" stroke="#78350F" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M140 112 C140 90 160 78 184 82" stroke="#78350F" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <g>
+    <ellipse cx="270" cy="160" rx="56" ry="62" fill="#D97706"/>
+    <path d="M270 98 C270 78 254 68 234 72" stroke="#78350F" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M270 98 C270 80 288 70 308 74" stroke="#78350F" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
+

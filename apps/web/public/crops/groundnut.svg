@@ -1,0 +1,29 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Groundnut crop">
+  <defs>
+    <linearGradient id="gnBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#gnBg)"/>
+  <g stroke="#4D7C0F" stroke-width="5" stroke-linecap="round">
+    <path d="M200 300 C200 260 200 200 200 150"/>
+    <path d="M200 220 C160 210 130 220 110 250"/>
+    <path d="M200 250 C160 245 140 250 120 270"/>
+    <path d="M200 220 C240 210 270 220 290 250"/>
+  </g>
+  <g fill="#92400E">
+    <ellipse cx="200" cy="90" rx="18" ry="11" transform="rotate(-20 200 90)"/>
+    <ellipse cx="230" cy="80" rx="18" ry="11" transform="rotate(20 230 80)"/>
+    <ellipse cx="170" cy="80" rx="18" ry="11" transform="rotate(-40 170 80)"/>
+  </g>
+  <g fill="#78350F" stroke="#92400E" stroke-width="1.5">
+    <ellipse cx="185" cy="100" rx="9" ry="6" transform="rotate(-15 185 100)"/>
+    <ellipse cx="215" cy="98" rx="9" ry="6" transform="rotate(15 215 98)"/>
+  </g>
+  <g fill="#B45309">
+    <ellipse cx="118" cy="255" rx="12" ry="8" transform="rotate(-10 118 255)"/>
+    <ellipse cx="128" cy="272" rx="12" ry="8" transform="rotate(10 128 272)"/>
+    <ellipse cx="285" cy="255" rx="12" ry="8" transform="rotate(10 285 255)"/>
+  </g>
+</svg>

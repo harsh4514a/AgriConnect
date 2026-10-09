@@ -1,0 +1,23 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tomatoes">
+  <defs>
+    <linearGradient id="tomatoBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEE2E2"/>
+      <stop offset="1" stop-color="#FECACA"/>
+    </linearGradient>
+    <radialGradient id="tomato1" cx="0.4" cy="0.35" r="1">
+      <stop stop-color="#F87171"/>
+      <stop offset="1" stop-color="#DC2626"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#tomatoBg)"/>
+  <circle cx="150" cy="160" r="72" fill="url(#tomato1)"/>
+  <circle cx="270" cy="120" r="56" fill="#EF4444"/>
+  <circle cx="250" cy="225" r="46" fill="#F87171"/>
+  <g fill="#16A34A">
+    <path d="M150 88 l14 22 h-28 z"/>
+    <path d="M270 64 l11 18 h-22 z"/>
+    <path d="M250 179 l9 15 h-18 z"/>
+  </g>
+  <path d="M150 88 C140 70 160 60 180 66" stroke="#15803D" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>
+

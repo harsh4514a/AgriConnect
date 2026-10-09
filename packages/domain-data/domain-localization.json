@@ -1,0 +1,2453 @@
+{
+  "regions": {
+    "Saurashtra": {
+      "gu": "સૌરાષ્ટ્ર",
+      "hi": "सौराष्ट्र"
+    },
+    "North Gujarat": {
+      "gu": "ઉત્તર ગુજરાત",
+      "hi": "उत्तर गुजरात"
+    },
+    "Central Gujarat": {
+      "gu": "મધ્ય ગુજરાત",
+      "hi": "मध्य गुजरात"
+    },
+    "South Gujarat": {
+      "gu": "દક્ષિણ ગુજરાત",
+      "hi": "दक्षिण गुजरात"
+    },
+    "Kutch": {
+      "gu": "કચ્છ",
+      "hi": "कच्छ"
+    },
+    "Kachchh": {
+      "gu": "કચ્છ",
+      "hi": "कच्छ"
+    }
+  },
+  "districts": {
+    "Ahmedabad": {
+      "gu": "અમદાવાદ",
+      "hi": "अहमदाबाद"
+    },
+    "Amreli": {
+      "gu": "અમરેલી",
+      "hi": "अमरेली"
+    },
+    "Anand": {
+      "gu": "આણંદ",
+      "hi": "आनंद"
+    },
+    "Aravalli": {
+      "gu": "અરવલ્લી",
+      "hi": "अरावली"
+    },
+    "Banaskantha": {
+      "gu": "બનાસકાંઠા",
+      "hi": "बनासकांठा"
+    },
+    "Bharuch": {
+      "gu": "ભરૂચ",
+      "hi": "भरूच"
+    },
+    "Bhavnagar": {
+      "gu": "ભાવનગર",
+      "hi": "भावनगर"
+    },
+    "Botad": {
+      "gu": "બોટાદ",
+      "hi": "बोटाद"
+    },
+    "Chhota Udepur": {
+      "gu": "છોટા ઉદેપુર",
+      "hi": "छोटा उदेपुर"
+    },
+    "Chhota Udaipur": {
+      "gu": "છોટા ઉદેપુર",
+      "hi": "छोटा उदेपुर"
+    },
+    "Dahod": {
+      "gu": "દાહોદ",
+      "hi": "दाहोद"
+    },
+    "Dang": {
+      "gu": "ડાંગ",
+      "hi": "डांग"
+    },
+    "Dangs": {
+      "gu": "ડાંગ",
+      "hi": "डांग"
+    },
+    "The Dangs": {
+      "gu": "ડાંગ",
+      "hi": "डांग"
+    },
+    "Devbhumi Dwarka": {
+      "gu": "દેવભૂમિ દ્વારકા",
+      "hi": "देवभूमि द्वारका"
+    },
+    "Devbhoomi Dwarka": {
+      "gu": "દેવભૂમિ દ્વારકા",
+      "hi": "देवभूमि द्वारका"
+    },
+    "Gandhinagar": {
+      "gu": "ગાંધીનગર",
+      "hi": "गांधीनगर"
+    },
+    "Gir Somnath": {
+      "gu": "ગીર સોમનાથ",
+      "hi": "गिर सोमनाथ"
+    },
+    "Jamnagar": {
+      "gu": "જામનગર",
+      "hi": "जामनगर"
+    },
+    "Junagadh": {
+      "gu": "જૂનાગઢ",
+      "hi": "जूनागढ़"
+    },
+    "Kachchh": {
+      "gu": "કચ્છ",
+      "hi": "कच्छ"
+    },
+    "Kutch": {
+      "gu": "કચ્છ",
+      "hi": "कच्छ"
+    },
+    "Kheda": {
+      "gu": "ખેડા",
+      "hi": "खेड़ा"
+    },
+    "Mahisagar": {
+      "gu": "મહીસાગર",
+      "hi": "महीसागर"
+    },
+    "Mehsana": {
+      "gu": "મહેસાણા",
+      "hi": "मेहसाणा"
+    },
+    "Morbi": {
+      "gu": "મોરબી",
+      "hi": "मोरबी"
+    },
+    "Narmada": {
+      "gu": "નર્મદા",
+      "hi": "नर्मदा"
+    },
+    "Navsari": {
+      "gu": "નવસારી",
+      "hi": "नवसारी"
+    },
+    "Panchmahal": {
+      "gu": "પંચમહાલ",
+      "hi": "पंचमहल"
+    },
+    "Patan": {
+      "gu": "પાટણ",
+      "hi": "पाटण"
+    },
+    "Porbandar": {
+      "gu": "પોરબંદર",
+      "hi": "पोरबंदर"
+    },
+    "Rajkot": {
+      "gu": "રાજકોટ",
+      "hi": "राजकोट"
+    },
+    "Sabarkantha": {
+      "gu": "સાબરકાંઠા",
+      "hi": "साबरकांठा"
+    },
+    "Surat": {
+      "gu": "સુરત",
+      "hi": "सूरत"
+    },
+    "Surendranagar": {
+      "gu": "સુરેન્દ્રનગર",
+      "hi": "सुरेंद्रनगर"
+    },
+    "Tapi": {
+      "gu": "તાપી",
+      "hi": "तापी"
+    },
+    "Vadodara": {
+      "gu": "વડોદરા",
+      "hi": "वडोदरा"
+    },
+    "Valsad": {
+      "gu": "વલસાડ",
+      "hi": "वलसाड"
+    },
+    "Vav Tharad": {
+      "gu": "વાવ થરાદ",
+      "hi": "वाव थराद"
+    }
+  },
+  "crops": {
+    "Cotton": {
+      "gu": "કપાસ",
+      "hi": "कपास"
+    },
+    "Groundnut": {
+      "gu": "મગફળી",
+      "hi": "मूंगफली"
+    },
+    "Groundnut Pods": {
+      "gu": "મગફળી",
+      "hi": "मूंगफली"
+    },
+    "Groundnut Seed": {
+      "gu": "મગફળી દાણા",
+      "hi": "मूंगफली दाना"
+    },
+    "Wheat": {
+      "gu": "ઘઉં",
+      "hi": "गेहूं"
+    },
+    "Castor Seed": {
+      "gu": "એરંડા (દિવેલા)",
+      "hi": "अरंडी"
+    },
+    "Castor": {
+      "gu": "એરંડા",
+      "hi": "अरंडी"
+    },
+    "Mustard": {
+      "gu": "રાયડો (સરસવ)",
+      "hi": "सरसों"
+    },
+    "Mustard Seed": {
+      "gu": "રાયડો (સરસવ)",
+      "hi": "सरसों"
+    },
+    "Cumin": {
+      "gu": "જીરું",
+      "hi": "जीरा"
+    },
+    "Cumin Seed": {
+      "gu": "જીરું",
+      "hi": "जीरा"
+    },
+    "Gram": {
+      "gu": "ચણા",
+      "hi": "चना"
+    },
+    "Bengal Gram": {
+      "gu": "ચણા",
+      "hi": "चना"
+    },
+    "Sesamum": {
+      "gu": "તલ",
+      "hi": "तिल"
+    },
+    "Sesame Seed": {
+      "gu": "તલ",
+      "hi": "तिल"
+    },
+    "Bajra": {
+      "gu": "બાજરી",
+      "hi": "बाजरा"
+    },
+    "Pearl Millet": {
+      "gu": "બાજરી",
+      "hi": "बाजरा"
+    },
+    "Paddy": {
+      "gu": "ડાંગર (ચોખા)",
+      "hi": "धान (चावल)"
+    },
+    "Rice": {
+      "gu": "ચોખા",
+      "hi": "चावल"
+    },
+    "Maize": {
+      "gu": "મકાઈ",
+      "hi": "मक्का"
+    },
+    "Corn": {
+      "gu": "મકાઈ",
+      "hi": "मक्का"
+    },
+    "Onion": {
+      "gu": "ડુંગળી",
+      "hi": "प्याज"
+    },
+    "Potato": {
+      "gu": "બટાકા",
+      "hi": "आलू"
+    },
+    "Tomato": {
+      "gu": "ટામેટા",
+      "hi": "टमाटर"
+    },
+    "Chili": {
+      "gu": "મરચાં",
+      "hi": "मिर्च"
+    },
+    "Green Chili": {
+      "gu": "લીલા મરચાં",
+      "hi": "हरी मिर्च"
+    },
+    "Red Chili": {
+      "gu": "લાલ મરચાં",
+      "hi": "लाल मिर्च"
+    },
+    "Garlic": {
+      "gu": "લસણ",
+      "hi": "लहसुन"
+    },
+    "Soyabean": {
+      "gu": "સોયાબીન",
+      "hi": "सोयाबीन"
+    },
+    "Soybean": {
+      "gu": "સોયાબીન",
+      "hi": "सोयाबीन"
+    },
+    "Coriander": {
+      "gu": "ધાણા",
+      "hi": "धनिया"
+    },
+    "Coriander Seed": {
+      "gu": "ધાણા",
+      "hi": "धनिया"
+    },
+    "Fennel": {
+      "gu": "વરિયાળી",
+      "hi": "सौंफ"
+    },
+    "Fennel Seed": {
+      "gu": "વરિયાળી",
+      "hi": "सौंफ"
+    },
+    "Fenugreek": {
+      "gu": "મેથી",
+      "hi": "मेथी"
+    },
+    "Fenugreek Seed": {
+      "gu": "મેથી દાણા",
+      "hi": "मेथी दाना"
+    },
+    "Tuver": {
+      "gu": "તુવેર",
+      "hi": "तुअर (अरहर)"
+    },
+    "Arhar": {
+      "gu": "તુવેર",
+      "hi": "अरहर"
+    },
+    "Pigeon Pea": {
+      "gu": "તુવેર",
+      "hi": "तुअर"
+    },
+    "Moong": {
+      "gu": "મગ",
+      "hi": "मूंग"
+    },
+    "Green Gram": {
+      "gu": "મગ",
+      "hi": "मूंग"
+    },
+    "Urad": {
+      "gu": "અડદ",
+      "hi": "उड़द"
+    },
+    "Black Gram": {
+      "gu": "અડદ",
+      "hi": "उड़द"
+    },
+    "Math": {
+      "gu": "મઠ",
+      "hi": "मोठ"
+    },
+    "Moth": {
+      "gu": "મઠ",
+      "hi": "मोठ"
+    },
+    "Jowar": {
+      "gu": "જુવાર",
+      "hi": "ज्वार"
+    },
+    "Sorghum": {
+      "gu": "જુવાર",
+      "hi": "ज्वार"
+    },
+    "Banana": {
+      "gu": "કેળા",
+      "hi": "केला"
+    },
+    "Mango": {
+      "gu": "કેરી",
+      "hi": "आम"
+    },
+    "Lemon": {
+      "gu": "લીંબુ",
+      "hi": "नींबू"
+    },
+    "Ginger": {
+      "gu": "આદુ",
+      "hi": "अदरक"
+    },
+    "Turmeric": {
+      "gu": "હળદર",
+      "hi": "हल्दी"
+    },
+    "Cluster Beans": {
+      "gu": "ગુવાર",
+      "hi": "ग्वार"
+    },
+    "Guar": {
+      "gu": "ગુવાર",
+      "hi": "ग्वार"
+    },
+    "Suva": {
+      "gu": "સુવા",
+      "hi": "सोआ"
+    },
+    "Isabgol": {
+      "gu": "ઇસબગુલ",
+      "hi": "इसबगोल"
+    },
+    "Rajgaro": {
+      "gu": "રાજગરો",
+      "hi": "राजगिरा"
+    },
+    "Peas": {
+      "gu": "વટાણા",
+      "hi": "मटर"
+    },
+    "Cauliflower": {
+      "gu": "ફુલાવર",
+      "hi": "फूलगोभी"
+    },
+    "Cabbage": {
+      "gu": "કોબી",
+      "hi": "पत्तागोभी"
+    },
+    "Brinjal": {
+      "gu": "રીંગણ",
+      "hi": "बैंगन"
+    },
+    "Eggplant": {
+      "gu": "રીંગણ",
+      "hi": "बैंगन"
+    },
+    "Ladyfinger": {
+      "gu": "ભીંડો",
+      "hi": "भिंडी"
+    },
+    "Bhindi": {
+      "gu": "ભીંડો",
+      "hi": "भिंडी"
+    },
+    "Bottle Gourd": {
+      "gu": "દૂધી",
+      "hi": "लौकी"
+    },
+    "Bitter Gourd": {
+      "gu": "કારેલા",
+      "hi": "करेला"
+    },
+    "Ridge Gourd": {
+      "gu": "તુરિયા",
+      "hi": "तोरई"
+    },
+    "Cucumber": {
+      "gu": "કાકડી",
+      "hi": "खीरा"
+    },
+    "Watermelon": {
+      "gu": "તરબૂચ",
+      "hi": "तरबूज"
+    },
+    "Muskmelon": {
+      "gu": "ટેટી",
+      "hi": "खरबूजा"
+    },
+    "Papaya": {
+      "gu": "પપૈયા",
+      "hi": "पपीता"
+    },
+    "Pomegranate": {
+      "gu": "દાડમ",
+      "hi": "अनार"
+    },
+    "Guava": {
+      "gu": "જામફળ",
+      "hi": "अमरूद"
+    },
+    "Apple": {
+      "gu": "સફરજન",
+      "hi": "सेब"
+    },
+    "Sweet Potato": {
+      "gu": "શક્કરિયા",
+      "hi": "शकरकंद"
+    },
+    "Carrot": {
+      "gu": "ગાજર",
+      "hi": "गाजर"
+    },
+    "Radish": {
+      "gu": "મૂળો",
+      "hi": "मूली"
+    },
+    "Beetroot": {
+      "gu": "બીટ",
+      "hi": "चुकंदर"
+    },
+    "Mint": {
+      "gu": "ફુદીનો",
+      "hi": "पुदीना"
+    },
+    "Spinach": {
+      "gu": "પાલક",
+      "hi": "पालक"
+    },
+    "Ajwan": {
+      "gu": "અજમો",
+      "hi": "अजवाइन"
+    },
+    "Ground Nut": {
+      "gu": "મગફળી",
+      "hi": "मूंगफली"
+    },
+    "Groundnut (Bold)": {
+      "gu": "મગફળી (બોલ્ડ)",
+      "hi": "मूंगफली (बोल्ड)"
+    },
+    "Ground Nut Seed": {
+      "gu": "મગફળીના દાણા",
+      "hi": "मूंगफली के दाने"
+    },
+    "Coriander Leaves": {
+      "gu": "લીલા ધાણા",
+      "hi": "धनिया पत्ता"
+    },
+    "Green Ginger": {
+      "gu": "લીલું આદુ",
+      "hi": "हरा अदरक"
+    },
+    "Amaranthus": {
+      "gu": "તાંદળજો",
+      "hi": "चौलाई"
+    },
+    "Asalia": {
+      "gu": "અસાલિયો",
+      "hi": "हलीम"
+    },
+    "Bajra(Pearl Millet/Cumbu)": {
+      "gu": "બાજરી",
+      "hi": "बाजरा"
+    },
+    "Banana - Green": {
+      "gu": "કાચા કેળા",
+      "hi": "कच्चा केला"
+    },
+    "Barley(Jau)": {
+      "gu": "જવ",
+      "hi": "जौ"
+    },
+    "Beans": {
+      "gu": "ફણસી",
+      "hi": "सेम"
+    },
+    "Big Gram": {
+      "gu": "મોટા ચણા",
+      "hi": "बड़ा चना"
+    },
+    "Capsicum": {
+      "gu": "શિમલા મરચાં",
+      "hi": "शिमला मिर्च"
+    },
+    "Chicory(Chikori/Kasni)": {
+      "gu": "કાસની",
+      "hi": "कासनी"
+    },
+    "Chikoos(Sapota)": {
+      "gu": "ચીકુ",
+      "hi": "चीकू"
+    },
+    "Colacasia": {
+      "gu": "અરબી",
+      "hi": "अरबी"
+    },
+    "Cotton Seed": {
+      "gu": "કપાસિયા",
+      "hi": "बिनौला"
+    },
+    "Cowpea(Lobia/Karamani)": {
+      "gu": "ચોળી",
+      "hi": "लोबिया"
+    },
+    "Cowpea(Veg)": {
+      "gu": "ચોળી",
+      "hi": "लोबिया की फली"
+    },
+    "Cucumbar(Kheera)": {
+      "gu": "કાકડી",
+      "hi": "खीरा"
+    },
+    "Cummin Seed(Jeera)": {
+      "gu": "જીરું",
+      "hi": "जीरा"
+    },
+    "Drumstick": {
+      "gu": "સરગવો",
+      "hi": "सहजन"
+    },
+    "Dry Chillies": {
+      "gu": "સૂકાં મરચાં",
+      "hi": "सूखी मिर्च"
+    },
+    "Elephant Yam(Suran)/Amorphophallus": {
+      "gu": "સૂરન",
+      "hi": "सूरन"
+    },
+    "Foxtail Millet(Navane)": {
+      "gu": "કાંગ",
+      "hi": "कंगनी"
+    },
+    "French Beans(Frasbean)": {
+      "gu": "ફ્રેન્ચ બીન્સ",
+      "hi": "फ्रेंच बीन्स"
+    },
+    "Gram Raw(Chholia)": {
+      "gu": "લીલા ચણા",
+      "hi": "हरा चना"
+    },
+    "Grapes": {
+      "gu": "દ્રાક્ષ",
+      "hi": "अंगूर"
+    },
+    "Groundnut pods(raw)": {
+      "gu": "કાચી મગફળી",
+      "hi": "कच्ची मूंगफली"
+    },
+    "Groundnut(Split)": {
+      "gu": "ફાડેલી મગફળી",
+      "hi": "टूटी मूंगफली"
+    },
+    "Guar Seed(Cluster Beans Seed)": {
+      "gu": "ગુવારના બીજ",
+      "hi": "ग्वार के बीज"
+    },
+    "Indian Beans(Seam)": {
+      "gu": "વાલ",
+      "hi": "सेम"
+    },
+    "Isabgul(Psyllium)": {
+      "gu": "ઇસબગુલ",
+      "hi": "इसबगोल"
+    },
+    "Jowar(Sorghum)": {
+      "gu": "જુવાર",
+      "hi": "ज्वार"
+    },
+    "Kabuli Chana(Chickpeas-White)": {
+      "gu": "કાબુલી ચણા",
+      "hi": "काबुली चना"
+    },
+    "Kulthi(Horse Gram)": {
+      "gu": "કુલથી",
+      "hi": "कुल्थी"
+    },
+    "Leafy Vegetable": {
+      "gu": "પાંદડાવાળાં શાકભાજી",
+      "hi": "पत्तेदार सब्ज़ियाँ"
+    },
+    "Lime": {
+      "gu": "લીંબુ",
+      "hi": "नींबू"
+    },
+    "Little gourd(Kundru)": {
+      "gu": "ટીંડોળા",
+      "hi": "कुंदरू"
+    },
+    "Long Melon(Kakri)": {
+      "gu": "કાકડી",
+      "hi": "ककड़ी"
+    },
+    "Mango(Raw-Ripe)": {
+      "gu": "કાચી-પાકી કેરી",
+      "hi": "कच्चा-पका आम"
+    },
+    "Methi Seeds": {
+      "gu": "મેથીના દાણા",
+      "hi": "मेथी दाना"
+    },
+    "Methi(Leaves)": {
+      "gu": "મેથીનાં પાન",
+      "hi": "मेथी के पत्ते"
+    },
+    "Millets": {
+      "gu": "જાડાં ધાન્ય",
+      "hi": "मोटे अनाज"
+    },
+    "Mint(Pudina)": {
+      "gu": "ફુદીનો",
+      "hi": "पुदीना"
+    },
+    "Mousambi(Sweet Lime)": {
+      "gu": "મોસંબી",
+      "hi": "मौसंबी"
+    },
+    "Onion Green": {
+      "gu": "લીલી ડુંગળી",
+      "hi": "हरा प्याज"
+    },
+    "Orange": {
+      "gu": "નારંગી",
+      "hi": "संतरा"
+    },
+    "Other Pulses": {
+      "gu": "અન્ય કઠોળ",
+      "hi": "अन्य दालें"
+    },
+    "Paddy(Common)": {
+      "gu": "સામાન્ય ડાંગર",
+      "hi": "साधारण धान"
+    },
+    "Papaya(Raw)": {
+      "gu": "કાચું પપૈયું",
+      "hi": "कच्चा पपीता"
+    },
+    "Pea Pod/Pea Cod/हरी मटर": {
+      "gu": "વટાણા",
+      "hi": "हरी मटर"
+    },
+    "Peas Wet": {
+      "gu": "લીલા વટાણા",
+      "hi": "हरे मटर"
+    },
+    "Pegeon Pea(Arhar Fali)": {
+      "gu": "તુવેરની શીંગ",
+      "hi": "अरहर की फली"
+    },
+    "Pineapple": {
+      "gu": "અનાનસ",
+      "hi": "अनानास"
+    },
+    "Pointed gourd(Parval)": {
+      "gu": "પરવળ",
+      "hi": "परवल"
+    },
+    "Pumpkin": {
+      "gu": "કોળું",
+      "hi": "कद्दू"
+    },
+    "Raddish": {
+      "gu": "મૂળો",
+      "hi": "मूली"
+    },
+    "Rajgir": {
+      "gu": "રાજગરો",
+      "hi": "राजगीरा"
+    },
+    "Rayee": {
+      "gu": "રાઈ",
+      "hi": "राई"
+    },
+    "Red gram split/Arhar dal/Tur dal": {
+      "gu": "તુવેરની દાળ",
+      "hi": "अरहर की दाल"
+    },
+    "Ridgeguard(Tori)": {
+      "gu": "તુરીયા",
+      "hi": "तोरी"
+    },
+    "Snakeguard": {
+      "gu": "પડવળ",
+      "hi": "चिचिंडा"
+    },
+    "Soanf": {
+      "gu": "વરિયાળી",
+      "hi": "सौंफ"
+    },
+    "Spiny Gourd / Kartali(Kantola)": {
+      "gu": "કંટોળા",
+      "hi": "ककोड़ा"
+    },
+    "Sponge gourd": {
+      "gu": "ગલકા",
+      "hi": "गिलकी"
+    },
+    "Surat Beans(Papadi)": {
+      "gu": "સુરતી પાપડી",
+      "hi": "सुरती पापड़ी"
+    },
+    "Suva(Dill Seed)": {
+      "gu": "સુવાદાણા",
+      "hi": "सोआ के बीज"
+    },
+    "Tender Coconut": {
+      "gu": "લીલું નાળિયેર",
+      "hi": "हरा नारियल"
+    },
+    "Tinda": {
+      "gu": "ટિંડા",
+      "hi": "टिंडा"
+    },
+    "Turmeric(raw)": {
+      "gu": "કાચી હળદર",
+      "hi": "कच्ची हल्दी"
+    },
+    "Water Melon": {
+      "gu": "તરબૂચ",
+      "hi": "तरबूज"
+    },
+    "Yam(Ratalu)": {
+      "gu": "રતાળુ",
+      "hi": "रतालू"
+    }
+  },
+  "markets": {
+    "Rajkot": {
+      "gu": "રાજકોટ",
+      "hi": "राजकोट"
+    },
+    "Gondal": {
+      "gu": "ગોંડલ",
+      "hi": "गोंडल"
+    },
+    "Jasdan": {
+      "gu": "જસદણ",
+      "hi": "जसदण"
+    },
+    "Jetpur": {
+      "gu": "જેતપુર",
+      "hi": "जेतपुर"
+    },
+    "Dhoraji": {
+      "gu": "ધોરાજી",
+      "hi": "धोराजी"
+    },
+    "Upleta": {
+      "gu": "ઉપલેટા",
+      "hi": "उपलेटा"
+    },
+    "Amreli": {
+      "gu": "અમરેલી",
+      "hi": "अमरेली"
+    },
+    "Babra": {
+      "gu": "બાબરા",
+      "hi": "बाबरा"
+    },
+    "Bagasara": {
+      "gu": "બગસરા",
+      "hi": "बगसरा"
+    },
+    "Dhari": {
+      "gu": "ધારી",
+      "hi": "धारी"
+    },
+    "Rajula": {
+      "gu": "રાજુલા",
+      "hi": "राजुला"
+    },
+    "Savarkundla": {
+      "gu": "સાવરકુંડલા",
+      "hi": "सावरकुंडला"
+    },
+    "Bhavnagar": {
+      "gu": "ભાવનગર",
+      "hi": "भावनगर"
+    },
+    "Mahuva": {
+      "gu": "મહુવા",
+      "hi": "महुआ"
+    },
+    "Talaja": {
+      "gu": "તળાજા",
+      "hi": "तलाजा"
+    },
+    "Palitana": {
+      "gu": "પાલીતાણા",
+      "hi": "पालीताना"
+    },
+    "Botad": {
+      "gu": "બોટાદ",
+      "hi": "बोटाद"
+    },
+    "Gadhada": {
+      "gu": "ગઢડા",
+      "hi": "गढड़ा"
+    },
+    "Junagadh": {
+      "gu": "જૂનાગઢ",
+      "hi": "जूनागढ़"
+    },
+    "Keshod": {
+      "gu": "કેશોદ",
+      "hi": "केशोद"
+    },
+    "Visavadar": {
+      "gu": "વિસાવદર",
+      "hi": "विसावदर"
+    },
+    "Manavadar": {
+      "gu": "માણાવદર",
+      "hi": "माणावदर"
+    },
+    "Mangrol": {
+      "gu": "માંગરોળ",
+      "hi": "मांगरोल"
+    },
+    "Jamnagar": {
+      "gu": "જામનગર",
+      "hi": "जामनगर"
+    },
+    "Dhrol": {
+      "gu": "ધ્રોલ",
+      "hi": "ध्रोल"
+    },
+    "Kalavad": {
+      "gu": "કાલાવડ",
+      "hi": "कालावड"
+    },
+    "Jamjodhpur": {
+      "gu": "જામજોધપુર",
+      "hi": "जामजोधपुर"
+    },
+    "Morbi": {
+      "gu": "મોરબી",
+      "hi": "मोरबी"
+    },
+    "Halvad": {
+      "gu": "હળવદ",
+      "hi": "हलवद"
+    },
+    "Wankaner": {
+      "gu": "વાંકાનેર",
+      "hi": "वांकानेर"
+    },
+    "Surendranagar": {
+      "gu": "સુરેન્દ્રનગર",
+      "hi": "सुरेंद्रनगर"
+    },
+    "Wadhwan": {
+      "gu": "વઢવાણ",
+      "hi": "वढवाण"
+    },
+    "Dhrangadhra": {
+      "gu": "ધ્રાંગધ્રા",
+      "hi": "ध्रांगध्रा"
+    },
+    "Chotila": {
+      "gu": "ચોટીલા",
+      "hi": "चोटीला"
+    },
+    "Limbdi": {
+      "gu": "લીંબડી",
+      "hi": "लिंबडी"
+    },
+    "Porbandar": {
+      "gu": "પોરબંદર",
+      "hi": "पोरबंदर"
+    },
+    "Khambhalia": {
+      "gu": "ખંભાળિયા",
+      "hi": "खंभालिया"
+    },
+    "Dwarka": {
+      "gu": "દ્વારકા",
+      "hi": "द्वारका"
+    },
+    "Veraval": {
+      "gu": "વેરાવળ",
+      "hi": "वेरावल"
+    },
+    "Kodinar": {
+      "gu": "કોડીનાર",
+      "hi": "कोडीनार"
+    },
+    "Una": {
+      "gu": "ઉના",
+      "hi": "उना"
+    },
+    "Ahmedabad": {
+      "gu": "અમદાવાદ",
+      "hi": "अहमदाबाद"
+    },
+    "Sanand": {
+      "gu": "સાણંદ",
+      "hi": "साणंद"
+    },
+    "Bavla": {
+      "gu": "બાવળા",
+      "hi": "बावला"
+    },
+    "Mandal": {
+      "gu": "માંડલ",
+      "hi": "मांडल"
+    },
+    "Viramgam": {
+      "gu": "વિરમગામ",
+      "hi": "विरमगाम"
+    },
+    "Gandhinagar": {
+      "gu": "ગાંધીનગર",
+      "hi": "गांधीनगर"
+    },
+    "Mansa": {
+      "gu": "માણસા",
+      "hi": "माणसा"
+    },
+    "Kalol": {
+      "gu": "કલોલ",
+      "hi": "कलोल"
+    },
+    "Mehsana": {
+      "gu": "મહેસાણા",
+      "hi": "मेहसाणा"
+    },
+    "Unjha": {
+      "gu": "ઊંઝા",
+      "hi": "ऊंझा"
+    },
+    "Visnagar": {
+      "gu": "વિસનગર",
+      "hi": "विसनगर"
+    },
+    "Kadi": {
+      "gu": "કડી",
+      "hi": "कडी"
+    },
+    "Vijapur": {
+      "gu": "વિજાપુર",
+      "hi": "विजापुर"
+    },
+    "Becharaji": {
+      "gu": "બેચરાજી",
+      "hi": "बेचराजी"
+    },
+    "Patan": {
+      "gu": "પાટણ",
+      "hi": "पाटण"
+    },
+    "Siddhpur": {
+      "gu": "સિદ્ધપુર",
+      "hi": "सिद्धपुर"
+    },
+    "Radhanpur": {
+      "gu": "રાધનપુર",
+      "hi": "राधनपुर"
+    },
+    "Harij": {
+      "gu": "હારીજ",
+      "hi": "हारीज"
+    },
+    "Palanpur": {
+      "gu": "પાલનપુર",
+      "hi": "पालनपुर"
+    },
+    "Deesa": {
+      "gu": "ડીસા",
+      "hi": "डीसा"
+    },
+    "Dhanera": {
+      "gu": "ધાનેરા",
+      "hi": "धानेरा"
+    },
+    "Tharad": {
+      "gu": "થરાદ",
+      "hi": "थराद"
+    },
+    "Bhabhar": {
+      "gu": "ભાભર",
+      "hi": "भाभर"
+    },
+    "Himatnagar": {
+      "gu": "હિંમતનગર",
+      "hi": "हिम्मतनगर"
+    },
+    "Idar": {
+      "gu": "ઇડર",
+      "hi": "इडर"
+    },
+    "Khedbrahma": {
+      "gu": "ખેડબ્રહ્મા",
+      "hi": "खेडब्रह्मा"
+    },
+    "Talod": {
+      "gu": "તલોદ",
+      "hi": "तलोद"
+    },
+    "Modasa": {
+      "gu": "મોડાસા",
+      "hi": "मोडासा"
+    },
+    "Bayad": {
+      "gu": "બાયડ",
+      "hi": "बायड"
+    },
+    "Vadodara": {
+      "gu": "વડોદરા",
+      "hi": "वडोदरा"
+    },
+    "Padra": {
+      "gu": "પાદરા",
+      "hi": "पादरा"
+    },
+    "Karjan": {
+      "gu": "કરજણ",
+      "hi": "करजण"
+    },
+    "Dabhoi": {
+      "gu": "ડભોઈ",
+      "hi": "डभोई"
+    },
+    "Anand": {
+      "gu": "આણંદ",
+      "hi": "आणंद"
+    },
+    "Khambhat": {
+      "gu": "ખંભાત",
+      "hi": "खंभात"
+    },
+    "Borsad": {
+      "gu": "બોરસદ",
+      "hi": "बोरसद"
+    },
+    "Petlad": {
+      "gu": "પેટલાદ",
+      "hi": "पेटलाद"
+    },
+    "Nadiad": {
+      "gu": "નડિયાદ",
+      "hi": "नडियाद"
+    },
+    "Kapadvanj": {
+      "gu": "કપડવંજ",
+      "hi": "कपड़वंज"
+    },
+    "Godhra": {
+      "gu": "ગોધરા",
+      "hi": "गोधरा"
+    },
+    "Halol": {
+      "gu": "હાલોલ",
+      "hi": "हालोल"
+    },
+    "Dahod": {
+      "gu": "દાહોદ",
+      "hi": "दाहोद"
+    },
+    "Zalod": {
+      "gu": "ઝાલોદ",
+      "hi": "झालोद"
+    },
+    "Lunawada": {
+      "gu": "લુણાવાડા",
+      "hi": "लुणावाडा"
+    },
+    "Chhota Udepur": {
+      "gu": "છોટા ઉદેપુર",
+      "hi": "छोटा उदेपुर"
+    },
+    "Bodeli": {
+      "gu": "બોડેલી",
+      "hi": "बोडेली"
+    },
+    "Surat": {
+      "gu": "સુરત",
+      "hi": "सूरत"
+    },
+    "Bardoli": {
+      "gu": "બારડોલી",
+      "hi": "बारडोली"
+    },
+    "Bharuch": {
+      "gu": "ભરૂચ",
+      "hi": "भरूच"
+    },
+    "Ankleshwar": {
+      "gu": "અંકલેશ્વર",
+      "hi": "अंकलेश्वर"
+    },
+    "Jambusar": {
+      "gu": "જંબુસર",
+      "hi": "जंबूसर"
+    },
+    "Rajpipla": {
+      "gu": "રાજપીપળા",
+      "hi": "राजपीपला"
+    },
+    "Navsari": {
+      "gu": "નવસારી",
+      "hi": "नवसारी"
+    },
+    "Chikhli": {
+      "gu": "ચીખલી",
+      "hi": "चिखली"
+    },
+    "Valsad": {
+      "gu": "વલસાડ",
+      "hi": "वलसाड"
+    },
+    "Pardi": {
+      "gu": "પારડી",
+      "hi": "पारडी"
+    },
+    "Dharampur": {
+      "gu": "ધરમપુર",
+      "hi": "धरमपुर"
+    },
+    "Vyara": {
+      "gu": "વ્યારા",
+      "hi": "व्यरा"
+    },
+    "Ahwa": {
+      "gu": "આહવા",
+      "hi": "आहवा"
+    },
+    "Bhuj": {
+      "gu": "ભુજ",
+      "hi": "भुज"
+    },
+    "Anjar": {
+      "gu": "અંજાર",
+      "hi": "अंजार"
+    },
+    "Gandhidham": {
+      "gu": "ગાંધીધામ",
+      "hi": "गांधीधाम"
+    },
+    "Mandvi": {
+      "gu": "માંડવી",
+      "hi": "मांडवी"
+    },
+    "Rapar": {
+      "gu": "રાપર",
+      "hi": "रापर"
+    },
+    "Bhachau": {
+      "gu": "ભચાઉ",
+      "hi": "भचाऊ"
+    },
+    "Nakhtrana": {
+      "gu": "નખત્રાણા",
+      "hi": "नखत्राणा"
+    },
+    "Bhesan": {
+      "gu": "ભેસાણ",
+      "hi": "भेसाण"
+    },
+    "Botad(Bhabarkot)": {
+      "gu": "બોટાદ (ભાભરકોટ)",
+      "hi": "बोटाद (भाभरकोट)"
+    },
+    "Botad(Haddad)": {
+      "gu": "બોટાદ (હડદડ)",
+      "hi": "बोटाद (हडदड)"
+    },
+    "Damnagar": {
+      "gu": "દામનગર",
+      "hi": "दामनगर"
+    },
+    "Dasada Patadi": {
+      "gu": "દસાડા પાટડી",
+      "hi": "दसाडा पाटड़ी"
+    },
+    "Gondal(Veg.market Gondal)": {
+      "gu": "ગોંડલ (વેજ માર્કેટ ગોંડલ)",
+      "hi": "गोंडल (सब्ज़ी मंडी गोंडल)"
+    },
+    "Jam Jodhpur": {
+      "gu": "જામજોધપુર",
+      "hi": "जामजोधपुर"
+    },
+    "Dholka": {
+      "gu": "ધોળકા",
+      "hi": "धोलका"
+    },
+    "Ahmedabad(Chimanbhai Patal Market Vasana)": {
+      "gu": "અમદાવાદ (ચીમનભાઈ પટેલ માર્કેટ, વસણા)",
+      "hi": "अहमदाबाद (चिमनभाई पटेल मार्केट, वासणा)"
+    },
+    "Ahmedabad(Chimanbhai Patel Market Vasana)": {
+      "gu": "અમદાવાદ (ચીમનભાઈ પટેલ માર્કેટ, વસણા)",
+      "hi": "अहमदाबाद (चिमनभाई पटेल मार्केट, वासणा)"
+    },
+    "Bhiloda": {
+      "gu": "ભિલોડા",
+      "hi": "भिलोडा"
+    },
+    "Chanasma": {
+      "gu": "ચાણસ્મા",
+      "hi": "चाणस्मा"
+    },
+    "Deesa(Bhildi)": {
+      "gu": "ડીસા (ભીલડી)",
+      "hi": "डीसा (भीलड़ी)"
+    },
+    "Deesa(Deesa Veg Yard)": {
+      "gu": "ડીસા (શાકભાજી યાર્ડ)",
+      "hi": "डीसा (सब्ज़ी मंडी)"
+    },
+    "Dehgam": {
+      "gu": "દહેગામ",
+      "hi": "दहेगाम"
+    },
+    "Dehgam(Rekhiyal)": {
+      "gu": "દહેગામ (રેખિયાળ)",
+      "hi": "दहेगाम (रेखियाल)"
+    },
+    "Dhansura": {
+      "gu": "ધનસુરા",
+      "hi": "धनसुरा"
+    },
+    "Diyodar": {
+      "gu": "દિયોદર",
+      "hi": "दियोदर"
+    },
+    "Himatnagar(Veg.Market Himatnagar)": {
+      "gu": "હિંમતનગર (શાકભાજી માર્કેટ)",
+      "hi": "हिम्मतनगर (सब्ज़ी मंडी)"
+    },
+    "Ahwa-Dang": {
+      "gu": "આહવા-ડાંગ",
+      "hi": "आहवा-डांग"
+    },
+    "Bardoli(Kadod)": {
+      "gu": "બારડોલી (કડોદ)",
+      "hi": "बारडोली (कडोद)"
+    },
+    "Bilimora": {
+      "gu": "બીલીમોરા",
+      "hi": "बिलिमोरा"
+    },
+    "Chikli(Khorgam)": {
+      "gu": "ચીખલી (ખોરગામ)",
+      "hi": "चिखली (खोरगाम)"
+    },
+    "Garudeshwar": {
+      "gu": "ગરુડેશ્વર",
+      "hi": "गरुडेश्वर"
+    },
+    "Mahuva(Anaval)": {
+      "gu": "મહુવા (આનાવલ)",
+      "hi": "महुवा (अनावल)"
+    },
+    "Songadh": {
+      "gu": "સોનગઢ",
+      "hi": "सोनगढ़"
+    },
+    "Songadh(Badarpada)": {
+      "gu": "સોનગઢ (બદરપાડા)",
+      "hi": "सोनगढ़ (बदरपाड़ा)"
+    },
+    "Songadh(Umrada)": {
+      "gu": "સોનગઢ (ઉમરડા)",
+      "hi": "सोनगढ़ (उमरड़ा)"
+    },
+    "Meghraj": {
+      "gu": "મેઘરજ",
+      "hi": "मेघराज"
+    },
+    "Anand(Veg,Yard,Anand)": {
+      "gu": "આણંદ (શાકભાજી યાર્ડ, આણંદ)",
+      "hi": "आनंद (सब्ज़ी मंडी, आनंद)"
+    },
+    "Bodeliu": {
+      "gu": "બોડેલિયુ",
+      "hi": "बोडेलियु"
+    },
+    "Dahod(Veg. Market)": {
+      "gu": "દાહોદ (શાકભાજી માર્કેટ)",
+      "hi": "दाहोद (सब्ज़ी मंडी)"
+    },
+    "Davgadbaria(Piplod)": {
+      "gu": "દેવગઢ બારિયા (પીપલોદ)",
+      "hi": "देवगढ़ बारिया (पीपलोद)"
+    },
+    "Devgadhbaria": {
+      "gu": "દેવગઢ બારિયા",
+      "hi": "देवगढ़ बारिया"
+    },
+    "Godhra Kakanpur": {
+      "gu": "ગોધરા (કાકણપુર)",
+      "hi": "गोधरा (काकणपुर)"
+    },
+    "Godhra(Timbaroad)": {
+      "gu": "ગોધરા (ટીંબા રોડ)",
+      "hi": "गोधरा (टींबा रोड)"
+    },
+    "Hadad": {
+      "gu": "હડદ",
+      "hi": "हडद"
+    },
+    "Jetpur(Dist.Rajkot)": {
+      "gu": "જેતપુર (જિલ્લો રાજકોટ)",
+      "hi": "जेतपुर (ज़िला राजकोट)"
+    },
+    "Kalediya": {
+      "gu": "કાલેડિયા",
+      "hi": "कलेडिया"
+    },
+    "Kalol(Veg,Market,Kalol)": {
+      "gu": "કલોલ (શાકભાજી માર્કેટ, કલોલ)",
+      "hi": "कलोल (सब्ज़ी मंडी, कलोल)"
+    },
+    "Khambhat(Grain Market)": {
+      "gu": "ખંભાત (અનાજ માર્કેટ)",
+      "hi": "खंभात (अनाज मंडी)"
+    },
+    "Khambhat(Veg Yard Khambhat)": {
+      "gu": "ખંભાત (શાકભાજી યાર્ડ, ખંભાત)",
+      "hi": "खंभात (सब्ज़ी मंडी, खंभात)"
+    },
+    "Lakhani": {
+      "gu": "લખાણી",
+      "hi": "लखाणी"
+    },
+    "Mahuva(Station Road)": {
+      "gu": "મહુવા (સ્ટેશન રોડ)",
+      "hi": "महुवा (स्टेशन रोड)"
+    },
+    "Mansa(Manas Veg Yard)": {
+      "gu": "માણસા (શાકભાજી યાર્ડ)",
+      "hi": "मानसा (सब्ज़ी मंडी)"
+    },
+    "Mehsana(Jornang)": {
+      "gu": "મહેસાણા (જોર્નંગ)",
+      "hi": "मेहसाणा (जोरनंग)"
+    },
+    "Mehsana(Mehsana Veg)": {
+      "gu": "મહેસાણા (શાકભાજી માર્કેટ)",
+      "hi": "मेहसाणा (सब्ज़ी मंडी)"
+    },
+    "Modasa(Tintoi)": {
+      "gu": "મોડાસા (ટીંટોઈ)",
+      "hi": "मोडासा (टींटोई)"
+    },
+    "Modasar": {
+      "gu": "મોડાસર",
+      "hi": "मोडासर"
+    },
+    "Morva Hafad": {
+      "gu": "મોરવા હડફ",
+      "hi": "मोरवा हडफ"
+    },
+    "Nadiyad(Chaklasi)": {
+      "gu": "નડિયાદ (ચકલાસી)",
+      "hi": "नडियाद (चकलासी)"
+    },
+    "Nadiyad(Piplag)": {
+      "gu": "નડિયાદ (પીપળાગ)",
+      "hi": "नडियाद (पीपलाग)"
+    },
+    "Prantij": {
+      "gu": "પ્રાંતિજ",
+      "hi": "प्रांतिज"
+    },
+    "Prantij(Salala)": {
+      "gu": "પ્રાંતિજ (સાલાલા)",
+      "hi": "प्रांतिज (सालाला)"
+    },
+    "Rajkot(Veg.Sub Yard)": {
+      "gu": "રાજકોટ (શાકભાજી સબ યાર્ડ)",
+      "hi": "राजकोट (सब्ज़ी उप मंडी)"
+    },
+    "Sami": {
+      "gu": "સામી",
+      "hi": "सामी"
+    },
+    "Talalagir": {
+      "gu": "તાલાલા-ગીર",
+      "hi": "तालाला-गीर"
+    },
+    "Talod(Harsol)": {
+      "gu": "તલોદ (હરસોલ)",
+      "hi": "तलोद (हरसोल)"
+    },
+    "Thara": {
+      "gu": "થરા",
+      "hi": "थरा"
+    },
+    "Thara(Shihori)": {
+      "gu": "થરા (શિહોરી)",
+      "hi": "थरा (शिहोरी)"
+    },
+    "Tharad(Rah)": {
+      "gu": "થરાદ (રાહ)",
+      "hi": "थराद (राह)"
+    },
+    "Umreth": {
+      "gu": "ઉમરેઠ",
+      "hi": "उमरेठ"
+    },
+    "Unava": {
+      "gu": "ઉનાવા",
+      "hi": "उनावा"
+    },
+    "Vadali": {
+      "gu": "વડાલી",
+      "hi": "वडाली"
+    },
+    "Vadgam": {
+      "gu": "વડગામ",
+      "hi": "वडगाम"
+    },
+    "Vav": {
+      "gu": "વાવ",
+      "hi": "वाव"
+    },
+    "Vijapur(Gojjariya)": {
+      "gu": "વિજાપુર (ગોજારિયા)",
+      "hi": "विजापुर (गोजारिया)"
+    },
+    "Vijapur(Kukarvada)": {
+      "gu": "વિજાપુર (કુકરવાડા)",
+      "hi": "विजापुर (कुकरवाडा)"
+    },
+    "Vijapur(Vegetable)": {
+      "gu": "વિજાપુર (શાકભાજી માર્કેટ)",
+      "hi": "विजापुर (सब्ज़ी मंडी)"
+    },
+    "Zalod(Sanjeli)": {
+      "gu": "ઝાલોદ (સંજેલી)",
+      "hi": "झालोद (संजेली)"
+    }
+  },
+  "varieties": {
+    "FAQ": {
+      "gu": "સામાન્ય (FAQ)",
+      "hi": "सामान्य (FAQ)"
+    },
+    "Medium": {
+      "gu": "મધ્યમ",
+      "hi": "मध्यम"
+    },
+    "Super": {
+      "gu": "ઉત્તમ",
+      "hi": "उत्तम"
+    },
+    "Deshi": {
+      "gu": "દેશી",
+      "hi": "देशी"
+    },
+    "Desi": {
+      "gu": "દેશી",
+      "hi": "देशी"
+    },
+    "Hybrid": {
+      "gu": "હાઇબ્રિડ",
+      "hi": "हाइब्रिड"
+    },
+    "Local": {
+      "gu": "સ્થાનિક",
+      "hi": "स्थानीय"
+    },
+    "Other": {
+      "gu": "અન્ય",
+      "hi": "अन्य"
+    },
+    "Lokwan": {
+      "gu": "લોકવન",
+      "hi": "लोकवन"
+    },
+    "Tukdi": {
+      "gu": "ટુકડી",
+      "hi": "टुकडी"
+    },
+    "Shankar": {
+      "gu": "શંકર",
+      "hi": "शंकर"
+    },
+    "Desi (Whole)": {
+      "gu": "દેશી (આખું)",
+      "hi": "देसी (साबुत)"
+    },
+    "Black Gram (Whole)": {
+      "gu": "અડદ (આખું)",
+      "hi": "उड़द (साबुत)"
+    },
+    "CO-2 (Unginned)": {
+      "gu": "CO-2 (બીજ સાથેનો કપાસ)",
+      "hi": "CO-2 (बीज सहित कपास)"
+    },
+    "Bold": {
+      "gu": "બોલ્ડ",
+      "hi": "बोल्ड"
+    },
+    "Arhar (Whole)": {
+      "gu": "તુવેર (આખું)",
+      "hi": "अरहर (साबुत)"
+    },
+    "Sesame": {
+      "gu": "તલ",
+      "hi": "तिल"
+    },
+    "Ground Nut Seed": {
+      "gu": "મગફળીના દાણા",
+      "hi": "मूंगफली के दाने"
+    },
+    "Green (Whole)": {
+      "gu": "મગ (આખું)",
+      "hi": "मूंग (साबुत)"
+    },
+    "Bhindi": {
+      "gu": "ભીંડો",
+      "hi": "भिंडी"
+    },
+    "Bottle Gourd": {
+      "gu": "દૂધી",
+      "hi": "लौकी"
+    },
+    "Cabbage": {
+      "gu": "કોબી",
+      "hi": "पत्तागोभी"
+    },
+    "Cauliflower": {
+      "gu": "ફુલાવર",
+      "hi": "फूलगोभी"
+    },
+    "Coriander": {
+      "gu": "લીલા ધાણા",
+      "hi": "धनिया पत्ता"
+    },
+    "Green Ginger": {
+      "gu": "લીલું આદુ",
+      "hi": "हरा अदरक"
+    },
+    "Green Chili": {
+      "gu": "લીલા મરચાં",
+      "hi": "हरी मिर्च"
+    },
+    "Guar": {
+      "gu": "ગુવાર",
+      "hi": "ग्वार"
+    },
+    "Lemon": {
+      "gu": "લીંબુ",
+      "hi": "नींबू"
+    },
+    "Tomato": {
+      "gu": "ટામેટા",
+      "hi": "टमाटर"
+    }
+  },
+  "grades": {
+    "FAQ": {
+      "gu": "યોગ્ય સરેરાશ ગુણવત્તા",
+      "hi": "उचित औसत गुणवत्ता"
+    },
+    "Medium": {
+      "gu": "મધ્યમ",
+      "hi": "मध्यम"
+    },
+    "Super": {
+      "gu": "ઉત્તમ",
+      "hi": "उत्तम"
+    },
+    "Grade-1": {
+      "gu": "ગ્રેડ-૧",
+      "hi": "ग्रेड-1"
+    },
+    "Grade-2": {
+      "gu": "ગ્રેડ-૨",
+      "hi": "ग्रेड-2"
+    },
+    "A": {
+      "gu": "એ (A)",
+      "hi": "ए (A)"
+    },
+    "B": {
+      "gu": "બી (B)",
+      "hi": "बी (B)"
+    },
+    "C": {
+      "gu": "સી (C)",
+      "hi": "सी (C)"
+    },
+    "Local": {
+      "gu": "સ્થાનિક",
+      "hi": "स्थानीय"
+    },
+    "Other": {
+      "gu": "અન્ય",
+      "hi": "अन्य"
+    },
+    "Grade A": {
+      "gu": "ગ્રેડ એ",
+      "hi": "ग्रेड ए"
+    },
+    "Grade B": {
+      "gu": "ગ્રેડ બી",
+      "hi": "ग्रेड बी"
+    },
+    "Grade Range-1": {
+      "gu": "ગ્રેડ શ્રેણી-૧",
+      "hi": "ग्रेड श्रेणी-1"
+    },
+    "Grade Range-2": {
+      "gu": "ગ્રેડ શ્રેણી-૨",
+      "hi": "ग्रेड श्रेणी-2"
+    },
+    "Grade Range-3": {
+      "gu": "ગ્રેડ શ્રેણી-૩",
+      "hi": "ग्रेड श्रेणी-3"
+    },
+    "Large": {
+      "gu": "મોટું",
+      "hi": "बड़ा"
+    },
+    "Non-FAQ": {
+      "gu": "યોગ્ય સરેરાશ ગુણવત્તા વિનાનું",
+      "hi": "उचित औसत गुणवत्ता रहित"
+    }
+  },
+  "districtAliases": {
+    "arvalli": "Aravalli",
+    "banas kantha": "Banaskantha",
+    "banaskantha": "Banaskantha",
+    "chhotaudepur": "Chhota Udepur",
+    "chhota udaipur": "Chhota Udepur",
+    "dangs": "Dang",
+    "the dangs": "Dang",
+    "devbhoomi dwarka": "Devbhumi Dwarka",
+    "kachchh": "Kachchh",
+    "kutch": "Kachchh",
+    "mahesana": "Mehsana",
+    "panch mahals": "Panchmahal",
+    "sabar kantha": "Sabarkantha",
+    "vav-tharad": "Vav Tharad",
+    "vav tharad": "Vav Tharad",
+    "gir somnath": "Gir Somnath",
+    "mahisagar": "Mahisagar",
+    "aravalli district": "Aravalli",
+    "banas kantha district": "Banaskantha",
+    "chhota udepur district": "Chhota Udepur",
+    "banaskanth": "Banaskantha",
+    "junagarh": "Junagadh",
+    "panchmahals": "Panchmahal",
+    "vadodara(baroda)": "Vadodara"
+  },
+  "cropAliases": {
+    "ground nut": "Ground Nut",
+    "groundnut bold": "Groundnut",
+    "groundnut (bold)": "Groundnut",
+    "ground nut seed": "Groundnut Seed",
+    "groundnut seed": "Groundnut Seed",
+    "ajwan": "Ajwan",
+    "ajwain": "Ajwan",
+    "ajowan": "Ajwan",
+    "bengal gram": "Bengal Gram",
+    "gram dal": "Gram",
+    "bengal gram(gram)(whole)": "Bengal Gram",
+    "black gram(urd beans)(whole)": "Black Gram",
+    "green gram(moong)(whole)": "Green Gram",
+    "red gram/arhar/tur(whole)": "Arhar",
+    "sesamum(sesame,gingelly,til)": "Sesame Seed",
+    "bhindi(ladies finger)": "Bhindi",
+    "bhindi (ladies finger)": "Bhindi",
+    "ladies finger": "Ladyfinger",
+    "coriander(leaves)": "Coriander Leaves",
+    "coriander (leaves)": "Coriander Leaves",
+    "ginger(green)": "Green Ginger",
+    "ginger (green)": "Green Ginger",
+    "green chilli": "Green Chili",
+    "green chilly": "Green Chili",
+    "green chillies": "Green Chili",
+    "gwar": "Guar",
+    "corriander seed": "Coriander Seed",
+    "corriander seeds": "Coriander Seed",
+    "coriander seeds": "Coriander Seed",
+    "soya bean": "Soyabean",
+    "soyabeen": "Soyabean",
+    "soyabeans": "Soyabean"
+  },
+  "states": {
+    "Gujarat": {
+      "gu": "ગુજરાત",
+      "hi": "गुजरात"
+    }
+  },
+  "vehicleTypes": {
+    "tractor": {
+      "gu": "ટ્રેક્ટર",
+      "hi": "ट्रैक्टर"
+    },
+    "tractor_trailer": {
+      "gu": "ટ્રેક્ટર ટ્રોલી",
+      "hi": "ट्रैक्टर ट्रॉली"
+    },
+    "pickup": {
+      "gu": "પિકઅપ",
+      "hi": "पिकअप"
+    },
+    "mini_truck": {
+      "gu": "મિની ટ્રક",
+      "hi": "मिनी ट्रक"
+    },
+    "truck": {
+      "gu": "ટ્રક",
+      "hi": "ट्रक"
+    },
+    "other": {
+      "gu": "અન્ય",
+      "hi": "अन्य"
+    }
+  },
+  "units": {
+    "kg": {
+      "gu": "કિલોગ્રામ",
+      "hi": "किलोग्राम"
+    },
+    "quintal": {
+      "gu": "ક્વિન્ટલ",
+      "hi": "क्विंटल"
+    },
+    "ton": {
+      "gu": "ટન",
+      "hi": "टन"
+    },
+    "20 kg": {
+      "gu": "૨૦ કિલોગ્રામ",
+      "hi": "२० किलोग्राम"
+    }
+  },
+  "talukaAliases": {
+    "babara": "Babra",
+    "mahesana": "Mehsana",
+    "morvi": "Morbi",
+    "nakhatrana": "Nakhtrana",
+    "dohad": "Dahod",
+    "sidhpur": "Siddhpur",
+    "chhota udaipur": "Chhota Udepur",
+    "savar kundla": "Savarkundla",
+    "saverkundla": "Savarkundla",
+    "vadia": "Vadiya"
+  },
+  "talukas": {
+    "Vadiya": {
+      "gu": "વડીયા"
+    },
+    "Jafrabad": {
+      "gu": "જાફરાબાદ",
+      "hi": "जाफराबाद"
+    },
+    "Khambha": {
+      "gu": "ખાંભા",
+      "hi": "खांभा"
+    },
+    "Kunkavav Vadia": {
+      "gu": "કુંકાવાવ-વડીયા",
+      "hi": "कुंकावाव-वडिया"
+    },
+    "Lathi": {
+      "gu": "લાઠી",
+      "hi": "लाठी"
+    },
+    "Lilia": {
+      "gu": "લીલીયા",
+      "hi": "लीलिया"
+    },
+    "Anand City": {
+      "gu": "આણંદ શહેર",
+      "hi": "आनंद शहर"
+    },
+    "Anand Rural": {
+      "gu": "આણંદ ગ્રામ્ય",
+      "hi": "आनंद ग्रामीण"
+    },
+    "Anklav": {
+      "gu": "આંકલાવ",
+      "hi": "आंकलाव"
+    },
+    "Sojitra": {
+      "gu": "સોજીત્રા",
+      "hi": "सोजित्रा"
+    },
+    "Tarapur": {
+      "gu": "તારાપુર",
+      "hi": "तारापुर"
+    },
+    "Umreth": {
+      "gu": "ઉમરેઠ",
+      "hi": "उमरेठ"
+    },
+    "Meghraj": {
+      "gu": "મેઘરજ",
+      "hi": "मेघराज"
+    }
+  },
+  "marketAliases": {
+    "damnnagar": "Damnagar",
+    "dasada patadi": "Dasada Patadi",
+    "APMCKHEDBRAHMA": "Khedbrahma",
+    "Chansama": "Chanasma",
+    "Bhilimora": "Bilimora",
+    "Vyra": "Vyara",
+    "Garudeshwal": "Garudeshwar",
+    "Dhragradhra APMC": "Dhrangadhra",
+    "Kalawad APMC": "Kalavad",
+    "Sanad APMC": "Sanand",
+    "Taleja APMC": "Talaja",
+    "Vadhvan APMC": "Wadhwan",
+    "Vankaner APMC": "Wankaner",
+    "Jhalod APMC": "Zalod"
+  },
+  "varietyAliases": {
+    "green chilli": "Green Chili",
+    "green chilly": "Green Chili",
+    "green chillies": "Green Chili",
+    "gwar": "Guar",
+    "green ginger": "Green Ginger"
+  },
+  "villages": {
+    "Adas": {
+      "gu": "અડાસ",
+      "hi": "अडास"
+    },
+    "Ajarpura": {
+      "gu": "અજરપુરા",
+      "hi": "अजरपुरा"
+    },
+    "Anklavdi": {
+      "gu": "આંકલાવડી",
+      "hi": "आंकलावडी"
+    },
+    "Bakrol": {
+      "gu": "બાકરોલ",
+      "hi": "बकरोल"
+    },
+    "Bedva": {
+      "gu": "બેડવા",
+      "hi": "बेडवा"
+    },
+    "Boriavi": {
+      "gu": "બોરીયાવી",
+      "hi": "बोरियावी"
+    },
+    "Boryavi": {
+      "gu": "બોરીયાવી",
+      "hi": "बोरियावी"
+    },
+    "Adepur": {
+      "gu": "અદેપુર",
+      "hi": "अदेपुर"
+    },
+    "Adhodiya": {
+      "gu": "અધોડીયા",
+      "hi": "अधोडीया"
+    },
+    "Antoli": {
+      "gu": "અંટોલી",
+      "hi": "अंटोली"
+    },
+    "Badartralna (Chhapra)": {
+      "gu": "બડાત્રાલના (છાપરા)",
+      "hi": "बडात्रालना (छापरा)"
+    },
+    "Banthivada (Ajuhirola)": {
+      "gu": "બાંથીવાડા (અજુહીરોલા)",
+      "hi": "बांथीवाडा (अजुहीरोला)"
+    },
+    "Banthivada Jemana": {
+      "gu": "બાંથીવાડા (જેમાના)",
+      "hi": "बांथीवाडा (जेमाना)"
+    },
+    "Banthivada Lalakumpa": {
+      "gu": "બાંથીવાડા (લાલા કંપા)",
+      "hi": "बांथीवाडा (लाला कंपा)"
+    },
+    "Baskadanti": {
+      "gu": "બાસ્કાદાંતી",
+      "hi": "बास्कादांती"
+    },
+    "Behdaj": {
+      "gu": "બેહડાજ",
+      "hi": "बेहडाज"
+    },
+    "Belyo": {
+      "gu": "બેલ્યો",
+      "hi": "बेल्यो"
+    },
+    "Bhatkota": {
+      "gu": "ભાટકોટા",
+      "hi": "भाटकोटा"
+    },
+    "Bhemapur": {
+      "gu": "ભેમાપુર",
+      "hi": "भेमापुर"
+    },
+    "Bhunjri": {
+      "gu": "ભુંજરી",
+      "hi": "भुंजरी"
+    },
+    "Bhutiya": {
+      "gu": "ભુતિયા",
+      "hi": "भुतिया"
+    },
+    "Bhuval": {
+      "gu": "ભુવાલ",
+      "hi": "भुवाल"
+    },
+    "Brahman Kotda": {
+      "gu": "બ્રાહ્મણ કોટડા",
+      "hi": "ब्राह्मण कोटडा"
+    },
+    "Chhikari": {
+      "gu": "છીકારી",
+      "hi": "छीकारी"
+    },
+    "Chhitadara": {
+      "gu": "છીતાદરા",
+      "hi": "छीतादरा"
+    },
+    "Dachka": {
+      "gu": "ડચકા",
+      "hi": "डचका"
+    },
+    "Damorna Dhundha": {
+      "gu": "ડામોરના ધુંધા",
+      "hi": "डामोरना धुंधा"
+    },
+    "Dhandhiya": {
+      "gu": "ધાંધીયા",
+      "hi": "धांधीया"
+    },
+    "Dhanivada": {
+      "gu": "ધાણીવાડા",
+      "hi": "धाणीवाडा"
+    },
+    "Dharola": {
+      "gu": "ધારોળા",
+      "hi": "धारोळा"
+    },
+    "Dhemda": {
+      "gu": "ધેમદા",
+      "hi": "धेमदा"
+    },
+    "Dhenkva": {
+      "gu": "ઢેંકવા",
+      "hi": "ढेंकवा"
+    },
+    "Dholapana": {
+      "gu": "ઢોલાપાણા",
+      "hi": "ढोलापाणा"
+    },
+    "Dhundhera": {
+      "gu": "ઢુંઢેરા",
+      "hi": "ढुंढेरा"
+    },
+    "Dungragod": {
+      "gu": "ડુંગરાગોડ",
+      "hi": "डुंगरागोड"
+    },
+    "Futa": {
+      "gu": "ફુતા",
+      "hi": "फुता"
+    },
+    "Gay Vachhda": {
+      "gu": "ગાયવાછડા",
+      "hi": "गायवाछडा"
+    },
+    "Ged": {
+      "gu": "ગેડ",
+      "hi": "गेड"
+    },
+    "Ghorvada": {
+      "gu": "ઘોરવાડા",
+      "hi": "घोरवाडा"
+    },
+    "Godha": {
+      "gu": "ગોધા",
+      "hi": "गोधा"
+    },
+    "Godhavada": {
+      "gu": "ગોધાવાડા",
+      "hi": "गोधावाडा"
+    },
+    "Gokchuvan": {
+      "gu": "ગોકચુવાણ",
+      "hi": "गोकचुवाण"
+    },
+    "Gopavada": {
+      "gu": "ગોપવાડા",
+      "hi": "गोपवाडा"
+    },
+    "Hiratimba": {
+      "gu": "હીરાટિંબા",
+      "hi": "हीराटिंबा"
+    },
+    "Intva": {
+      "gu": "ઇંટવા",
+      "hi": "इंटवा"
+    },
+    "Iploda": {
+      "gu": "ઇપલો",
+      "hi": "इपलो"
+    },
+    "Isari": {
+      "gu": "ઇસારી",
+      "hi": "इसारी"
+    },
+    "Jalampur": {
+      "gu": "જાલમપુર",
+      "hi": "जालमपुर"
+    },
+    "Jamgadh": {
+      "gu": "જામગઢ",
+      "hi": "जामगढ"
+    },
+    "Jashvantpura": {
+      "gu": "જશવંતપુરા",
+      "hi": "जशवंतपुरा"
+    },
+    "Jitpur": {
+      "gu": "જીતપુર",
+      "hi": "जीतपुर"
+    },
+    "Jivanpur": {
+      "gu": "જીવનપુર",
+      "hi": "जीवनपुर"
+    },
+    "Kadvada": {
+      "gu": "કાદવડા",
+      "hi": "कादवडा"
+    },
+    "Kadvadi": {
+      "gu": "કદવાડી",
+      "hi": "कदवाडी"
+    },
+    "Kaliya Kuva": {
+      "gu": "કાલિયાકુવા",
+      "hi": "कालियाकुवा"
+    },
+    "Kamroda": {
+      "gu": "કામરોડા",
+      "hi": "कामरोडा"
+    },
+    "Kantalu": {
+      "gu": "કાંટાળુ",
+      "hi": "कांटाळु"
+    },
+    "Karanpur": {
+      "gu": "કરણપુર",
+      "hi": "करणपुर"
+    },
+    "Kasana": {
+      "gu": "કસાણા",
+      "hi": "कसाणा"
+    },
+    "Khakhariya": {
+      "gu": "ખાખરીયા",
+      "hi": "खाखरीया"
+    },
+    "Khandivav": {
+      "gu": "ખાંડીવાવ",
+      "hi": "खांडीवाव"
+    },
+    "Kherai": {
+      "gu": "ખેરાઇ",
+      "hi": "खेराइ"
+    },
+    "Khokhariya": {
+      "gu": "ખોખરીયા",
+      "hi": "खोखरीया"
+    },
+    "Kolundra": {
+      "gu": "કોલુન્દ્રા",
+      "hi": "कोलुन्द्रा"
+    },
+    "Krushnapur": {
+      "gu": "કૃષ્ણાપુર",
+      "hi": "कृष्णापुर"
+    },
+    "Kumbhera": {
+      "gu": "કુંભેરા",
+      "hi": "कुंभेरा"
+    },
+    "Kunol": {
+      "gu": "કુણોલ",
+      "hi": "कुणोल"
+    },
+    "Lakhapur": {
+      "gu": "લાખાપુર",
+      "hi": "लाखापुर"
+    },
+    "Lakhipur": {
+      "gu": "લખીપુર",
+      "hi": "लखीपुर"
+    },
+    "Lalodiya": {
+      "gu": "લાલોડીયા",
+      "hi": "लालोडीया"
+    },
+    "Lalpur": {
+      "gu": "લાલપુર",
+      "hi": "लालपुर"
+    },
+    "Limbhoi": {
+      "gu": "લીંભોઇ",
+      "hi": "लींभोइ"
+    },
+    "Limbodara (Ramgadhi)": {
+      "gu": "લીંબોદરા (રામગઢી)",
+      "hi": "लींबोदरा (रामगढी)"
+    },
+    "Limbodara(Dhundha)": {
+      "gu": "લીંબોદરા (ધુંધા)",
+      "hi": "लींबोदरा (धुंधा)"
+    },
+    "Mahudi": {
+      "gu": "મહુડી",
+      "hi": "महुडी"
+    },
+    "Manda": {
+      "gu": "માંડા",
+      "hi": "मांडा"
+    },
+    "Meghraj": {
+      "gu": "મેઘરજ",
+      "hi": "मेघरज"
+    },
+    "Mota Math": {
+      "gu": "મોટા મઠ",
+      "hi": "मोटा मठ"
+    },
+    "Moti Mori": {
+      "gu": "મોટી મોરી",
+      "hi": "मोटी मोरी"
+    },
+    "Moti Moydi": {
+      "gu": "મોટી મોયડી",
+      "hi": "मोटी मोयडी"
+    },
+    "Moti Panduli": {
+      "gu": "મોટી પાંડુલી",
+      "hi": "मोटी पांडुली"
+    },
+    "Mudshi": {
+      "gu": "મુડશી",
+      "hi": "मुडशी"
+    },
+    "Munshivada": {
+      "gu": "મુન્શીવાડા",
+      "hi": "मुन्शीवाडा"
+    },
+    "Nani Moydi": {
+      "gu": "નાની મોયડી",
+      "hi": "नानी मोयडी"
+    },
+    "Nani Panduli": {
+      "gu": "નાની પાંડુલી",
+      "hi": "नानी पांडुली"
+    },
+    "Naranpur": {
+      "gu": "નારણપુર",
+      "hi": "नारणपुर"
+    },
+    "Navagam (Isari)": {
+      "gu": "નવાગામ (ઇસારી)",
+      "hi": "नवागाम (इसारी)"
+    },
+    "Navagam (Kasana)": {
+      "gu": "નવાગામ (કસાણા)",
+      "hi": "नवागाम (कसाणा)"
+    },
+    "Nesda": {
+      "gu": "નેસદા",
+      "hi": "नेसदा"
+    },
+    "Odha (Kasana)": {
+      "gu": "ઓઢા (કસાણા)",
+      "hi": "ओढा (कसाणा)"
+    },
+    "Odha (Panibar)": {
+      "gu": "ઓઢા (પાણીબાર)",
+      "hi": "ओढा (पाणीबार)"
+    },
+    "Pahadiya (Meghraj)": {
+      "gu": "પહાડીયા (મેઘરજ)",
+      "hi": "पहाडीया (मेघरज)"
+    },
+    "Pahadiya (Panchal)": {
+      "gu": "પહાડીયા (પાંચાલ)",
+      "hi": "पहाडीया (पांचाल)"
+    },
+    "Palla (Bhemapur)": {
+      "gu": "પાલ્લા (ભેમાપુર)",
+      "hi": "पाल्ला (भेमापुर)"
+    },
+    "Palla Kasana": {
+      "gu": "પાલ્લા (કસાણા)",
+      "hi": "पाल्ला (कसाणा)"
+    },
+    "Panchal": {
+      "gu": "પાંચાલ",
+      "hi": "पांचाल"
+    },
+    "Panibar": {
+      "gu": "પાણીબાર",
+      "hi": "पाणीबार"
+    },
+    "Patelna Chhapra": {
+      "gu": "પટેલના છાપરા",
+      "hi": "पटेलना छापरा"
+    },
+    "Patelna Dhundha": {
+      "gu": "પટેલના ધુંધા",
+      "hi": "पटेलना धुंधा"
+    },
+    "Pisal": {
+      "gu": "પીસલ",
+      "hi": "पीसल"
+    },
+    "Pruthvipura": {
+      "gu": "પૃથ્વીપુરા",
+      "hi": "पृथ्वीपुरा"
+    },
+    "Punjapur": {
+      "gu": "પુંજાપુર",
+      "hi": "पुंजापुर"
+    },
+    "Rajpur (Isari)": {
+      "gu": "રાજપુર (ઇસારી)",
+      "hi": "राजपुर (इसारी)"
+    },
+    "Rajpur (Ramgadhi)": {
+      "gu": "રાજપુર (રામગઢી)",
+      "hi": "राजपुर (रामगढी)"
+    },
+    "Rakhapur": {
+      "gu": "રખાપુર",
+      "hi": "रखापुर"
+    },
+    "Ramgadhi": {
+      "gu": "રામગઢી",
+      "hi": "रामगढी"
+    },
+    "Ranjedi": {
+      "gu": "રંજેડી",
+      "hi": "रंजेडी"
+    },
+    "Rayavada": {
+      "gu": "રાયાવાડા",
+      "hi": "रायावाडा"
+    },
+    "Rellavada": {
+      "gu": "રેલાવાડા",
+      "hi": "रेलावाडा"
+    },
+    "Relyo": {
+      "gu": "રેલ્યો",
+      "hi": "रेल्यो"
+    },
+    "Rola": {
+      "gu": "રોલા",
+      "hi": "रोला"
+    },
+    "Royaniya": {
+      "gu": "રોયાણીયા",
+      "hi": "रोयाणीया"
+    },
+    "Sangal": {
+      "gu": "સંગાલ",
+      "hi": "संगाल"
+    },
+    "Sarangpur": {
+      "gu": "સારંગપુર",
+      "hi": "सारंगपुर"
+    },
+    "Satipura": {
+      "gu": "સતીપુરા",
+      "hi": "सतीपुरा"
+    },
+    "Sendaryo": {
+      "gu": "સેંદારયો",
+      "hi": "सेंदारयो"
+    },
+    "Sisodara (Adepur)": {
+      "gu": "સીસોદરા (અદેપુર)",
+      "hi": "सीसोदरा (अदेपुर)"
+    },
+    "Sisodara (Megharaj)": {
+      "gu": "સીસોદરા (મેઘરજ)",
+      "hi": "सीसोदरा (मेघरज)"
+    },
+    "Surdevi": {
+      "gu": "સુરદેવી",
+      "hi": "सुरदेवी"
+    },
+    "Tarakvada": {
+      "gu": "તારકવાડા",
+      "hi": "तारकवाडा"
+    },
+    "Tarakvadia": {
+      "gu": "તારકવાડીયા",
+      "hi": "तारकवाडीया"
+    },
+    "Tumbaliya": {
+      "gu": "તુંબાલીયા",
+      "hi": "तुंबालीया"
+    },
+    "Ukardi": {
+      "gu": "ઉકરડી",
+      "hi": "उकरडी"
+    },
+    "Undva": {
+      "gu": "ઉંડવા",
+      "hi": "उंडवा"
+    },
+    "Vaghpur": {
+      "gu": "વાઘપુર",
+      "hi": "वाघपुर"
+    },
+    "Vagora": {
+      "gu": "વાગોરા",
+      "hi": "वागोरा"
+    },
+    "Vaidi": {
+      "gu": "વૈડી",
+      "hi": "वैडी"
+    },
+    "Vaiya": {
+      "gu": "વૈયા",
+      "hi": "वैया"
+    },
+    "Valuna": {
+      "gu": "વલુણા",
+      "hi": "वलुणा"
+    },
+    "Vaniyavada": {
+      "gu": "વાણીયાવાડા",
+      "hi": "वाणीयावाडा"
+    },
+    "Vank": {
+      "gu": "વાંક",
+      "hi": "वांक"
+    },
+    "Vanka Timba": {
+      "gu": "વાંકાટિંબા",
+      "hi": "वांकाटिंबा"
+    },
+    "Varthali": {
+      "gu": "વરથલી",
+      "hi": "वरथली"
+    },
+    "Vasai": {
+      "gu": "વસાઇ",
+      "hi": "वसाइ"
+    },
+    "Vasna": {
+      "gu": "વાસણા",
+      "hi": "वासणा"
+    },
+    "Zarda": {
+      "gu": "ઝરડા",
+      "hi": "झरडा"
+    },
+    "Zeriyawada": {
+      "gu": "ઝેરીયાવાડા",
+      "hi": "झेरीयावाडा"
+    }
+  },
+  "villageAliases": {
+    "Boryavi": "Boriavi"
+  }
+}

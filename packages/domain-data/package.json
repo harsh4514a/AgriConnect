@@ -1,0 +1,14 @@
+{
+  "name": "@agri/domain-data",
+  "private": true,
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./index.cjs",
+  "types": "./index.d.cts",
+  "exports": {
+    ".": {
+      "types": "./index.d.cts",
+      "default": "./index.cjs"
+    }
+  }
+}

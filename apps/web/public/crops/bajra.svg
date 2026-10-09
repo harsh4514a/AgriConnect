@@ -1,0 +1,33 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bajra (Pearl Millet) crop">
+  <defs>
+    <linearGradient id="bajraBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF3C7"/>
+      <stop offset="1" stop-color="#FDE68A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="24" fill="url(#bajraBg)"/>
+  <g stroke="#A16207" stroke-width="5" stroke-linecap="round">
+    <path d="M200 300 C200 250 200 180 200 90"/>
+    <path d="M200 200 C160 190 130 200 110 230"/>
+    <path d="M200 240 C160 235 140 240 125 260"/>
+  </g>
+  <g fill="#B45309" opacity="0.9">
+    <circle cx="200" cy="70" r="8"/>
+    <circle cx="184" cy="85" r="7"/>
+    <circle cx="216" cy="85" r="7"/>
+    <circle cx="170" cy="100" r="7"/>
+    <circle cx="230" cy="100" r="7"/>
+    <circle cx="200" cy="105" r="7"/>
+  </g>
+  <g fill="#D97706" opacity="0.85">
+    <circle cx="156" cy="115" r="6"/>
+    <circle cx="244" cy="115" r="6"/>
+    <circle cx="188" cy="122" r="6"/>
+    <circle cx="212" cy="122" r="6"/>
+    <circle cx="200" cy="135" r="6"/>
+  </g>
+  <g fill="#B45309" stroke="#A16207" stroke-width="1.5">
+    <ellipse cx="112" cy="235" rx="12" ry="18" transform="rotate(-15 112 235)"/>
+    <ellipse cx="128" cy="258" rx="10" ry="16" transform="rotate(10 128 258)"/>
+  </g>
+</svg>
