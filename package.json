@@ -34,7 +34,6 @@
   "scripts": {
     "lint": "turbo run lint --continue",
     "format": "prettier -w .",
-    "prepare": "husky",
     "typecheck": "turbo run typecheck",
     "dev": "turbo run dev",
     "build": "turbo run build",
