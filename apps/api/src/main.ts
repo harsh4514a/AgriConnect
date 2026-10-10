@@ -76,10 +76,6 @@ function validateProductionEnvironment(): void {
     throw new Error(`Missing production environment variables: ${missing.join(', ')}`);
   }
 
-  if (process.env.OTP_PROVIDER?.trim().toLowerCase() !== 'firebase') {
-    throw new Error('OTP_PROVIDER must be set to firebase in production.');
-  }
-
   const firebaseCredentials = [
     'FIREBASE_PROJECT_ID',
     'FIREBASE_CLIENT_EMAIL',
