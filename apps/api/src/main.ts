@@ -76,19 +76,6 @@ function validateProductionEnvironment(): void {
     throw new Error(`Missing production environment variables: ${missing.join(', ')}`);
   }
 
-  // const firebaseCredentials = [
-  //   'FIREBASE_PROJECT_ID',
-  //   'FIREBASE_CLIENT_EMAIL',
-  //   'FIREBASE_PRIVATE_KEY',
-  // ];
-  // const missingFirebaseCredentials = firebaseCredentials.filter(
-  //   (name) => !process.env[name]?.trim(),
-  // );
-  // if (missingFirebaseCredentials.length > 0) {
-  //   throw new Error(
-  //     `Missing production Firebase Admin variables: ${missingFirebaseCredentials.join(', ')}`,
-  //   );
-  // }
 
   const jwtSecrets = [
     process.env.JWT_ACCESS_SECRET!,

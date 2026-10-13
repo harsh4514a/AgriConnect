@@ -1,15 +1,13 @@
+
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@/config/config.service';
 import { OTPAdapter } from '../otp-adapter.interface';
 
 /**
- * Mock OTP Adapter (development only).
+ * Mock OTP adapter.
  *
- * Does NOT send a real OTP message. Prints the OTP to the backend console
- * so developers can complete the OTP flow locally without a production
- * provider.
- *
- * Active only when `OTP_PROVIDER=mock` in .env.
+ * Prints generated OTPs to the server logs. It does not send SMS.
+ * Use only for local development or controlled production testing.
  */
 @Injectable()
 export class MockOtpAdapter implements OTPAdapter {
@@ -20,15 +18,28 @@ export class MockOtpAdapter implements OTPAdapter {
   constructor(private readonly configService: ConfigService) {}
 
   async sendOTP(mobileNumber: string, otp: string): Promise<void> {
-    if (this.configService.get('NODE_ENV') === 'production') {
-      throw new Error('Mock OTP delivery is disabled in production.');
+    const environment =
+      this.configService.get('NODE_ENV') ?? 'development';
+
+    const countryCode =
+      this.configService.get('OTP_COUNTRY_CODE') ?? '91';
+
+    // Do not expose real users' OTPs in public production logs.
+    // Configure this flag only for controlled testing.
+    if (
+      environment === 'production' &&
+      this.configService.get('ALLOW_PRODUCTION_MOCK_OTP') !== 'true'
+    ) {
+      throw new Error(
+        'Mock OTP is disabled in production. Configure a real OTP provider or explicitly enable controlled testing.',
+      );
     }
 
-    const countryCode = this.configService.get('OTP_COUNTRY_CODE') ?? '91';
+    this.logger.warn(
+      `Mock OTP generated for +${countryCode}${mobileNumber}. ` +
+        'This code is visible in application logs.',
+    );
 
-    this.logger.log('========================================');
-    this.logger.log(`OTP for +${countryCode}${mobileNumber}`);
-    this.logger.log(otp);
-    this.logger.log('========================================');
+    this.logger.log(`OTP: ${otp}`);
   }
 }

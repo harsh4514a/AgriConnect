@@ -30,17 +30,20 @@ export class ProviderFactory {
     this.logger.log(`Resolving OTP provider: ${provider}`);
 
     switch (provider) {
-      case OtpProviderName.FIREBASE:
-        return new FirebaseOtpAdapter(this.firebaseAdminService);
-
       case OtpProviderName.MOCK:
         this.logger.warn(
-          'Mock OTP provider enabled. OTPs may be visible in application logs.',
+          'Mock OTP provider selected. OTP delivery is console-only.',
         );
         return new MockOtpAdapter(this.configService);
 
+      case OtpProviderName.FIREBASE:
+        this.logger.log('Firebase OTP provider selected.');
+        return new FirebaseOtpAdapter(this.firebaseAdminService);
+
       default:
-        throw new Error(`Unsupported OTP_PROVIDER "${provider}".`);
+        throw new Error(
+          `Unsupported OTP_PROVIDER "${provider}". Use "mock" or "firebase".`,
+        );
     }
   }
 }
