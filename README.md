@@ -478,15 +478,3 @@ Contributions and suggestions are welcome.
 6. Push your branch and open a pull request.
 
 Avoid committing generated files, private credentials, local database dumps, or unrelated changes.
-
-## 📄 License
-
-No license has been specified in this README. If you intend to make AgriConnect open source, add a `LICENSE` file with the license you choose. Until then, do not assume that the repository grants permission to reuse or redistribute its code.
-
-## 👨‍💻 Project
-
-**AgriConnect — Smart Agricultural Marketplace**
-
-Developed as a final-year B.Tech Computer Science and Engineering project, with a focus on helping farmers access buyers, market information, and agricultural resources through a digital platform.
-
-Repository: [github.com/harsh4514a/AgriConnect](https://github.com/harsh4514a/AgriConnect)
