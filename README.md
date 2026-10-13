@@ -1,1173 +1,492 @@
-# 🌾 AgriConnect — Complete A–Z Project Documentation
+# 🌱 AgriConnect — Smart Agricultural Marketplace
 
-## 📋 Table of Contents
+**Connecting Farmers Directly with Buyers**
 
-1. [Project Overview](#1-project-overview)
-2. [Tech Stack](#2-tech-stack)
-3. [Monorepo Structure](#3-monorepo-structure)
-4. [Prisma Database Schema (All Models)](#4-prisma-database-schema-all-models)
-5. [Backend Architecture (NestJS)](#5-backend-architecture-nestjs)
-6. [Frontend Architecture (Next.js 15)](#6-frontend-architecture-nextjs-15)
-7. [Authentication Module — Complete Details](#7-authentication-module--complete-details)
-8. [Environment Variables](#8-environment-variables)
-9. [API Endpoints (Swagger)](#9-api-endpoints-swagger)
-10. [Quick Setup Commands](#10-quick-setup-commands)
-11. [Postman Testing Guide](#11-postman-testing-guide)
-12. [Coding Standards & Naming Conventions](#12-coding-standards--naming-conventions)
-13. [Git Workflow](#13-git-workflow)
+AgriConnect is a web-based agricultural marketplace designed to help farmers connect directly with potential buyers, discover nearby agricultural products, access market-yard prices, and find useful farming information.
 
----
+The platform aims to reduce dependency on intermediaries, improve market accessibility, and make agricultural information easier to access through a responsive, multilingual experience.
 
-## 1. Project Overview
+## 📌 Table of Contents
 
-**AgriConnect** is a Smart Agricultural Marketplace that connects farmers directly with buyers. It is built as a monorepo using **pnpm workspaces + Turborepo**.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Project Architecture](#-project-architecture)
+- [Repository Structure](#-repository-structure)
+- [Prerequisites](#-prerequisites)
+- [Installation and Setup](#-installation-and-setup)
+- [Environment Configuration](#-environment-configuration)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [Available Scripts](#-available-scripts)
+- [Deployment](#-deployment)
+- [Security](#-security)
+- [Contributing](#-contributing)
+- [License](#-license)
 
----
+## 🌾 Overview
 
-## 2. Tech Stack
+Traditional agricultural markets can make it difficult for farmers to reach buyers directly and obtain useful, timely information about crop prices and farming practices.
 
-| Layer    | Technology                                                     |
-| -------- | -------------------------------------------------------------- |
-| Frontend | Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui + next-intl |
-| Backend  | NestJS + Prisma ORM + PostgreSQL + JWT Authentication          |
-| Map      | Leaflet + OpenStreetMap                                        |
-| Media    | Cloudinary                                                     |
-| State    | Zustand                                                        |
-| Forms    | react-hook-form + zod                                          |
-| HTTP     | Axios                                                          |
-| Docs     | Swagger (OpenAPI)                                              |
+AgriConnect provides a digital platform where farmers can publish agricultural listings, buyers can discover available produce or post their requirements, and users can access agricultural resources in one place.
 
----
+The application is designed as a responsive website with Progressive Web App (PWA) capabilities and multilingual support.
 
-## 3. Monorepo Structure
+## ✨ Key Features
 
+### 1. Authentication and User Profiles
+- Mobile-number-based OTP authentication.
+- User registration and profile management.
+- Location information associated with user profiles.
+
+### 2. Agricultural Marketplace
+- Publish and browse agricultural product listings.
+- View product and seller information.
+- Discover available produce and contact sellers directly.
+
+### 3. Nearby Listings
+- Discover agricultural products around a selected location.
+- Filter listings based on location and distance where supported.
+
+### 4. Market-Yard Prices
+- Retrieve agricultural market-price data from the Data.gov.in API.
+- Store and manage market-price records in PostgreSQL.
+- Synchronize available data for Gujarat.
+- Display price information for supported commodities and markets.
+
+### 5. Crop Guide
+- Browse agricultural crop information.
+- Search and filter crop guides.
+- Access localized crop-guide content in supported languages.
+
+### 6. Buyer Requirements
+- Allow buyers to publish crop requirements.
+- Specify the crop, quantity, unit, location, and optional details.
+- Enable farmers to discover requirements and contact buyers directly.
+
+### 7. Government Schemes
+- Browse information about agricultural government schemes.
+- Access scheme information through the supported application interface.
+
+### 8. Seasonal Crop Calendar
+- Access seasonal crop-planning information to support agricultural decisions.
+
+### 9. Transport Directory
+- Discover available agricultural transport services.
+- View transporter contact information and vehicle details where provided.
+- Contact service providers directly by phone.
+
+### 10. Multilingual Interface
+- Internationalization using `next-intl`.
+- Support for English, Hindi, and Gujarati in implemented application areas.
+
+### 11. Progressive Web App
+- Responsive experience across desktop and mobile devices.
+- PWA support for compatible browsers and devices.
+
+### 12. Administration
+- Dedicated administrator authentication and dashboard.
+- User-management capabilities.
+- Marketplace-management capabilities.
+- Administrative tools for supported platform operations.
+
+> Feature availability may vary by module and deployment configuration.
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | Next.js 15, React 19, TypeScript |
+| Styling | Tailwind CSS, Radix UI, Lucide React |
+| Internationalization | next-intl |
+| Forms and Validation | React Hook Form, Zod |
+| State Management | Zustand |
+| Backend | NestJS, TypeScript, Node.js |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Authentication | JWT-based authentication and mobile OTP workflow |
+| Image Management | Cloudinary |
+| Maps | Leaflet, OpenStreetMap |
+| Government Data | Data.gov.in API |
+| Monorepo | pnpm workspaces, Turborepo |
+| Frontend Deployment | Vercel |
+| Backend Deployment | Render |
+
+## 🏗️ Project Architecture
+
+AgriConnect uses a monorepo architecture that separates the frontend, backend, and shared packages.
+
+```text
+                   ┌─────────────────────────┐
+                   │       Web Browser       │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Next.js Web Frontend  │
+                   │       apps/web           │
+                   └────────────┬────────────┘
+                                │ HTTPS / REST
+                                ▼
+                   ┌─────────────────────────┐
+                   │      NestJS API         │
+                   │       apps/api           │
+                   └──────┬──────────┬───────┘
+                          │          │
+                          ▼          ▼
+                  ┌────────────┐  ┌────────────────┐
+                  │ PostgreSQL │  │ External APIs  │
+                  │  Prisma    │  │ Data.gov.in    │
+                  └────────────┘  │ Cloudinary     │
+                                  └────────────────┘
 ```
+
+### Architecture Highlights
+
+- **Frontend:** Renders the user interface and communicates with the backend API.
+- **Backend:** Implements application logic, authentication, marketplace features, and data access.
+- **Database:** Stores application data using PostgreSQL and Prisma.
+- **Shared packages:** Reuse code and configuration across applications.
+- **External services:** Provide market-price data and image-management functionality.
+
+## 📁 Repository Structure
+
+```text
 AgriConnect/
 ├── apps/
-│   ├── web/                    # Next.js 15 Frontend
-│   │   ├── src/
-│   │   │   ├── app/
-│   │   │   │   └── [locale]/
-│   │   │   │       ├── layout.tsx
-│   │   │   │       ├── page.tsx
-│   │   │   │       └── not-found.tsx
-│   │   │   ├── styles/
-│   │   │   │   └── globals.css
-│   │   │   └── types/
-│   │   │       └── css.d.ts
-│   │   ├── next.config.mjs
-│   │   ├── tailwind.config.ts
-│   │   ├── postcss.config.mjs
-│   │   ├── tsconfig.json
+│   ├── api/                 # NestJS backend
+│   │   ├── prisma/          # Prisma schema, migrations and seeds
+│   │   ├── src/             # API modules and business logic
+│   │   ├── .env.example     # Backend environment template
 │   │   └── package.json
-│   └── api/                    # NestJS Backend
-│       ├── prisma/
-│       │   ├── schema.prisma          # <-- Database schema
-│       │   └── migrations/            # <-- Auto-generated
-│       ├── src/
-│       │   ├── main.ts                # Bootstrap + Swagger + ValidationPipe
-│       │   ├── app/
-│       │   │   ├── app.module.ts
-│       │   │   └── health/
-│       │   │       └── health.controller.ts
-│       │   ├── config/
-│       │   │   ├── config.module.ts
-│       │   │   └── config.service.ts
-│       │   ├── prisma/
-│       │   │   ├── prisma.module.ts
-│       │   │   └── prisma.service.ts
-│       │   └── modules/
-│       │       └── authentication/    # <-- Auth Module
-│       │           ├── auth.controller.ts
-│       │           ├── auth.service.ts
-│       │           ├── auth.module.ts
-│       │           ├── dto/
-│       │           │   ├── register.dto.ts
-│       │           │   ├── login.dto.ts
-│       │           │   └── refresh.dto.ts
-│       │           ├── guards/
-│       │           │   └── jwt-auth.guard.ts
-│       │           ├── decorators/
-│       │           │   ├── current-user.decorator.ts
-│       │           │   └── public.decorator.ts
-│       │           ├── strategies/
-│       │           │   └── jwt.strategy.ts
-│       │           └── interfaces/
-│       │               ├── jwt-payload.interface.ts
-│       │               └── auth-response.interface.ts
-│       ├── .env
-│       ├── tsconfig.json
+│   │
+│   └── web/                 # Next.js frontend
+│       ├── src/             # Frontend application
+│       ├── .env.example     # Frontend environment template
 │       └── package.json
+│
 ├── packages/
-│   ├── ui/                     # Shared UI components
-│   │   ├── src/index.ts
-│   │   └── package.json
-│   ├── types/                  # Shared TypeScript types
-│   │   ├── src/index.ts
-│   │   └── package.json
-│   └── config/                 # ESLint, Prettier, tsconfig presets
-│       ├── src/index.ts
-│       └── package.json
-├── .husky/
-│   ├── pre-commit
-│   └── commit-msg
-├── .editorconfig
-├── .gitignore
-├── .prettierrc
-├── .commitlintrc.cjs
-├── turbo.json
-├── package.json                # Root workspace
-├── pnpm-workspace.yaml
+│   ├── config/              # Shared configuration
+│   ├── types/               # Shared types
+│   ├── ui/                  # Shared UI package
+│   └── ...                  # Other shared workspace packages
+│
+├── .env.example             # Root environment template
+├── package.json             # Root scripts and workspace configuration
+├── pnpm-workspace.yaml      # pnpm workspace configuration
+├── pnpm-lock.yaml           # Dependency lockfile
+├── turbo.json               # Turborepo configuration
 └── README.md
 ```
 
----
+The exact contents of individual directories may evolve as the project develops.
 
-## 4. Prisma Database Schema (All Models)
+## 💻 Prerequisites
 
-```prisma
-// apps/api/prisma/schema.prisma
+Install the following software before starting development:
 
-generator client {
-  provider = "prisma-client-js"
-}
+- **Node.js:** Version 20 or newer.
+- **pnpm:** Version 9.15.9.
+- **PostgreSQL:** A running local instance or a reachable PostgreSQL database.
+- **Git:** To clone and manage the repository.
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-// ========== AUTHENTICATION MODULE ==========
-
-// Registered user accounts
-model User {
-  id                String          @id @default(uuid()) @db.Uuid
-  email             String          @unique @db.VarChar(255)
-  passwordHash      String          @db.VarChar(255)
-  fullName          String?         @db.VarChar(100)
-  role              String          @default("farmer") @db.VarChar(20)
-  mobileNumber      String?         @unique @db.VarChar(15)
-  preferredLanguage String?         @default("english") @db.VarChar(20)
-  stateId           String?         @db.Uuid
-  districtId        String?         @db.Uuid
-  talukaId          String?         @db.Uuid
-  villageId         String?         @db.Uuid
-  latitude          Float?
-  longitude         Float?
-  isVerified        Boolean         @default(false)
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-
-  // Relationships
-  state          State?          @relation(fields: [stateId], references: [id])
-  district       District?       @relation(fields: [districtId], references: [id])
-  taluka         Taluka?         @relation(fields: [talukaId], references: [id])
-  village        Village?        @relation(fields: [villageId], references: [id])
-  otps           Otp[]
-  refreshTokens  RefreshToken[]
-
-  @@index([email])
-  @@index([mobileNumber])
-  @@map("users")
-}
-
-// OTPs for authentication
-model Otp {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  hashedOtp String   @db.VarChar(255)
-  expiresAt DateTime
-  attempts  Int      @default(0)
-  isUsed    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt])
-  @@map("otps")
-}
-
-// JWT Refresh Tokens
-model RefreshToken {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  token     String   @unique @db.VarChar(500)
-  expiresAt DateTime
-  isRevoked Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([token])
-  @@map("refresh_tokens")
-}
-
-// ========== GEOGRAPHY MODELS (for location) ==========
-
-model State {
-  id        String     @id @default(uuid()) @db.Uuid
-  name      String     @unique @db.VarChar(100)
-  districts District[]
-  users     User[]
-  @@map("states")
-}
-
-model District {
-  id      String   @id @default(uuid()) @db.Uuid
-  stateId String   @db.Uuid
-  name    String   @db.VarChar(100)
-  state   State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  talukas Taluka[]
-  users   User[]
-  @@unique([stateId, name])
-  @@index([stateId])
-  @@map("districts")
-}
-
-model Taluka {
-  id         String   @id @default(uuid()) @db.Uuid
-  districtId String   @db.Uuid
-  name       String   @db.VarChar(100)
-  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
-  villages   Village[]
-  users      User[]
-  @@unique([districtId, name])
-  @@index([districtId])
-  @@map("talukas")
-}
-
-model Village {
-  id       String @id @default(uuid()) @db.Uuid
-  talukaId String @db.Uuid
-  name     String @db.VarChar(100)
-  taluka   Taluka @relation(fields: [talukaId], references: [id], onDelete: Cascade)
-  users    User[]
-  @@unique([talukaId, name])
-  @@index([talukaId])
-  @@map("villages")
-}
-```
-
-**Database Tables:**
-
-| Table            | Description                      |
-| ---------------- | -------------------------------- |
-| `users`          | User accounts (farmer/buyer)     |
-| `otps`           | One-time passwords for auth      |
-| `refresh_tokens` | JWT refresh tokens (hashed)      |
-| `states`         | Indian states                    |
-| `districts`      | Districts within states          |
-| `talukas`        | Talukas/Tehsils within districts |
-| `villages`       | Villages within talukas          |
-
----
-
-## 5. Backend Architecture (NestJS)
-
-### Design Pattern: Module-based Clean Architecture
-
-```
-src/
-├── main.ts                    # Entry point (Swagger, CORS, ValidationPipe)
-├── app/
-│   ├── app.module.ts          # Root module (imports Config, Prisma, Auth)
-│   └── health/
-│       └── health.controller.ts  # GET /health
-├── config/
-│   ├── config.module.ts       # Global config provider
-│   └── config.service.ts      # Reads process.env
-├── prisma/
-│   ├── prisma.module.ts       # Global Prisma provider
-│   └── prisma.service.ts      # Prisma client (connects to PostgreSQL)
-└── modules/
-    └── authentication/        # Auth module (module-based)
-        ├── auth.module.ts     # Wires Passport + JWT + Prisma + Config
-        ├── auth.controller.ts # REST controller (5 endpoints)
-        ├── auth.service.ts    # Business logic (register, login, refresh, logout, profile)
-        ├── dto/               # Request validation DTOs
-        ├── guards/            # JWT auth guard
-        ├── decorators/        # @Public(), @CurrentUser()
-        ├── strategies/        # Passport JWT strategy
-        └── interfaces/        # TypeScript interfaces
-```
-
-### Key Files Content
-
-#### `main.ts`
-
-```typescript
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app/app.module';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
-
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('AgriConnect API')
-    .setDescription('Smart Agricultural Marketplace API')
-    .setVersion('0.1.0')
-    .addBearerAuth()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, document);
-
-  const port = process.env.PORT ? Number(process.env.PORT) : 3001;
-  await app.listen(port);
-}
-bootstrap();
-```
-
-#### `config.service.ts`
-
-```typescript
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
-export class ConfigService {
-  get(key: string): string | undefined {
-    return process.env[key];
-  }
-
-  getOrThrow(key: string): string {
-    const value = process.env[key];
-    if (!value) {
-      throw new Error(`Environment variable "${key}" is not defined`);
-    }
-    return value;
-  }
-}
-```
-
-#### `prisma.service.ts`
-
-```typescript
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-
-@Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  private readonly logger = new Logger(PrismaService.name);
-
-  async onModuleInit() {
-    await this.$connect();
-    this.logger.log('Successfully connected to PostgreSQL database');
-  }
-
-  async onModuleDestroy() {
-    await this.$disconnect();
-  }
-}
-```
-
----
-
-## 6. Frontend Architecture (Next.js 15)
-
-```
-apps/web/src/
-├── app/
-│   └── [locale]/              # next-intl locale routing
-│       ├── layout.tsx         # Root layout (locale-based)
-│       ├── page.tsx           # Home page
-│       └── not-found.tsx      # 404 page
-├── styles/
-│   └── globals.css            # Tailwind + shadcn CSS variables
-├── types/
-│   └── css.d.ts               # CSS module types
-└── lib/                       # (future: API client, i18n config, utils)
-```
-
----
-
-## 7. Authentication Module — Complete Details
-
-### 1. `auth.module.ts`
-
-```typescript
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { PrismaModule } from '@/prisma/prisma.module';
-import { ConfigModule } from '@/config/config.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-
-@Module({
-  imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.register({}),
-    PrismaModule,
-    ConfigModule,
-  ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard],
-  exports: [AuthService, JwtStrategy, JwtAuthGuard, PassportModule],
-})
-export class AuthModule {}
-```
-
-### 2. `auth.controller.ts` — 5 Endpoints
-
-```typescript
-import { Controller, Post, Get, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
-import { RefreshDto } from './dto/refresh.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Public } from './decorators/public.decorator';
-import { CurrentUser } from './decorators/current-user.decorator';
-
-@ApiTags('Authentication')
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-
-  @Public()
-  @Post('register')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Register a new user (farmer or buyer)' })
-  async register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto);
-  }
-
-  @Public()
-  @Post('login')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Authenticate user with email and password' })
-  async login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
-  }
-
-  @Public()
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh access token using a valid refresh token' })
-  async refresh(@Body() dto: RefreshDto) {
-    return this.authService.refresh(dto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Logout user and revoke refresh token' })
-  async logout(@CurrentUser('id') userId: string, @Body() dto?: RefreshDto) {
-    await this.authService.logout(userId, dto?.refreshToken);
-    return { message: 'Logged out successfully' };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get the profile of the authenticated user' })
-  async profile(@CurrentUser('id') userId: string) {
-    return this.authService.getProfile(userId);
-  }
-}
-```
-
-### 3. `auth.service.ts` — Business Logic (register, login, refresh, logout, profile)
-
-```typescript
-import { Injectable, UnauthorizedException, ConflictException, Logger } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
-import { PrismaService } from '@/prisma/prisma.service';
-import { ConfigService } from '@/config/config.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
-import { RefreshDto } from './dto/refresh.dto';
-
-const SALT_ROUNDS = 12;
-
-@Injectable()
-export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
-
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
-  ) {}
-
-  async register(dto: RegisterDto) {
-    const existingUser = await this.prisma.user.findUnique({ where: { email: dto.email } });
-    if (existingUser) throw new ConflictException('A user with this email already exists');
-
-    const passwordHash = await bcrypt.hash(dto.password, SALT_ROUNDS);
-
-    const user = await this.prisma.user.create({
-      data: {
-        email: dto.email,
-        passwordHash,
-        fullName: dto.fullName ?? null,
-        role: dto.role,
-        mobileNumber: dto.mobileNumber ?? null,
-      },
-    });
-
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
-
-    return {
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        role: user.role,
-        isVerified: user.isVerified,
-      },
-      tokens,
-    };
-  }
-
-  async login(dto: LoginDto) {
-    const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
-    if (!user) throw new UnauthorizedException('Invalid email or password');
-
-    const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!isPasswordValid) throw new UnauthorizedException('Invalid email or password');
-
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
-    return {
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        role: user.role,
-        isVerified: user.isVerified,
-      },
-      tokens,
-    };
-  }
-
-  async refresh(dto: RefreshDto) {
-    const candidateTokens = await this.prisma.refreshToken.findMany({
-      where: { isRevoked: false, expiresAt: { gt: new Date() } },
-      include: { user: true },
-    });
-
-    let matchedToken = null;
-    for (const candidate of candidateTokens) {
-      const isMatch = await bcrypt.compare(dto.refreshToken, candidate.token);
-      if (isMatch) {
-        matchedToken = candidate;
-        break;
-      }
-    }
-    if (!matchedToken) throw new UnauthorizedException('Invalid or revoked refresh token');
-
-    // Revoke old token (rotation)
-    await this.prisma.refreshToken.update({
-      where: { id: matchedToken.id },
-      data: { isRevoked: true },
-    });
-
-    return this.generateTokens(
-      matchedToken.user.id,
-      matchedToken.user.email,
-      matchedToken.user.role,
-    );
-  }
-
-  async logout(userId: string, refreshToken?: string) {
-    if (refreshToken) {
-      await this.prisma.refreshToken.updateMany({
-        where: { userId, token: refreshToken, isRevoked: false },
-        data: { isRevoked: true },
-      });
-    } else {
-      await this.prisma.refreshToken.updateMany({
-        where: { userId, isRevoked: false },
-        data: { isRevoked: true },
-      });
-    }
-  }
-
-  async getProfile(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        fullName: true,
-        role: true,
-        mobileNumber: true,
-        preferredLanguage: true,
-        isVerified: true,
-        createdAt: true,
-        state: { select: { name: true } },
-        district: { select: { name: true } },
-        taluka: { select: { name: true } },
-        village: { select: { name: true } },
-      },
-    });
-    if (!user) throw new UnauthorizedException('User not found');
-    return user;
-  }
-
-  private async generateTokens(userId: string, email: string, role: string) {
-    const payload = { sub: userId, email, role };
-
-    const accessToken = this.jwtService.sign(payload, {
-      secret: this.configService.getOrThrow('JWT_ACCESS_SECRET'),
-      expiresIn: '15m',
-    });
-
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.configService.getOrThrow('JWT_REFRESH_SECRET'),
-      expiresIn: '7d',
-    });
-
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-    await this.prisma.refreshToken.create({
-      data: { userId, token: hashedRefreshToken, expiresAt },
-    });
-
-    return { accessToken, refreshToken };
-  }
-}
-```
-
-### 4. `register.dto.ts` — Input Validation
-
-```typescript
-import {
-  IsEmail,
-  IsString,
-  IsOptional,
-  IsEnum,
-  IsMobilePhone,
-  MinLength,
-  MaxLength,
-} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-
-export enum UserRole {
-  FARMER = 'farmer',
-  BUYER = 'buyer',
-}
-
-export class RegisterDto {
-  @ApiProperty({ example: 'farmer@example.com' })
-  @IsEmail({}, { message: 'Please provide a valid email address' })
-  email: string;
-
-  @ApiProperty({ example: 'SecurePass@123' })
-  @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  @MaxLength(100)
-  password: string;
-
-  @ApiProperty({ example: 'Ramesh Kumar', required: false })
-  @IsString()
-  @IsOptional()
-  @MaxLength(100)
-  fullName?: string;
-
-  @ApiProperty({ enum: UserRole, example: UserRole.FARMER })
-  @IsEnum(UserRole, { message: 'Role must be either farmer or buyer' })
-  role: UserRole;
-
-  @ApiProperty({ example: '+919876543210', required: false })
-  @IsString()
-  @IsOptional()
-  @IsMobilePhone('en-IN', {}, { message: 'Please provide a valid Indian mobile number' })
-  mobileNumber?: string;
-}
-```
-
-### 5. `login.dto.ts`
-
-```typescript
-import { IsEmail, IsString, MinLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-
-export class LoginDto {
-  @ApiProperty({ example: 'farmer@example.com' })
-  @IsEmail({}, { message: 'Please provide a valid email address' })
-  email: string;
-
-  @ApiProperty({ example: 'SecurePass@123' })
-  @IsString()
-  @MinLength(1, { message: 'Password is required' })
-  password: string;
-}
-```
-
-### 6. `refresh.dto.ts`
-
-```typescript
-import { IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-
-export class RefreshDto {
-  @ApiProperty({ description: 'Valid refresh token issued at login' })
-  @IsString()
-  refreshToken: string;
-}
-```
-
-### 7. `jwt.strategy.ts`
-
-```typescript
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PrismaService } from '@/prisma/prisma.service';
-import { ConfigService } from '@/config/config.service';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
-
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly prisma: PrismaService,
-    configService: ConfigService,
-  ) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.getOrThrow('JWT_ACCESS_SECRET'),
-    });
-  }
-
-  async validate(payload: JwtPayload) {
-    const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
-    if (!user) throw new UnauthorizedException('User not found');
-    return { id: user.id, email: user.email, role: user.role };
-  }
-}
-```
-
-### 8. `jwt-auth.guard.ts`
-
-```typescript
-import { Injectable, ExecutionContext } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Reflector } from '@nestjs/core';
-
-@Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private readonly reflector: Reflector) {
-    super();
-  }
-
-  canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (isPublic) return true;
-    return super.canActivate(context);
-  }
-}
-```
-
-### 9. `public.decorator.ts`
-
-```typescript
-import { SetMetadata } from '@nestjs/common';
-export const Public = () => SetMetadata('isPublic', true);
-```
-
-### 10. `current-user.decorator.ts`
-
-```typescript
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-
-export const CurrentUser = createParamDecorator(
-  (data: string | undefined, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    const user = request.user;
-    return data ? user?.[data] : user;
-  },
-);
-```
-
-### 11. Interfaces
-
-```typescript
-// jwt-payload.interface.ts
-export interface JwtPayload {
-  sub: string;
-  email: string;
-  role: string;
-}
-
-// auth-response.interface.ts
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface AuthResponse {
-  user: {
-    id: string;
-    email: string;
-    fullName: string | null;
-    role: string;
-    isVerified: boolean;
-  };
-  tokens: AuthTokens;
-}
-```
-
-### Security Features Implemented
-
-- ✅ Passwords hashed with **bcryptjs** (12 salt rounds)
-- ✅ Refresh tokens hashed with **bcrypt** (10 rounds) before DB storage
-- ✅ **Token rotation**: old refresh token revoked on refresh
-- ✅ JWT `sub` validated against existing user in database
-- ✅ Access token expires in **15 minutes**
-- ✅ Refresh token expires in **7 days**
-- ✅ Class-validator input validation on all DTOs
-- ✅ `UnauthorizedException` for invalid/expired/revoked tokens
-- ✅ Global `ValidationPipe` with `whitelist`, `forbidNonWhitelisted`, `transform`
-- ✅ Swagger documented with `@ApiBearerAuth()`
-- ✅ `@Public()` decorator to skip auth on specific endpoints
-
----
-
-## 8. Environment Variables
-
-### Root `.env.example`
-
-```env
-NODE_ENV=development
-TURBO_TEAM=agriconnect
-```
-
-### Backend `apps/api/.env`
-
-```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/agriconnect
-JWT_ACCESS_SECRET=6xNSG1sPtDDNKhzy9TWpVhWqJ6dXFukN62TBS/FStADeJTkgHh6c1/D2vU4kPe76nb2E33mLTxOCChhS1nGioQ==
-JWT_REFRESH_SECRET=46/6DzfSG6ilJjJlJDJwczIbhxGmpx9GOSfZQpObXHDNxgbwaBQgQP8AS7vqGGZSgW3iCtSdZ9XNKHG9c46dTw==
-PORT=3001
-NODE_ENV=development
-```
-
-### Frontend `apps/web/.env` (future)
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
-```
-
----
-
-## 9. API Endpoints (Swagger)
-
-| Method | Endpoint         | Auth Required | Description                      |
-| ------ | ---------------- | ------------- | -------------------------------- |
-| GET    | `/health`        | ❌            | Health check                     |
-| POST   | `/auth/register` | ❌            | Register new user (farmer/buyer) |
-| POST   | `/auth/login`    | ❌            | Login with email + password      |
-| POST   | `/auth/refresh`  | ❌            | Refresh access token             |
-| POST   | `/auth/logout`   | ✅ Bearer JWT | Revoke refresh token(s)          |
-| GET    | `/auth/profile`  | ✅ Bearer JWT | Get authenticated user profile   |
-
-**Swagger UI:** http://localhost:3001/api
-
----
-
-## 10. Quick Setup Commands
-
-### Prerequisites
+Verify your installations:
 
 ```bash
-# Install pnpm (if not installed)
-npm install -g pnpm
-
-# Start PostgreSQL
-brew services start postgresql@15
-
-# Create database
-psql -d postgres -c "CREATE DATABASE agriconnect;"
+node --version
+pnpm --version
+git --version
+psql --version
 ```
 
-### Install Dependencies
+If pnpm is not installed or does not match the required version, enable Corepack where supported:
 
 ```bash
-# From repo root
-cd /Users/harshgondaliya/Documents/B/7th\ Sem/SGP/AgriConnect
+corepack enable
+corepack prepare pnpm@9.15.9 --activate
+```
+
+## 🚀 Installation and Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/harsh4514a/AgriConnect.git
+cd AgriConnect
+```
+
+### 2. Install Dependencies
+
+Run the command from the repository root:
+
+```bash
 pnpm install
 ```
 
-### Setup Backend Environment
+This installs dependencies for the workspace applications and shared packages.
+
+### 3. Configure Environment Variables
+
+The repository contains environment example files. Copy the relevant templates to create your local environment files.
 
 ```bash
-# Create .env file
-cat > apps/api/.env << 'EOF'
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/agriconnect
-JWT_ACCESS_SECRET=6xNSG1sPtDDNKhzy9TWpVhWqJ6dXFukN62TBS/FStADeJTkgHh6c1/D2vU4kPe76nb2E33mLTxOCChhS1nGioQ==
-JWT_REFRESH_SECRET=46/6DzfSG6ilJjJlJDJwczIbhxGmpx9GOSfZQpObXHDNxgbwaBQgQP8AS7vqGGZSgW3iCtSdZ9XNKHG9c46dTw==
-PORT=3001
-NODE_ENV=development
-EOF
+cp .env.example .env
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
 ```
 
-### Run Prisma Migrations
+Review each file and replace example values with your local configuration.
+
+**Important:** Never commit actual API keys, database passwords, JWT secrets, or private credentials.
+
+See [Environment Configuration](#-environment-configuration) for the purpose of each environment file.
+
+## ⚙️ Environment Configuration
+
+AgriConnect uses separate environment configurations for the root workspace, backend, and frontend.
+
+| File | Purpose |
+|---|---|
+| `.env` | Root workspace settings |
+| `apps/api/.env` | Backend, database, authentication and server-side integrations |
+| `apps/web/.env` | Frontend configuration and public API settings |
+
+Use the corresponding `.env.example` file in the codebase as the source of truth for required variables and their intended format.
+
+### Important Configuration Areas
+
+- **Database:** PostgreSQL connection string used by Prisma.
+- **Authentication:** Unique JWT secrets and the configured OTP provider.
+- **Cloudinary:** Server-side credentials for image management.
+- **Market prices:** Data.gov.in API configuration and synchronization settings.
+- **Frontend:** Canonical site URL and backend API URL.
+- **CORS:** Allowed frontend origins configured by the backend.
+
+Frontend variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Never put private credentials in these variables.
+
+The mock OTP provider is intended for development and does not send SMS. Configure a real, correctly integrated SMS authentication provider for production authentication.
+
+## 🗄️ Database Setup
+
+AgriConnect uses PostgreSQL with Prisma ORM.
+
+### 1. Create a Database
+
+Create a PostgreSQL database for local development, for example:
+
+```sql
+CREATE DATABASE agriconnect;
+```
+
+Ensure that the `DATABASE_URL` in `apps/api/.env` points to the correct database and includes any required connection parameters.
+
+### 2. Generate the Prisma Client
+
+From the repository root:
+
+```bash
+pnpm --filter @agri/api prisma:generate
+```
+
+### 3. Apply Database Migrations
+
+For a database that already has the project's committed Prisma migrations:
+
+```bash
+pnpm --filter @agri/api db:migrate:deploy
+```
+
+This applies pending migrations; it does not create a new migration from schema changes.
+
+For local development, if you intentionally need to create a migration after changing the Prisma schema, use Prisma's development migration workflow from the API workspace:
 
 ```bash
 cd apps/api
-pnpm prisma migrate dev --name init_auth
+pnpm exec prisma migrate dev --name describe_your_change
+cd ../..
 ```
 
-### Generate Prisma Client
+Review schema changes and migrations before applying them to a production database. Back up important data before any database operation that could alter or remove it.
+
+### 4. Optional Database Seeds
+
+The API package provides the following seed-related scripts:
 
 ```bash
-pnpm prisma generate
+pnpm --filter @agri/api db:seed
+pnpm --filter @agri/api db:seed-admin
+pnpm --filter @agri/api db:seed-crop-guides
+pnpm --filter @agri/api db:seed-government-schemes
 ```
 
-### Type Check (should show 0 errors)
+Run only the seeds you need. Check the corresponding seed implementation and required environment variables before running administrator or content seeds.
+
+## ▶️ Running the Application
+
+### Start the Full Workspace
+
+From the repository root:
 
 ```bash
-npx tsc --noEmit
+pnpm dev
 ```
 
-### Start Backend Server
+The root script runs the workspace development tasks through Turborepo. Check the application logs for the actual ports and startup status.
+
+### Start the Backend Separately
+
+Open a terminal at the repository root:
 
 ```bash
-cd apps/api
-pnpm run dev
+pnpm --filter @agri/api dev
 ```
 
-### Start Frontend (separate terminal)
+The backend defaults to port `3001` unless overridden by its configuration.
+
+### Start the Frontend Separately
+
+Open another terminal:
 
 ```bash
-cd apps/web
-pnpm run dev
+pnpm --filter @agri/web dev
 ```
 
-### Prisma Studio (optional, DB browser)
+The Next.js development server normally runs at:
 
-```bash
-cd apps/api
-pnpm prisma studio
-```
+**http://localhost:3000**
 
-Opens at: **http://localhost:5555**
+Make sure the frontend API URL points to the backend address and the backend permits requests from the frontend origin.
 
-### Reset Database (if needed)
+## 🧰 Available Scripts
 
-```bash
-psql -d postgres -c "DROP DATABASE IF EXISTS agriconnect;"
-psql -d postgres -c "CREATE DATABASE agriconnect;"
-cd apps/api
-pnpm prisma migrate dev --name init_auth
-pnpm run dev
-```
+### Root Workspace
 
----
+Run these from the repository root.
 
-## 11. Postman Testing Guide
+| Command | Purpose |
+|---|---|
+| `pnpm install` | Install workspace dependencies |
+| `pnpm dev` | Run workspace development tasks |
+| `pnpm build` | Build workspace applications and packages |
+| `pnpm lint` | Run workspace lint tasks |
+| `pnpm typecheck` | Run workspace TypeScript checks |
+| `pnpm test` | Run available workspace test tasks |
+| `pnpm format` | Format files with Prettier |
 
-### Test Sequence
+### Backend — `@agri/api`
 
-#### 1️⃣ Register a Farmer
+| Command | Purpose |
+|---|---|
+| `pnpm --filter @agri/api dev` | Start NestJS in watch mode |
+| `pnpm --filter @agri/api build` | Build the backend |
+| `pnpm --filter @agri/api start` | Start the compiled backend |
+| `pnpm --filter @agri/api lint` | Run backend linting |
+| `pnpm --filter @agri/api typecheck` | Run backend type checks |
+| `pnpm --filter @agri/api prisma:generate` | Generate Prisma Client |
+| `pnpm --filter @agri/api db:migrate:deploy` | Apply pending migrations |
+| `pnpm --filter @agri/api prisma:studio` | Open Prisma Studio |
+| `pnpm --filter @agri/api db:seed` | Run the configured Prisma seed |
 
-```
-POST http://localhost:3001/auth/register
-Content-Type: application/json
+### Frontend — `@agri/web`
 
-{
-  "email": "farmer1@test.com",
-  "password": "Test@123",
-  "fullName": "Rajesh Kumar",
-  "role": "farmer",
-  "mobileNumber": "+919876543210"
-}
-```
+| Command | Purpose |
+|---|---|
+| `pnpm --filter @agri/web dev` | Start the Next.js development server |
+| `pnpm --filter @agri/web build` | Build the frontend |
+| `pnpm --filter @agri/web start` | Start the production server |
+| `pnpm --filter @agri/web lint` | Run frontend linting |
+| `pnpm --filter @agri/web typecheck` | Run frontend type checks |
 
-✅ **Expected:** `201 Created` with `user` + `tokens`
+## ☁️ Deployment
 
-#### 2️⃣ Login
+AgriConnect uses a separate deployment for the frontend and backend.
 
-```
-POST http://localhost:3001/auth/login
-Content-Type: application/json
+### Frontend — Vercel
 
-{
-  "email": "farmer1@test.com",
-  "password": "Test@123"
-}
-```
+1. Import the GitHub repository into Vercel.
+2. Configure the project for the monorepo's `apps/web` application.
+3. Set the required frontend environment variables using `apps/web/.env.example` as the reference.
+4. Configure the production API URL and canonical site URL.
+5. Deploy and verify the build output.
 
-✅ **Expected:** `200 OK` with `user` + `tokens`
+The production API URL must point to the deployed NestJS backend, not `localhost`.
 
-#### 3️⃣ Get Profile (authenticated)
+### Backend — Render
 
-```
-GET http://localhost:3001/auth/profile
-Authorization: Bearer <access_token_from_login>
-```
+1. Create a web service connected to the GitHub repository.
+2. Configure the service to use the `apps/api` application within the pnpm monorepo.
+3. Install workspace dependencies from the repository root so that shared workspace packages resolve correctly.
+4. Configure the backend environment variables using `apps/api/.env.example` as the reference.
+5. Ensure the production database is reachable and Prisma migrations have been applied.
+6. Configure the service to listen on the port supplied by Render.
+7. Deploy and review the service logs.
 
-✅ **Expected:** `200 OK` with user profile
+The backend needs valid production secrets, CORS configuration, database access, and credentials for any enabled external integrations.
 
-#### 4️⃣ Refresh Token
+### Production Checklist
 
-```
-POST http://localhost:3001/auth/refresh
-Content-Type: application/json
+- [ ] Configure all required production environment variables.
+- [ ] Use a production PostgreSQL database.
+- [ ] Apply Prisma migrations.
+- [ ] Use unique, strong JWT secrets.
+- [ ] Configure the production frontend origin in CORS.
+- [ ] Use HTTPS URLs for deployed services.
+- [ ] Configure the OTP provider correctly for real SMS delivery.
+- [ ] Verify Cloudinary and market-price integrations.
+- [ ] Check frontend and backend logs after deployment.
+- [ ] Never expose private environment values in logs or public repositories.
 
-{
-  "refreshToken": "<refresh_token_from_login>"
-}
-```
+## 🔐 Security
 
-✅ **Expected:** `200 OK` with new `accessToken` + `refreshToken`
+- Never commit `.env` files containing real secrets.
+- Keep `.env.example` files populated with placeholders, not production credentials.
+- Use different, strong JWT secrets for each token purpose.
+- Restrict CORS to trusted frontend origins.
+- Keep server-side API keys and Cloudinary secrets on the backend.
+- Do not log real users' OTPs in public production logs.
+- Validate and sanitize incoming user data.
+- Use secure HTTPS connections for deployed services.
+- Back up production data before migrations or database maintenance.
 
-#### 5️⃣ Logout
+## 🤝 Contributing
 
-```
-POST http://localhost:3001/auth/logout
-Authorization: Bearer <access_token>
-Content-Type: application/json
+Contributions and suggestions are welcome.
 
-{
-  "refreshToken": "<refresh_token_to_revoke>"
-}
-```
+1. Fork the repository.
+2. Create a feature branch:
 
-✅ **Expected:** `200 OK` — `{ "message": "Logged out successfully" }`
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
 
----
+3. Make your changes following the existing project structure.
+4. Run relevant checks:
 
-## 12. Coding Standards & Naming Conventions
+   ```bash
+   pnpm lint
+   pnpm typecheck
+   pnpm build
+   ```
 
-| Item                | Convention                                                  |
-| ------------------- | ----------------------------------------------------------- |
-| **Folders**         | `kebab-case` (e.g., `auth-guard`, `jwt.strategy`)           |
-| **Files**           | `kebab-case` (e.g., `auth.service.ts`, `jwt-auth.guard.ts`) |
-| **Classes**         | `PascalCase` (e.g., `AuthService`, `JwtAuthGuard`)          |
-| **Interfaces**      | `PascalCase` (e.g., `JwtPayload`, `AuthResponse`)           |
-| **DTOs**            | `PascalCase` + `.dto.ts` suffix                             |
-| **Enums**           | `PascalCase` (e.g., `UserRole`)                             |
-| **Constants**       | `UPPER_SNAKE_CASE`                                          |
-| **Variables**       | `camelCase`                                                 |
-| **Functions**       | `camelCase`                                                 |
-| **API Routes**      | `kebab-case` (e.g., `/auth/register`, `/auth/refresh`)      |
-| **Database Tables** | `snake_case` (e.g., `users`, `refresh_tokens`)              |
-| **Database Fields** | `camelCase` in Prisma -> `snake_case` in DB via `@map()`    |
-| **Commit Messages** | Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`    |
+5. Commit your changes with a clear message:
 
----
+   ```bash
+   git add .
+   git commit -m "feat: describe your change"
+   ```
 
-## 13. Git Workflow
+6. Push your branch and open a pull request.
 
-### Branch Strategy
+Avoid committing generated files, private credentials, local database dumps, or unrelated changes.
 
-```
-main               # Production-ready code
-├── develop        # Development branch
-│   ├── feature/authentication   # Feature branches
-│   ├── feature/marketplace
-│   └── bugfix/xxx
-```
+## 📄 License
 
-### Commit Convention (Conventional Commits)
+No license has been specified in this README. If you intend to make AgriConnect open source, add a `LICENSE` file with the license you choose. Until then, do not assume that the repository grants permission to reuse or redistribute its code.
 
-```
-feat: add user registration endpoint
-fix: correct password validation regex
-chore: update dependencies
-docs: add API documentation
-refactor: extract JWT generation to service
-```
+## 👨‍💻 Project
 
-### Husky + lint-staged
+**AgriConnect — Smart Agricultural Marketplace**
 
-- **pre-commit:** Runs `eslint --fix` + `prettier --write` on staged files
-- **commit-msg:** Validates commit message against Conventional Commits via `commitlint`
+Developed as a final-year B.Tech Computer Science and Engineering project, with a focus on helping farmers access buyers, market information, and agricultural resources through a digital platform.
 
-### Recommended Workflow
-
-```bash
-# Start new feature
-git checkout -b feature/authentication
-
-# Make changes + commit
-git add .
-git commit -m "feat: add authentication module with JWT"
-
-# Push and create PR
-git push origin feature/authentication
-# Open PR → merge to develop → merge to main
-```
-
----
-
-## 🎯 Summary: What Is Built (Module 1: Authentication)
-
-### ✅ Backend API (NestJS)
-
-- [x] 5 REST endpoints: register, login, refresh, logout, profile
-- [x] JWT access/refresh token flow with rotation
-- [x] bcrypt password hashing (12 rounds)
-- [x] bcrypt refresh token hashing (10 rounds)
-- [x] Input validation via class-validator
-- [x] Swagger documentation with Bearer auth
-- [x] Global ValidationPipe
-- [x] Prisma ORM with PostgreSQL
-- [x] Database migrations: 7 tables (users, otps, refresh_tokens, states, districts, talukas, villages)
-- [x] TypeScript: 0 errors in `tsc --noEmit`
-- [x] Server runs on port 3001
-
-### ✅ Frontend UI (Next.js 15)
-
-- [x] Basic project scaffolding
-- [x] next-intl locale routing (en, hi)
-- [x] Tailwind CSS setup
-- [x] shadcn/ui compatible CSS variables
-- [x] Home page with responsive layout
-- [ ] ❌ **Authentication UI pages (login, register) — NOT YET BUILT**
-
-### ✅ Tooling
-
-- [x] pnpm workspaces monorepo
-- [x] Turborepo pipeline
-- [x] ESLint + Prettier
-- [x] Husky + lint-staged + commitlint
-- [x] `.editorconfig`
-- [x] `.gitignore`
-- [x] Path aliases (`@/`, `@agri/*`)
-
----
-
-## 🔮 What's Next (Future Modules)
-
-| #   | Module                  | Status      |
-| --- | ----------------------- | ----------- |
-| 1   | Authentication (API)    | ✅ Complete |
-| 2   | Authentication (UI)     | 🔜 Next     |
-| 3   | Marketplace             | ⏳          |
-| 4   | Nearby Listings         | ⏳          |
-| 5   | Market Prices           | ⏳          |
-| 6   | Crop Information        | ⏳          |
-| 7   | Seasonal Crop Calendar  | ⏳          |
-| 8   | Government Schemes      | ⏳          |
-| 9   | Buyer Requirement Board | ⏳          |
-| 10  | Transport Directory     | ⏳          |
-| 11  | Agri Shop Directory     | ⏳          |
-| 12  | Multi-language          | ⏳          |
-| 13  | Notifications           | ⏳          |
-| 14  | Farmer Dashboard        | ⏳          |
-| 15  | Admin Dashboard         | ⏳          |
-# AgriConnect
+Repository: [github.com/harsh4514a/AgriConnect](https://github.com/harsh4514a/AgriConnect)
