@@ -6,6 +6,10 @@ AgriConnect is a web-based agricultural marketplace designed to help farmers con
 
 The platform aims to reduce dependency on intermediaries, improve market accessibility, and make agricultural information easier to access through a responsive, multilingual experience.
 
+## 🌐 Live Demo
+
+**Live Website:** https://agri-connect-opal.vercel.app/en/
+
 ## 📌 Table of Contents
 
 - [Overview](#-overview)
