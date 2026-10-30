@@ -1,484 +1,358 @@
-# 🌱 AgriConnect — Smart Agricultural Marketplace
+# AgriConnect --- Smart Agricultural Marketplace
 
-**Connecting Farmers Directly with Buyers**
+AgriConnect is a multilingual agricultural marketplace that connects
+farmers directly with buyers. It helps farmers publish crop listings,
+discover nearby produce, review market-yard prices, and access
+agricultural resources.
 
-AgriConnect is a web-based agricultural marketplace designed to help farmers connect directly with potential buyers, discover nearby agricultural products, access market-yard prices, and find useful farming information.
+**Live website:** https://agri-connect-opal.vercel.app/en/
 
-The platform aims to reduce dependency on intermediaries, improve market accessibility, and make agricultural information easier to access through a responsive, multilingual experience.
+## Table of Contents
 
-## 🌐 Live Demo
+-   [Features](#features)
+-   [Technology Stack](#technology-stack)
+-   [Project Structure](#project-structure)
+-   [Prerequisites](#prerequisites)
+-   [Local Setup](#local-setup)
+-   [Environment Variables](#environment-variables)
+-   [Database Setup](#database-setup)
+-   [Run the Application](#run-the-application)
+-   [Useful Commands](#useful-commands)
+-   [Deployment](#deployment)
+-   [Security](#security)
+-   [Contributing](#contributing)
+-   [License](#license)
 
-**Live Website:** https://agri-connect-opal.vercel.app/en/
+## Features
 
-## 📌 Table of Contents
+-   Mobile-number OTP authentication and user profiles.
+-   Agricultural marketplace for creating, browsing, and managing crop
+    listings.
+-   Nearby listings with location and distance-based discovery.
+-   Market-yard price information through the configured data
+    integration.
+-   Buyer requirements for crop and quantity requests.
+-   Crop guides and seasonal crop information.
+-   Agricultural government scheme information.
+-   Transport directory for discovering transport services.
+-   English, Hindi, and Gujarati support in implemented areas.
+-   Responsive, PWA-ready web experience.
+-   Admin panel for supported administrative operations.
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Technology Stack](#-technology-stack)
-- [Project Architecture](#-project-architecture)
-- [Repository Structure](#-repository-structure)
-- [Prerequisites](#-prerequisites)
-- [Installation and Setup](#-installation-and-setup)
-- [Environment Configuration](#-environment-configuration)
-- [Database Setup](#-database-setup)
-- [Running the Application](#-running-the-application)
-- [Available Scripts](#-available-scripts)
-- [Deployment](#-deployment)
-- [Security](#-security)
-- [Contributing](#-contributing)
-- [License](#-license)
+> Feature availability depends on the modules and integrations enabled
+> in the deployed environment.
 
-## 🌾 Overview
+## Technology Stack
 
-Traditional agricultural markets can make it difficult for farmers to reach buyers directly and obtain useful, timely information about crop prices and farming practices.
+  -----------------------------------------------------------------------
+  Area                                Technology
+  ----------------------------------- -----------------------------------
+  Frontend                            Next.js 15, React, TypeScript
 
-AgriConnect provides a digital platform where farmers can publish agricultural listings, buyers can discover available produce or post their requirements, and users can access agricultural resources in one place.
+  UI and styling                      Tailwind CSS, Radix UI /
+                                      shadcn-based components, Lucide
 
-The application is designed as a responsive website with Progressive Web App (PWA) capabilities and multilingual support.
+  Internationalization                next-intl
 
-## ✨ Key Features
+  Backend                             NestJS, Node.js, TypeScript
 
-### 1. Authentication and User Profiles
-- Mobile-number-based OTP authentication.
-- User registration and profile management.
-- Location information associated with user profiles.
+  Database                            PostgreSQL
 
-### 2. Agricultural Marketplace
-- Publish and browse agricultural product listings.
-- View product and seller information.
-- Discover available produce and contact sellers directly.
+  ORM                                 Prisma
 
-### 3. Nearby Listings
-- Discover agricultural products around a selected location.
-- Filter listings based on location and distance where supported.
+  Authentication                      Mobile OTP workflow and JWT
 
-### 4. Market-Yard Prices
-- Retrieve agricultural market-price data from the Data.gov.in API.
-- Store and manage market-price records in PostgreSQL.
-- Synchronize available data for Gujarat.
-- Display price information for supported commodities and markets.
+  Image management                    Cloudinary
 
-### 5. Crop Guide
-- Browse agricultural crop information.
-- Search and filter crop guides.
-- Access localized crop-guide content in supported languages.
+  Maps                                Leaflet, OpenStreetMap
 
-### 6. Buyer Requirements
-- Allow buyers to publish crop requirements.
-- Specify the crop, quantity, unit, location, and optional details.
-- Enable farmers to discover requirements and contact buyers directly.
+  Market data                         Data.gov.in integration
 
-### 7. Government Schemes
-- Browse information about agricultural government schemes.
-- Access scheme information through the supported application interface.
+  Monorepo tooling                    pnpm workspaces, Turborepo
 
-### 8. Seasonal Crop Calendar
-- Access seasonal crop-planning information to support agricultural decisions.
+  Frontend hosting                    Vercel
 
-### 9. Transport Directory
-- Discover available agricultural transport services.
-- View transporter contact information and vehicle details where provided.
-- Contact service providers directly by phone.
+  Backend hosting                     Render
+  -----------------------------------------------------------------------
 
-### 10. Multilingual Interface
-- Internationalization using `next-intl`.
-- Support for English, Hindi, and Gujarati in implemented application areas.
+## Project Structure
 
-### 11. Progressive Web App
-- Responsive experience across desktop and mobile devices.
-- PWA support for compatible browsers and devices.
-
-### 12. Administration
-- Dedicated administrator authentication and dashboard.
-- User-management capabilities.
-- Marketplace-management capabilities.
-- Administrative tools for supported platform operations.
-
-> Feature availability may vary by module and deployment configuration.
-
-## 🛠️ Technology Stack
-
-| Layer | Technologies |
-|---|---|
-| Frontend | Next.js 15, React 19, TypeScript |
-| Styling | Tailwind CSS, Radix UI, Lucide React |
-| Internationalization | next-intl |
-| Forms and Validation | React Hook Form, Zod |
-| State Management | Zustand |
-| Backend | NestJS, TypeScript, Node.js |
-| Database | PostgreSQL |
-| ORM | Prisma |
-| Authentication | JWT-based authentication and mobile OTP workflow |
-| Image Management | Cloudinary |
-| Maps | Leaflet, OpenStreetMap |
-| Government Data | Data.gov.in API |
-| Monorepo | pnpm workspaces, Turborepo |
-| Frontend Deployment | Vercel |
-| Backend Deployment | Render |
-
-## 🏗️ Project Architecture
-
-AgriConnect uses a monorepo architecture that separates the frontend, backend, and shared packages.
-
-```text
-                   ┌─────────────────────────┐
-                   │       Web Browser       │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │   Next.js Web Frontend  │
-                   │       apps/web           │
-                   └────────────┬────────────┘
-                                │ HTTPS / REST
-                                ▼
-                   ┌─────────────────────────┐
-                   │      NestJS API         │
-                   │       apps/api           │
-                   └──────┬──────────┬───────┘
-                          │          │
-                          ▼          ▼
-                  ┌────────────┐  ┌────────────────┐
-                  │ PostgreSQL │  │ External APIs  │
-                  │  Prisma    │  │ Data.gov.in    │
-                  └────────────┘  │ Cloudinary     │
-                                  └────────────────┘
-```
-
-### Architecture Highlights
-
-- **Frontend:** Renders the user interface and communicates with the backend API.
-- **Backend:** Implements application logic, authentication, marketplace features, and data access.
-- **Database:** Stores application data using PostgreSQL and Prisma.
-- **Shared packages:** Reuse code and configuration across applications.
-- **External services:** Provide market-price data and image-management functionality.
-
-## 📁 Repository Structure
-
-```text
+``` text
 AgriConnect/
 ├── apps/
-│   ├── api/                 # NestJS backend
-│   │   ├── prisma/          # Prisma schema, migrations and seeds
-│   │   ├── src/             # API modules and business logic
-│   │   ├── .env.example     # Backend environment template
-│   │   └── package.json
-│   │
-│   └── web/                 # Next.js frontend
-│       ├── src/             # Frontend application
-│       ├── .env.example     # Frontend environment template
-│       └── package.json
-│
-├── packages/
-│   ├── config/              # Shared configuration
-│   ├── types/               # Shared types
-│   ├── ui/                  # Shared UI package
-│   └── ...                  # Other shared workspace packages
-│
-├── .env.example             # Root environment template
-├── package.json             # Root scripts and workspace configuration
+│   ├── web/                 # Next.js frontend
+│   └── api/                 # NestJS backend
+├── packages/                # Shared workspace packages, if configured
+├── docs/                    # Documentation, if present
+├── scripts/                 # Project scripts, if present
+├── package.json             # Root workspace scripts
 ├── pnpm-workspace.yaml      # pnpm workspace configuration
 ├── pnpm-lock.yaml           # Dependency lockfile
 ├── turbo.json               # Turborepo configuration
 └── README.md
 ```
 
-The exact contents of individual directories may evolve as the project develops.
+The exact contents of directories may evolve as the project develops.
 
-## 💻 Prerequisites
+## Prerequisites
 
-Install the following software before starting development:
+-   **Node.js:** Node.js 20 or newer is the baseline stated in the
+    supplied project documentation. Prefer the version specified by the
+    repository's `engines` field or version file, if present.
+-   **pnpm:** Version `9.15.9` is the version stated in the supplied
+    project documentation.
+-   **PostgreSQL:** A local instance or reachable hosted database.
+-   **Git:** For source control.
 
-- **Node.js:** Version 20 or newer.
-- **pnpm:** Version 9.15.9.
-- **PostgreSQL:** A running local instance or a reachable PostgreSQL database.
-- **Git:** To clone and manage the repository.
+Check installed versions:
 
-Verify your installations:
-
-```bash
+``` bash
 node --version
 pnpm --version
 git --version
 psql --version
 ```
 
-If pnpm is not installed or does not match the required version, enable Corepack where supported:
+If Corepack is available:
 
-```bash
+``` bash
 corepack enable
 corepack prepare pnpm@9.15.9 --activate
 ```
 
-## 🚀 Installation and Setup
+## Local Setup
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
-```bash
+``` bash
 git clone https://github.com/harsh4514a/AgriConnect.git
 cd AgriConnect
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 
-Run the command from the repository root:
+Run from the repository root:
 
-```bash
+``` bash
 pnpm install
 ```
 
-This installs dependencies for the workspace applications and shared packages.
+### 3. Configure environment files
 
-### 3. Configure Environment Variables
+If these example files exist in your checkout, copy them:
 
-The repository contains environment example files. Copy the relevant templates to create your local environment files.
-
-```bash
+``` bash
 cp .env.example .env
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 ```
 
-Review each file and replace example values with your local configuration.
+If an example file does not exist, inspect the current application
+configuration rather than creating an empty environment file. Populate
+the resulting files with your local values. See [Environment
+Variables](#environment-variables).
 
-**Important:** Never commit actual API keys, database passwords, JWT secrets, or private credentials.
+## Environment Variables
 
-See [Environment Configuration](#-environment-configuration) for the purpose of each environment file.
+The project may use separate environment files for the root workspace,
+backend, and frontend.
 
-## ⚙️ Environment Configuration
+  -----------------------------------------------------------------------
+  File                                Intended use
+  ----------------------------------- -----------------------------------
+  `.env`                              Root-level tooling or shared
+                                      configuration, if used
 
-AgriConnect uses separate environment configurations for the root workspace, backend, and frontend.
+  `apps/api/.env`                     Backend, database, authentication,
+                                      and server-side integrations
 
-| File | Purpose |
-|---|---|
-| `.env` | Root workspace settings |
-| `apps/api/.env` | Backend, database, authentication and server-side integrations |
-| `apps/web/.env` | Frontend configuration and public API settings |
+  `apps/web/.env`                     Frontend configuration and public
+                                      API settings
+  -----------------------------------------------------------------------
 
-Use the corresponding `.env.example` file in the codebase as the source of truth for required variables and their intended format.
+Use the checked-in `.env.example` files and the code that reads
+environment variables as the source of truth. Variable names can change
+between versions.
 
-### Important Configuration Areas
+Typical configuration areas include: - PostgreSQL connection string used
+by Prisma. - Backend port and frontend API base URL. - JWT secrets and
+OTP configuration. - Cloudinary credentials. - Data.gov.in API key and
+market-price synchronization settings. - Allowed frontend origins for
+backend CORS. - Public website URL.
 
-- **Database:** PostgreSQL connection string used by Prisma.
-- **Authentication:** Unique JWT secrets and the configured OTP provider.
-- **Cloudinary:** Server-side credentials for image management.
-- **Market prices:** Data.gov.in API configuration and synchronization settings.
-- **Frontend:** Canonical site URL and backend API URL.
-- **CORS:** Allowed frontend origins configured by the backend.
+**Security:** Never commit real environment files, API keys, database
+credentials, OTPs, or JWT secrets. Variables prefixed with
+`NEXT_PUBLIC_` are exposed to the browser and must not contain private
+credentials.
 
-Frontend variables prefixed with `NEXT_PUBLIC_` are exposed to the browser. Never put private credentials in these variables.
+The development OTP flow may display OTP values in server logs or the
+console, depending on the implementation. Do not treat this as
+production SMS delivery. Production authentication requires a properly
+configured SMS/OTP provider.
 
-The mock OTP provider is intended for development and does not send SMS. Configure a real, correctly integrated SMS authentication provider for production authentication.
+## Database Setup
 
-## 🗄️ Database Setup
+AgriConnect uses PostgreSQL with Prisma.
 
-AgriConnect uses PostgreSQL with Prisma ORM.
+### 1. Create a database
 
-### 1. Create a Database
+For a local PostgreSQL instance:
 
-Create a PostgreSQL database for local development, for example:
-
-```sql
+``` sql
 CREATE DATABASE agriconnect;
 ```
 
-Ensure that the `DATABASE_URL` in `apps/api/.env` points to the correct database and includes any required connection parameters.
+Set the backend database connection string using the exact variable
+expected by the Prisma configuration (commonly `DATABASE_URL`).
 
-### 2. Generate the Prisma Client
+### 2. Generate Prisma Client
 
-From the repository root:
+The existing project documentation identifies the API workspace as
+`@agri/api`. Confirm that package name in `apps/api/package.json`.
 
-```bash
+``` bash
 pnpm --filter @agri/api prisma:generate
 ```
 
-### 3. Apply Database Migrations
+Alternative direct Prisma CLI command, if the package script is not
+defined:
 
-For a database that already has the project's committed Prisma migrations:
+``` bash
+pnpm --dir apps/api exec prisma generate
+```
 
-```bash
+### 3. Apply committed migrations
+
+The existing project documentation lists this script; confirm it exists
+in `apps/api/package.json`:
+
+``` bash
 pnpm --filter @agri/api db:migrate:deploy
 ```
 
-This applies pending migrations; it does not create a new migration from schema changes.
+Alternative direct Prisma CLI command:
 
-For local development, if you intentionally need to create a migration after changing the Prisma schema, use Prisma's development migration workflow from the API workspace:
-
-```bash
-cd apps/api
-pnpm exec prisma migrate dev --name describe_your_change
-cd ../..
+``` bash
+pnpm --dir apps/api exec prisma migrate deploy
 ```
 
-Review schema changes and migrations before applying them to a production database. Back up important data before any database operation that could alter or remove it.
+### 4. Create a migration during development
 
-### 4. Optional Database Seeds
+After intentionally changing the Prisma schema:
 
-The API package provides the following seed-related scripts:
+``` bash
+pnpm --dir apps/api exec prisma migrate dev --name describe_your_change
+```
 
-```bash
+Review generated migration files before committing them.
+
+### 5. Optional seed data
+
+The supplied README lists these seed scripts. Run only those that exist
+in the current API `package.json`, and inspect their implementations
+first:
+
+``` bash
 pnpm --filter @agri/api db:seed
 pnpm --filter @agri/api db:seed-admin
 pnpm --filter @agri/api db:seed-crop-guides
 pnpm --filter @agri/api db:seed-government-schemes
 ```
 
-Run only the seeds you need. Check the corresponding seed implementation and required environment variables before running administrator or content seeds.
+**Important:** Do not run `prisma migrate reset` on a database
+containing data you need. Back up important data before migrations or
+database maintenance.
 
-## ▶️ Running the Application
+## Run the Application
 
-### Start the Full Workspace
+### Run the full workspace
 
 From the repository root:
 
-```bash
+``` bash
 pnpm dev
 ```
 
-The root script runs the workspace development tasks through Turborepo. Check the application logs for the actual ports and startup status.
+This requires a `dev` script in the root `package.json`. Check terminal
+output for actual ports and startup status.
 
-### Start the Backend Separately
+### Run the backend separately
 
-Open a terminal at the repository root:
-
-```bash
+``` bash
 pnpm --filter @agri/api dev
 ```
 
-The backend defaults to port `3001` unless overridden by its configuration.
+### Run the frontend separately
 
-### Start the Frontend Separately
-
-Open another terminal:
-
-```bash
+``` bash
 pnpm --filter @agri/web dev
 ```
 
-The Next.js development server normally runs at:
+The frontend is expected to run at:
 
-**http://localhost:3000**
+``` text
+http://localhost:3000
+```
 
-Make sure the frontend API URL points to the backend address and the backend permits requests from the frontend origin.
+The backend port is determined by its configuration. Ensure the frontend
+API URL points to the running backend and backend CORS permits the
+frontend origin.
 
-## 🧰 Available Scripts
+## Useful Commands
 
-### Root Workspace
+Run commands from the repository root unless stated otherwise.
 
-Run these from the repository root.
+### Workspace
 
-| Command | Purpose |
-|---|---|
-| `pnpm install` | Install workspace dependencies |
-| `pnpm dev` | Run workspace development tasks |
-| `pnpm build` | Build workspace applications and packages |
-| `pnpm lint` | Run workspace lint tasks |
-| `pnpm typecheck` | Run workspace TypeScript checks |
-| `pnpm test` | Run available workspace test tasks |
-| `pnpm format` | Format files with Prettier |
+  Command            Purpose
+  ------------------ ------------------------------------------------------
+  `pnpm install`     Install workspace dependencies
+  `pnpm dev`         Run configured development tasks
+  `pnpm build`       Build configured workspace packages and applications
+  `pnpm lint`        Run configured lint tasks
+  `pnpm typecheck`   Run configured TypeScript checks
+  `pnpm test`        Run configured tests
 
-### Backend — `@agri/api`
+These root commands require corresponding scripts in the root
+`package.json` and task definitions in `turbo.json`.
 
-| Command | Purpose |
-|---|---|
-| `pnpm --filter @agri/api dev` | Start NestJS in watch mode |
-| `pnpm --filter @agri/api build` | Build the backend |
-| `pnpm --filter @agri/api start` | Start the compiled backend |
-| `pnpm --filter @agri/api lint` | Run backend linting |
-| `pnpm --filter @agri/api typecheck` | Run backend type checks |
-| `pnpm --filter @agri/api prisma:generate` | Generate Prisma Client |
-| `pnpm --filter @agri/api db:migrate:deploy` | Apply pending migrations |
-| `pnpm --filter @agri/api prisma:studio` | Open Prisma Studio |
-| `pnpm --filter @agri/api db:seed` | Run the configured Prisma seed |
+### Frontend
 
-### Frontend — `@agri/web`
+  Command                           Purpose
+  --------------------------------- ----------------------------------
+  `pnpm --filter @agri/web dev`     Start Next.js development server
+  `pnpm --filter @agri/web build`   Build frontend
+  `pnpm --filter @agri/web start`   Start production frontend server
 
-| Command | Purpose |
-|---|---|
-| `pnpm --filter @agri/web dev` | Start the Next.js development server |
-| `pnpm --filter @agri/web build` | Build the frontend |
-| `pnpm --filter @agri/web start` | Start the production server |
-| `pnpm --filter @agri/web lint` | Run frontend linting |
-| `pnpm --filter @agri/web typecheck` | Run frontend type checks |
+### Backend
 
-## ☁️ Deployment
+  ---------------------------------------------------------------------------------
+  Command                                       Purpose
+  --------------------------------------------- -----------------------------------
+  `pnpm --filter @agri/api dev`                 Start NestJS development server
 
-AgriConnect uses a separate deployment for the frontend and backend.
+  `pnpm --filter @agri/api build`               Build backend
 
-### Frontend — Vercel
+  `pnpm --filter @agri/api start`               Start compiled backend
 
-1. Import the GitHub repository into Vercel.
-2. Configure the project for the monorepo's `apps/web` application.
-3. Set the required frontend environment variables using `apps/web/.env.example` as the reference.
-4. Configure the production API URL and canonical site URL.
-5. Deploy and verify the build output.
+  `pnpm --filter @agri/api prisma:generate`     Generate Prisma Client
 
-The production API URL must point to the deployed NestJS backend, not `localhost`.
+  `pnpm --filter @agri/api db:migrate:deploy`   Apply committed migrations
 
-### Backend — Render
+  `pnpm --filter @agri/api prisma:studio`       Open Prisma Studio, if configured
+  ---------------------------------------------------------------------------------
 
-1. Create a web service connected to the GitHub repository.
-2. Configure the service to use the `apps/api` application within the pnpm monorepo.
-3. Install workspace dependencies from the repository root so that shared workspace packages resolve correctly.
-4. Configure the backend environment variables using `apps/api/.env.example` as the reference.
-5. Ensure the production database is reachable and Prisma migrations have been applied.
-6. Configure the service to listen on the port supplied by Render.
-7. Deploy and review the service logs.
+Package-filter commands require the package names shown in the relevant
+`package.json` files. Script commands require the named scripts to
+exist. Inspect the current definitions:
 
-The backend needs valid production secrets, CORS configuration, database access, and credentials for any enabled external integrations.
+``` bash
+cat package.json
+cat apps/web/package.json
+cat apps/api/package.json
+```
 
-### Production Checklist
+    public repositories.
 
-- [ ] Configure all required production environment variables.
-- [ ] Use a production PostgreSQL database.
-- [ ] Apply Prisma migrations.
-- [ ] Use unique, strong JWT secrets.
-- [ ] Configure the production frontend origin in CORS.
-- [ ] Use HTTPS URLs for deployed services.
-- [ ] Configure the OTP provider correctly for real SMS delivery.
-- [ ] Verify Cloudinary and market-price integrations.
-- [ ] Check frontend and backend logs after deployment.
-- [ ] Never expose private environment values in logs or public repositories.
 
-## 🔐 Security
 
-- Never commit `.env` files containing real secrets.
-- Keep `.env.example` files populated with placeholders, not production credentials.
-- Use different, strong JWT secrets for each token purpose.
-- Restrict CORS to trusted frontend origins.
-- Keep server-side API keys and Cloudinary secrets on the backend.
-- Do not log real users' OTPs in public production logs.
-- Validate and sanitize incoming user data.
-- Use secure HTTPS connections for deployed services.
-- Back up production data before migrations or database maintenance.
-
-## 🤝 Contributing
-
-Contributions and suggestions are welcome.
-
-1. Fork the repository.
-2. Create a feature branch:
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-3. Make your changes following the existing project structure.
-4. Run relevant checks:
-
-   ```bash
-   pnpm lint
-   pnpm typecheck
-   pnpm build
-   ```
-
-5. Commit your changes with a clear message:
-
-   ```bash
-   git add .
-   git commit -m "feat: describe your change"
-   ```
-
-6. Push your branch and open a pull request.
-
-Avoid committing generated files, private credentials, local database dumps, or unrelated changes.
