@@ -20,7 +20,7 @@ export default async function PublicBrowseLayout({
   return (
     <ScopedIntlProvider locale={locale} paths={PUBLIC_DASHBOARD_MESSAGE_PATHS}>
       <div className="min-h-dvh bg-canvas text-foreground">
-        <Navbar variant="solid" />
+        <Navbar variant="solid" showNotifications />
         <main
           id="page-content"
           className="mx-auto min-h-[calc(100dvh-4.5rem)] w-full max-w-screen-2xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8"
