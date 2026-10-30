@@ -36,7 +36,6 @@ agricultural resources.
 -   Agricultural government scheme information.
 -   Transport directory for discovering transport services.
 -   English, Hindi, and Gujarati support in implemented areas.
--   Responsive, PWA-ready web experience.
 -   Admin panel for supported administrative operations.
 
 > Feature availability depends on the modules and integrations enabled
@@ -352,7 +351,6 @@ cat apps/web/package.json
 cat apps/api/package.json
 ```
 
-    public repositories.
 
 
 
