@@ -1834,7 +1834,8 @@
           "marketplace": "Marketplace",
           "sell": "Sell",
           "listings": "Listings",
-          "profile": "Profile"
+          "profile": "Profile",
+          "more": "More"
         },
         "sellCta": "Sell Crop",
         "sellCtaDesc": "List your produce for sale"
@@ -2069,6 +2070,7 @@
           "noCropsDesc": "Try clearing your filters or search to see more listings.",
           "loading": "Loading listings",
           "postedToday": "Today",
+          "postedAt": "Posted {date}",
           "postedYesterday": "Yesterday",
           "postedDays": "days ago",
           "postedHours": "hours ago",
@@ -2116,6 +2118,12 @@
           "favorite": "Add to favorites",
           "unfavorite": "Remove from favorites",
           "shareSuccess": "Link copied to clipboard!",
+        "shareError": "Could not copy the link.",
+        "shareMessage": "I’m interested in the {crop} listing on AgriConnect. Quantity: {quantity}. Price: {price}.",
+        "shareLocation": "Location: {location}.",
+        "imageGalleryLabel": "Product images",
+        "viewImage": "View image {number}",
+        "breadcrumb": "Breadcrumb",
           "aboutProduce": "About This Produce",
           "productDetails": "Product Details",
           "listingLocation": "Listing Location",
@@ -2234,7 +2242,7 @@
           "imagesEmpty": "No photos yet",
           "imagesEmptyHint": "Add a photo so buyers can see your crop",
           "uploadInstructions": "Tap to add photos",
-        "uploadNote": "Up to 5 JPG, PNG, or WebP photos (5 MB each)",
+          "uploadNote": "Up to 5 JPG, PNG, or WebP photos (5 MB each)",
           "usePresetCrop": "Use standard crop photo",
           "primary": "Primary",
           "setPrimary": "Set Primary",
@@ -2299,9 +2307,9 @@
           "districtRequired": "District is required",
           "cropDateRequired": "Please select a crop date",
           "incompleteLocation": "Please select district, taluka, and village",
-        "incompleteFields": "Please complete the required fields",
-        "maxImages": "You can add up to 5 photos per listing.",
-        "imageTooLarge": "Each photo must be 5 MB or smaller."
+          "incompleteFields": "Please complete the required fields",
+          "maxImages": "You can add up to 5 photos per listing.",
+          "imageTooLarge": "Each photo must be 5 MB or smaller."
         }
       },
       "myListings": {
@@ -2918,16 +2926,329 @@
   },
   "common": {
     "appName": "AgriConnect",
+    "login": "Log in",
     "continue": "Continue",
     "back": "Back",
     "loading": "Loading...",
     "or": "OR",
     "allRightsReserved": "All rights reserved.",
     "farmersMarketplace": "Farmer's Marketplace",
-    "close": "Close"
+    "close": "Close",
+    "theme": {
+      "switchToLight": "Switch to light mode",
+      "switchToDark": "Switch to dark mode"
+    }
+  },
+  "landingPage": {
+    "nav": {
+      "mainNavigation": "Main navigation",
+      "marketplace": "Marketplace",
+      "marketplaceOptions": "Marketplace options",
+      "allListings": "All Listings",
+      "nearbyListings": "Nearby Listings",
+      "marketPrices": "Market prices",
+      "cropGuide": "Crop guide",
+      "schemes": "Government schemes",
+      "about": "About",
+      "features": "Features",
+      "howItWorks": "How it works",
+      "why": "Why AgriConnect",
+      "faq": "FAQs",
+      "login": "Login",
+      "getStarted": "Get started",
+      "menuOpen": "Open navigation menu",
+      "menuClose": "Close navigation menu",
+      "home": "Home",
+      "buyerRequirements": "Buyer Requirement",
+      "transport": "Transport",
+      "farmerResources": "Farmer Resources"
+    },
+    "hero": {
+      "controls": {
+        "carousel": "Featured AgriConnect stories",
+        "slideSelection": "Choose a featured story",
+        "previous": "Show previous slide",
+        "next": "Show next slide",
+      "pause": "Pause slide rotation",
+      "resume": "Resume slide rotation",
+        "goTo": "Go to slide {number}: {title}"
+      },
+      "slides": {
+        "marketplace": {
+          "eyebrow": "A fairer way to trade",
+          "title": "Your Harvest. Your Market. Your Opportunity.",
+          "description": "Connect directly with buyers, showcase your crops, and discover new opportunities for your produce.",
+          "primary": "Explore Marketplace",
+          "secondary": "Sell Your Crop",
+          "imageAlt": "A farmer tending a green field"
+        },
+        "prices": {
+          "eyebrow": "Make informed selling decisions",
+          "title": "Know the Market Before You Sell.",
+          "description": "Explore mandi prices and compare agricultural market information before deciding where to sell.",
+          "primary": "Explore Market Prices",
+          "secondary": "Browse Crops",
+          "imageAlt": "Wheat ready for harvest beside a combine harvester"
+        },
+        "guidance": {
+          "eyebrow": "Knowledge for every season",
+          "title": "Grow with Knowledge. Trade with Confidence.",
+          "description": "Explore crop guidance and useful government scheme information for your farming journey.",
+          "primary": "Explore Crop Guide",
+          "secondary": "Government Schemes",
+          "imageAlt": "A farmer plowing a field with oxen"
+        }
+      }
+    },
+    "sections": {
+      "about": {
+        "eyebrow": "About AgriConnect",
+        "title": "Connecting farmers with better opportunities",
+        "description": "AgriConnect brings crop listings, buyer requirements, market-price information, crop guides, and government scheme information together in one place.",
+        "cta": "Explore the marketplace",
+        "imageAlt": "A farmer caring for crops in a green field"
+      },
+      "features": {
+        "eyebrow": "Everything You Need",
+        "title": "A Complete Toolkit for Indian Farmers",
+        "description": "Explore produce listings, buyer requirements, market prices, crop guidance, and farming resources in one place.",
+        "items": {
+          "marketplace": {
+            "title": "Smart Marketplace",
+            "description": "Explore crop listings shared by farmers and connect through the contact options provided."
+          },
+          "nearby": {
+            "title": "Nearby Listings",
+            "description": "Sign in to find crop listings near your saved location."
+          },
+          "prices": {
+            "title": "Market Prices",
+            "description": "Review mandi price information available through AgriConnect."
+          },
+          "cropGuide": {
+            "title": "Crop Information",
+            "description": "Read cultivation guidance and information for supported crops."
+          },
+          "schemes": {
+            "title": "Government Schemes",
+            "description": "Explore information about government programs for farmers."
+          },
+          "requirements": {
+            "title": "Buyer Requirements",
+            "description": "Browse active produce requests shared by buyers."
+          },
+          "transport": {
+            "title": "Transport Directory",
+            "description": "Browse agricultural transport provider listings by location."
+          },
+          "languages": {
+            "title": "In Your Language",
+            "description": "Use AgriConnect in English, Hindi, or Gujarati with the language selector."
+          }
+        },
+        "learnMore": "Learn more"
+      },
+      "howItWorks": {
+        "eyebrow": "How It Works",
+        "title": "Get started in four simple steps",
+        "description": "Explore marketplace information, then sign in when you are ready to take account-based actions.",
+        "stepLabel": "Step {number}",
+        "steps": {
+          "discover": {
+            "title": "Explore",
+            "description": "Browse crop listings, buyer requirements, market prices, and farming resources."
+          },
+          "compare": {
+            "title": "Review Details",
+            "description": "Compare crop, quantity, and location details with the information available on each page."
+          },
+          "signIn": {
+            "title": "Sign In",
+            "description": "Create an account to contact buyers, publish listings, post buyer requirements, or manage your profile."
+          },
+          "manage": {
+            "title": "Manage Your Activity",
+            "description": "Update your own listings, requirements, transport entries, and profile from your dashboard."
+          }
+        }
+      },
+      "why": {
+        "eyebrow": "Why AgriConnect",
+        "title": "Built to Put Farmers First",
+        "description": "Explore agricultural marketplace listings and useful farming information through one clear, connected experience.",
+        "imageAlt": "Wheat field being harvested with a combine harvester",
+        "points": {
+          "listings": {
+            "title": "Explore marketplace listings",
+            "description": "Browse crop offers and active buyer requirements in one place."
+          },
+          "location": {
+            "title": "Review listing locations",
+            "description": "See the location details provided with crop and transport listings."
+          },
+          "prices": {
+            "title": "Check market information",
+            "description": "Look up market price data available in AgriConnect."
+          },
+          "resources": {
+            "title": "Find useful resources",
+            "description": "Read crop guidance and information about government schemes."
+          },
+          "languages": {
+            "title": "Choose your language",
+            "description": "Switch between English, Hindi, and Gujarati on desktop and mobile."
+          }
+        }
+      },
+      "faq": {
+        "eyebrow": "FAQs",
+        "title": "Frequently asked questions",
+        "description": "A few helpful details about using AgriConnect.",
+        "items": {
+          "what": {
+            "question": "What is AgriConnect?",
+            "answer": "AgriConnect is an agricultural marketplace and resource app for exploring crop listings, buyer requirements, market prices, crop guides, and government schemes."
+          },
+          "browse": {
+            "question": "Can I browse listings without signing in?",
+            "answer": "Yes. Marketplace listings, market prices, crop guides, schemes, buyer requirements, and transport listings can be browsed publicly. Sign in for protected account actions."
+          },
+          "list": {
+            "question": "How do I list my crops?",
+            "answer": "Sign in, open the Marketplace, and choose the option to create a listing. You need an account to create or manage listings."
+          },
+          "prices": {
+            "question": "Can I view market prices without signing in?",
+            "answer": "Yes. Market price information is available to browse without signing in."
+          },
+          "requirements": {
+            "question": "Where can I find buyer requirements?",
+            "answer": "Browse active requests from the Buyer Requirement page. Sign in to post or manage your own buyer requirements."
+          },
+          "languages": {
+            "question": "Which languages can I use?",
+            "answer": "AgriConnect is available in English, Hindi, and Gujarati. Choose a language from the header."
+          },
+          "transport": {
+            "question": "Can I browse transport listings without signing in?",
+            "answer": "Yes. You can browse active transport provider listings publicly. Sign in to create or manage your own transport listing."
+          },
+          "contact": {
+            "question": "Do I need to sign in to see contact details?",
+            "answer": "Yes. Sign in to view personal contact details for buyer requirements and transport providers."
+          }
+        }
+      }
+    },
+    "actions": {
+      "eyebrow": "Get started",
+      "title": "What would you like to do today?",
+      "items": {
+        "marketplace": {
+          "title": "Explore marketplace",
+          "description": "Browse crops shared by farmers."
+        },
+        "sell": {
+          "title": "Sell your crop",
+          "description": "Create a listing for your produce."
+        },
+        "prices": {
+          "title": "Check market prices",
+          "description": "Review available mandi prices."
+        },
+        "cropGuide": {
+          "title": "Explore crop guide",
+          "description": "Find guidance for supported crops."
+        }
+      }
+    },
+    "benefits": {
+      "eyebrow": "How AgriConnect helps",
+      "title": "Useful tools for everyday farming decisions.",
+      "description": "Bring trade and practical farming resources together in one place.",
+      "items": {
+        "connections": {
+          "title": "Connect farmers and buyers",
+          "description": "Share crop listings and discover produce offered by farmers."
+        },
+        "prices": {
+          "title": "Check market prices",
+          "description": "Review mandi price information available on AgriConnect."
+        },
+        "nearby": {
+          "title": "Explore nearby crop listings",
+          "description": "Browse produce listings and their locations."
+        },
+        "guidance": {
+          "title": "Find crop guidance and schemes",
+          "description": "Explore crop guides and government scheme information."
+        }
+      }
+    },
+    "marketplace": {
+      "eyebrow": "From the marketplace",
+      "title": "Crops listed by farmers",
+      "description": "A small preview of active listings shared on AgriConnect.",
+      "viewAll": "View all listings",
+      "loading": "Loading current listings…",
+      "error": "Listings could not be loaded right now.",
+      "retry": "Try again",
+      "empty": "There are no active listings to show right now.",
+      "location": "Location",
+      "price": "Price",
+      "quantity": "Quantity",
+      "available": "Available",
+      "soldOut": "Sold out"
+    },
+    "resources": {
+      "eyebrow": "Explore more",
+      "title": "Agricultural resources",
+      "items": {
+        "marketPrices": {
+          "title": "Market prices",
+          "description": "Review available mandi price information."
+        },
+        "cropGuide": {
+          "title": "Crop guide",
+          "description": "Read practical information for supported crops."
+        },
+        "schemes": {
+          "title": "Government schemes",
+          "description": "Browse information about farmer schemes."
+        }
+      }
+    },
+    "closing": {
+      "eyebrow": "Your next step starts here",
+      "title": "Make more of every harvest.",
+      "description": "Explore the marketplace or share your crop with potential buyers.",
+      "explore": "Explore Marketplace",
+      "sell": "Sell Your Crop"
+    },
+    "footer": {
+      "tagline": "Connecting farmers and buyers through useful marketplace and farming resources.",
+      "navigation": "Explore AgriConnect",
+      "resources": "Farmer resources",
+      "sections": "On this page",
+      "legal": "Legal",
+      "privacy": "Privacy policy",
+      "terms": "Terms of service",
+      "copyright": "All rights reserved."
+    },
+    "account": {
+      "menuLabel": "Account menu",
+      "dashboard": "My Dashboard",
+      "myListings": "My Listings",
+      "myRequirements": "My Buyer Requirements",
+      "myTransport": "My Transport Listings",
+      "profile": "My Profile",
+      "adminPanel": "Admin Panel",
+      "logout": "Log out"
+    }
   },
   "nav": {
     "selectLanguage": "Select language",
+    "marketPrices": "Market Prices",
     "home": "Home",
     "marketplace": "Marketplace",
     "features": "Features",
@@ -2957,6 +3278,9 @@
   },
   "auth": {
     "empowering": "Empowering Indian Agriculture",
+    "loginTitle": "Sign in or create your account",
+    "loginDescription": "Use your mobile number to continue or register with AgriConnect.",
+    "otpPrivacyNote": "We’ll send a one-time password to verify your mobile number.",
     "completeProfile": "Complete Your Profile",
     "welcomeTo": "Welcome to",
     "subtitle1": "Sell crops directly. Connect with nearby buyers.",
@@ -3249,7 +3573,7 @@
   "features": {
     "badge": "Everything You Need",
     "title": "A Complete Toolkit for Indian Farmers",
-    "subtitle": "From listing produce to finding buyers, weather alerts and government schemes — everything in one place.",
+    "subtitle": "From listing produce to finding buyers, crop guidance and government schemes — everything in one place.",
     "learnMore": "Learn more",
     "marketplace": "Smart Marketplace",
     "marketplaceDesc": "Post your produce and connect with verified buyers directly. No middlemen, no hidden commissions — just fair prices for your hard work.",
@@ -3264,9 +3588,7 @@
     "buyerBoard": "Buyer Requirement Board",
     "buyerBoardDesc": "Browse active buyer requirements and quote directly on what you grow.",
     "transport": "Transport Directory",
-    "transportDesc": "Find reliable transport and logistics partners to move your produce.",
-    "weather": "Weather Ready",
-    "weatherDesc": "Weather forecasts and alerts to protect your crops and plan your farming calendar."
+    "transportDesc": "Find reliable transport and logistics partners to move your produce."
   },
   "how": {
     "badge": "How It Works",
@@ -3404,7 +3726,7 @@
     "transport": {
       "contactConfirmation": {
         "title": "Call Transporter?",
-        "description": "Do you want to call this transport provider?",
+        "description": "You are about to call {name} at {phone}.",
         "cancel": "Cancel",
         "call": "Call"
       },
@@ -3555,7 +3877,9 @@
         }
       },
       "title": "Transport",
-      "subtitle": "Find transport services for moving your agricultural produce."
+      "subtitle": "Find transport services for moving your agricultural produce.",
+      "publicProviderLabel": "Local transport provider",
+      "contactSignIn": "Sign in to contact"
     },
     "nearby": {
       "eyebrow": "LOCAL DISCOVERY",
@@ -3775,7 +4099,8 @@
         "marketplace": "Marketplace",
         "sell": "Sell",
         "listings": "Listings",
-        "profile": "Profile"
+        "profile": "Profile",
+        "more": "More"
       },
       "sellCta": "Sell Crop",
       "sellCtaDesc": "List your produce for sale"
@@ -3992,6 +4317,7 @@
         "available": "Available",
         "farmer": "Farmer",
         "mobile": "Mobile",
+          "signInToContact": "Log in to view contact details",
         "callFarmer": "Call Farmer",
         "viewDetails": "View Details",
         "marketPrice": "Market Price",
@@ -4010,6 +4336,7 @@
         "noCropsDesc": "Try clearing your filters or search to see more listings.",
         "loading": "Loading listings",
         "postedToday": "Today",
+        "postedAt": "Posted {date}",
         "postedYesterday": "Yesterday",
         "postedDays": "days ago",
         "postedHours": "hours ago",
@@ -4040,6 +4367,9 @@
         "nearby": "Nearby",
         "nearbyTooltip": "Uses your saved profile location.",
         "nearbyComplete": "Complete your profile location to use Nearby.",
+        "nearestLocationUnavailable": "Nearest sorting needs saved coordinates in your profile. Results are shown by newest until a valid location is available.",
+        "unlocatedListings": "{count} listings have no verified location and cannot be checked by distance.",
+        "nearbyLoadError": "Nearby listings could not be loaded.",
         "nearbyNoResultsTitle": "No nearby crops found.",
         "nearbyNoResultsSubtitle": "Try disabling Nearby or changing other filters.",
         "showAllListings": "Show All Listings"
@@ -4057,6 +4387,12 @@
         "favorite": "Add to favorites",
         "unfavorite": "Remove from favorites",
         "shareSuccess": "Link copied to clipboard!",
+        "shareError": "Could not copy the link.",
+        "shareMessage": "I’m interested in the {crop} listing on AgriConnect. Quantity: {quantity}. Price: {price}.",
+        "shareLocation": "Location: {location}.",
+        "imageGalleryLabel": "Product images",
+        "viewImage": "View image {number}",
+        "breadcrumb": "Breadcrumb",
         "aboutProduce": "About This Produce",
         "productDetails": "Product Details",
         "listingLocation": "Listing Location",
@@ -4105,6 +4441,7 @@
         "skeletonAriaLabel": "Loading listing details",
         "noRelatedListings": "No other listings found in this category",
         "approximateDistance": "Approx. distance",
+                    "contactUnavailable": "Contact details are not available for this listing.",
         "locationPrivacyNotice": "Approximate location shown to protect farmer privacy. Exact details can be confirmed upon contact."
       }
     },
@@ -4153,6 +4490,11 @@
         "saveLocation": "Save Location",
         "cancelLocationEdit": "Cancel",
         "locationUpdated": "Listing location updated",
+        "captureFarmCoordinates": "Capture farm GPS location",
+        "capturingFarmCoordinates": "Getting farm location…",
+        "farmCoordinatesCaptured": "Farm GPS location captured",
+        "farmCoordinatesCaptureFailed": "Could not get your location. Allow location access and try again.",
+        "farmCoordinatesHelp": "Capture the actual farm point so distance results can use this listing.",
         "village": "Village",
         "villagePlaceholder": "Select Village",
         "selectVillage": "Select Village",
@@ -4363,7 +4705,7 @@
   },
   "buyerRequirements": {
     "title": "Buyer Requirements",
-    "subtitle": "Find what buyers are looking for and contact them directly.",
+    "subtitle": "Find what buyers are looking for and sign in to contact them directly.",
     "create": "Post Requirement",
     "results": "requirements",
     "searchPlaceholder": "Search crop, district, village or requirement",
@@ -4435,7 +4777,8 @@
       "cancel": "Cancel requirement",
       "callConfirmationText": "Do you want to call this buyer? The phone number is:",
       "cancelCall": "Cancel",
-      "confirmCall": "Call Now"
+      "confirmCall": "Call Now",
+      "signInToContact": "Sign in to view the buyer’s contact details."
     },
     "form": {
       "selectDistrict": "Select district",

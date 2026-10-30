@@ -25,7 +25,7 @@ import { useLocale } from '@/i18n/locale-provider';
 import { normalizeLocale } from '@/i18n/config';
 import { cn } from '@/utils/cn';
 import { getLocalizedDomainName } from '@agri/domain-data';
-import { storeTokens } from '@/services/api/token';
+import { storeTokens, syncSessionHintFromStorage } from '@/services/api/token';
 import { cacheUser } from '@/lib/auth/session';
 import type { StepProps } from '@/types/auth-steps.types';
 
@@ -439,6 +439,7 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
             if (res?.tokens?.refreshToken) {
                 localStorage.setItem('refreshToken', res.tokens.refreshToken);
             }
+            syncSessionHintFromStorage();
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('registrationToken');
             }
@@ -493,21 +494,21 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                 onClick={onBack}
                 whileHover={{ x: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors mb-6"
+                className="mb-5 flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
                 <ArrowLeft className="w-4 h-4" />
                 {t('manual.back')}
             </motion.button>
 
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 border border-white/20 bg-white/10 backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-green-300" />
-                <span className="text-xs font-semibold tracking-wide text-white/90">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-accent-soft px-3 py-1.5">
+                <span className="h-2 w-2 rounded-full bg-accent" />
+                <span className="text-xs font-semibold tracking-wide text-accent">
                     {t('manual.step', { current: 2, total: 2 })}
                 </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{t('manual.title')}</h2>
-            <p className="mt-2 text-sm text-white/60">{t('manual.subtitle')}</p>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{t('manual.title')}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t('manual.subtitle')}</p>
 
             <div className="mt-6 space-y-4">
                 <button
@@ -515,38 +516,37 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                     onClick={handleUseCurrentLocation}
                     disabled={isLocating}
                     className={cn(
-                        'w-full rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md px-5 py-3 text-left transition-all shadow-lg shadow-black/10',
-                        'hover:bg-white/15 hover:border-white/30',
+                        'w-full rounded-xl border border-border bg-surface-subtle px-4 py-3 text-left transition-colors',
+                        'hover:border-border-strong hover:bg-surface',
                         isLocating && 'opacity-60 cursor-not-allowed',
                     )}
                 >
                     {isLocating ? (
                         <div className="flex items-center gap-3">
-                            <Loader2 className="w-5 h-5 animate-spin text-green-300" />
+                            <Loader2 className="h-5 w-5 animate-spin text-accent" />
                             <div>
-                                <p className="text-sm font-semibold text-white">{t('manual.fetching')}</p>
-                                <p className="text-xs text-white/60">{t('manual.allowAccess')}</p>
+                                <p className="text-sm font-semibold text-foreground">{t('manual.fetching')}</p>
+                                <p className="text-xs text-muted-foreground">{t('manual.allowAccess')}</p>
                             </div>
                         </div>
                     ) : (
                         <div className="flex items-center gap-3">
                             <div
-                                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                                style={{ background: 'linear-gradient(135deg, #2E7D32, #388E3C)', boxShadow: '0 2px 8px rgba(46,125,50,0.25)' }}
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground"
                             >
-                                <LocateFixed className="w-5 h-5 text-white" />
+                                <LocateFixed className="h-5 w-5" />
                             </div>
                             <div>
-                                <p className="text-sm font-semibold text-white">{t('manual.fetch')}</p>
-                                <p className="text-xs text-white/60">{t('manual.fetchDesc')}</p>
+                                <p className="text-sm font-semibold text-foreground">{t('manual.fetch')}</p>
+                                <p className="text-xs text-muted-foreground">{t('manual.fetchDesc')}</p>
                             </div>
                         </div>
                     )}
                 </button>
 
-                <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                    <div className="lg:col-span-2">
-                        <label className="block text-xs font-bold text-white bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-md inline-block mb-1 border border-white/20">{t('manual.state')}</label>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                        <label className="mb-1 inline-block rounded-md text-sm font-semibold text-foreground">{t('manual.state')}</label>
                         <div className="relative">
                             <select
                                 value={locationData.stateId}
@@ -556,22 +556,22 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                                 }}
                                 disabled={!isLoaded}
                                 className={cn(
-                                    'w-full h-12 appearance-none rounded-xl border-2 bg-white/10 backdrop-blur-md px-4 pr-10 text-white',
-                                    'focus:outline-none focus:border-green-300 focus:ring-4 focus:ring-green-400/20',
-                                    locationData.stateId ? 'border-green-400' : 'border-white/25 hover:border-white/40',
+                                    'h-12 w-full appearance-none rounded-xl border border-border bg-surface px-4 pr-10 text-foreground',
+                                    'focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus',
+                                    locationData.stateId ? 'border-accent' : 'hover:border-border-strong',
                                 )}
                             >
-                                <option value="" className="text-gray-900">{t('manual.selectState')}</option>
+                                <option value="" className="bg-surface text-foreground">{t('manual.selectState')}</option>
                                 {states.map((state) => (
-                                    <option key={state.id} value={state.id} className="text-gray-900">{getLocalizedDomainName(state.name, appLocale, 'state')}</option>
+                                    <option key={state.id} value={state.id} className="bg-surface text-foreground">{getLocalizedDomainName(state.name, appLocale, 'state')}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-white bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-md inline-block mb-1 border border-white/20">{t('manual.district')}</label>
+                        <label className="mb-1 inline-block rounded-md text-sm font-semibold text-foreground">{t('manual.district')}</label>
                         <div className="relative">
                             <select
                                 value={locationData.districtId}
@@ -581,23 +581,23 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                                 }}
                                 disabled={!locationData.stateId || districts.length === 0}
                                 className={cn(
-                                    'w-full h-12 appearance-none rounded-xl border-2 bg-white/10 backdrop-blur-md px-4 pr-10 text-white',
-                                    'focus:outline-none focus:border-green-300 focus:ring-4 focus:ring-green-400/20',
-                                    locationData.districtId ? 'border-green-400' : 'border-white/25 hover:border-white/40',
+                                    'h-12 w-full appearance-none rounded-xl border border-border bg-surface px-4 pr-10 text-foreground',
+                                    'focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus',
+                                    locationData.districtId ? 'border-accent' : 'hover:border-border-strong',
                                     !locationData.stateId && 'opacity-60 cursor-not-allowed',
                                 )}
                             >
-                                <option value="" className="text-gray-900">{locationData.stateId ? t('manual.selectDistrict') : t('manual.selectStateFirst')}</option>
+                                <option value="" className="bg-surface text-foreground">{locationData.stateId ? t('manual.selectDistrict') : t('manual.selectStateFirst')}</option>
                                 {districts.map((district) => (
-                                    <option key={district.id} value={district.id} className="text-gray-900">{getLocalizedDomainName(district.name, appLocale, 'district')}</option>
+                                    <option key={district.id} value={district.id} className="bg-surface text-foreground">{getLocalizedDomainName(district.name, appLocale, 'district')}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-white bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-md inline-block mb-1 border border-white/20">{t('manual.taluka')}</label>
+                        <label className="mb-1 inline-block rounded-md text-sm font-semibold text-foreground">{t('manual.taluka')}</label>
                         <div className="relative">
                             <select
                                 value={locationData.talukaId}
@@ -607,23 +607,23 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                                 }}
                                 disabled={!locationData.districtId || talukas.length === 0}
                                 className={cn(
-                                    'w-full h-12 appearance-none rounded-xl border-2 bg-white/10 backdrop-blur-md px-4 pr-10 text-white',
-                                    'focus:outline-none focus:border-green-300 focus:ring-4 focus:ring-green-400/20',
-                                    locationData.talukaId ? 'border-green-400' : 'border-white/25 hover:border-white/40',
+                                    'h-12 w-full appearance-none rounded-xl border border-border bg-surface px-4 pr-10 text-foreground',
+                                    'focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus',
+                                    locationData.talukaId ? 'border-accent' : 'hover:border-border-strong',
                                     !locationData.districtId && 'opacity-60 cursor-not-allowed',
                                 )}
                             >
-                                <option value="" className="text-gray-900">{locationData.districtId ? t('manual.selectTaluka') : t('manual.selectDistrictFirst')}</option>
+                                <option value="" className="bg-surface text-foreground">{locationData.districtId ? t('manual.selectTaluka') : t('manual.selectDistrictFirst')}</option>
                                 {talukas.map((taluka) => (
-                                    <option key={taluka.id} value={taluka.id} className="text-gray-900">{getLocalizedDomainName(taluka.name, appLocale, 'taluka')}</option>
+                                    <option key={taluka.id} value={taluka.id} className="bg-surface text-foreground">{getLocalizedDomainName(taluka.name, appLocale, 'taluka')}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         </div>
                     </div>
 
-                    <div className="lg:col-span-2">
-                        <label className="block text-xs font-bold text-white bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-md inline-block mb-1 border border-white/20">{t('manual.village')}</label>
+                    <div>
+                        <label className="mb-1 inline-block rounded-md text-sm font-semibold text-foreground">{t('manual.village')}</label>
                         <div className="relative">
                             <select
                                 ref={villageSelectRef}
@@ -634,18 +634,18 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                                 }}
                                 disabled={!locationData.talukaId || villages.length === 0}
                                 className={cn(
-                                    'w-full h-12 appearance-none rounded-xl border-2 bg-white/10 backdrop-blur-md px-4 pr-10 text-white',
-                                    'focus:outline-none focus:border-green-300 focus:ring-4 focus:ring-green-400/20',
-                                    locationData.villageId ? 'border-green-400' : 'border-white/25 hover:border-white/40',
+                                    'h-12 w-full appearance-none rounded-xl border border-border bg-surface px-4 pr-10 text-foreground',
+                                    'focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus',
+                                    locationData.villageId ? 'border-accent' : 'hover:border-border-strong',
                                     !locationData.talukaId && 'opacity-60 cursor-not-allowed',
                                 )}
                             >
-                                <option value="" className="text-gray-900">{locationData.talukaId ? t('manual.selectVillage') : t('manual.selectTalukaFirst')}</option>
+                                <option value="" className="bg-surface text-foreground">{locationData.talukaId ? t('manual.selectVillage') : t('manual.selectTalukaFirst')}</option>
                                 {villages.map((village) => (
-                                    <option key={village.id} value={village.id} className="text-gray-900">{getLocalizedDomainName(village.name, appLocale, 'village')}</option>
+                                    <option key={village.id} value={village.id} className="bg-surface text-foreground">{getLocalizedDomainName(village.name, appLocale, 'village')}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         </div>
                     </div>
                 </div>
@@ -656,9 +656,9 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                     disabled={isLocating}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-green-300/40 shadow-lg shadow-black/10 text-xs font-bold text-green-300 hover:bg-white/15 hover:border-green-300 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-subtle px-3 py-2 text-xs font-semibold text-accent transition-colors hover:bg-surface"
                 >
-                    <RefreshCw className="w-3.5 h-3.5 text-green-300" />
+                    <RefreshCw className="h-3.5 w-3.5 text-accent" />
                     {t('manual.reDetect')}
                 </motion.button>
 
@@ -667,16 +667,11 @@ export function ManualLocationStep({ onBack, onComplete, authData }: StepProps) 
                     disabled={isSubmitting}
                     whileHover={!isSubmitting ? { scale: 1.01, y: -1 } : {}}
                     whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                    className="w-full h-14 rounded-full font-semibold text-base flex items-center justify-center gap-2 transition-all duration-200"
-                    style={
+                    className={`flex h-14 w-full items-center justify-center gap-2 rounded-xl text-base font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
                         isSubmitting
-                            ? { background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', cursor: 'not-allowed' }
-                            : {
-                                background: 'linear-gradient(135deg, #2E7D32, #388E3C)',
-                                color: '#fff',
-                                boxShadow: '0 4px 16px rgba(46,125,50,0.3)',
-                            }
-                    }
+                            ? 'cursor-not-allowed bg-surface-subtle text-muted-foreground'
+                            : 'bg-accent text-accent-foreground shadow-sm hover:bg-accent-strong'
+                    }`}
                 >
                     {isSubmitting ? (
                         <>

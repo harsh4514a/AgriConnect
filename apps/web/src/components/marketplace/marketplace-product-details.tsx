@@ -46,20 +46,14 @@
 //       label: t(
 //         'dashboard.marketplaceBrowse.detail.quantity',
 //       ),
-//       value: `${formatNumber(
-//         listing.quantity,
-//       )} ${t(
-//         `dashboard.marketplaceBrowse.unit.${listing.unit}`,
-//       )}`,
+//       value: `${formatNumber( // listing.quantity, // )} ${t( //`dashboard.marketplaceBrowse.unit.${listing.unit}`, // )}`,
 //     },
 
 //     {
 //       label: t(
 //         'dashboard.marketplaceBrowse.detail.pricePerUnit',
 //       ),
-//       value: `₹${formatNumber(
-//         listing.price,
-//       )} / ${listing.primaryUnit}`,
+//       value: `₹${formatNumber( // listing.price, // )} / ${listing.primaryUnit}`,
 //     },
 
 //     ...(listing.cropDate
@@ -102,15 +96,15 @@
 //   ];
 
 //   return (
-//     <section className="rounded-2xl bg-white/[0.035] p-5 sm:p-6">
+//     <section className="rounded-2xl bg-surface/[0.035] p-5 sm:p-6">
 //       {/* HEADER */}
 //       <div className="flex items-center gap-2">
 //         <Sprout
-//           className="h-5 w-5 text-emerald-300"
+//           className="h-5 w-5 text-accent"
 //           aria-hidden="true"
 //         />
 
-//         <h2 className="text-lg font-bold text-white">
+//         <h2 className="text-lg font-bold text-foreground">
 //           {t(
 //             'dashboard.marketplaceBrowse.detail.productDetails',
 //           )}
@@ -122,13 +116,13 @@
 //         {detailItems.map((item) => (
 //           <div
 //             key={item.label}
-//             className="min-w-0 rounded-xl bg-white/[0.025] p-3.5 transition-colors hover:bg-white/[0.045]"
+//             className="min-w-0 rounded-xl bg-surface/[0.025] p-3.5 transition-colors hover:bg-surface/[0.045]"
 //           >
-//             <span className="block truncate text-[10px] font-medium uppercase tracking-wide text-white/35">
+//             <span className="block truncate text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
 //               {item.label}
 //             </span>
 
-//             <span className="mt-1 block truncate text-sm font-semibold text-white/85">
+//             <span className="mt-1 block truncate text-sm font-semibold text-foreground">
 //               {item.value}
 //             </span>
 //           </div>
@@ -196,11 +190,7 @@ export function MarketplaceProductDetails({
       label: t(
         'dashboard.marketplaceBrowse.detail.quantity',
       ),
-      value: `${formatNumber(
-        listing.quantity,
-      )} ${t(
-        `dashboard.marketplaceBrowse.unit.${listing.unit}`,
-      )}`,
+      value: `${formatNumber( listing.quantity, )} ${t(`dashboard.marketplaceBrowse.unit.${listing.unit}`, )}`,
     },
 
     {
@@ -259,15 +249,15 @@ export function MarketplaceProductDetails({
          ===================================================== */}
 
       {description && (
-        <section className="rounded-2xl bg-white/[0.035] p-5 sm:p-6">
+        <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
           {/* HEADER */}
           <div className="flex items-center gap-2">
             <FileText
-              className="h-5 w-5 text-emerald-300"
+              className="h-5 w-5 text-accent"
               aria-hidden="true"
             />
 
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-foreground">
               {t(
                 'dashboard.marketplaceBrowse.detail.aboutProduce',
               )}
@@ -276,7 +266,7 @@ export function MarketplaceProductDetails({
 
           {/* DESCRIPTION */}
           <div className="mt-4">
-            <p className="whitespace-pre-line text-sm leading-7 text-white/70">
+            <p className="whitespace-pre-line text-sm leading-7 text-foreground">
               {description}
             </p>
           </div>
@@ -287,15 +277,15 @@ export function MarketplaceProductDetails({
           PRODUCT DETAILS
          ===================================================== */}
 
-      <section className="rounded-2xl bg-white/[0.035] p-5 sm:p-6">
+      <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
         {/* HEADER */}
         <div className="flex items-center gap-2">
           <Sprout
-            className="h-5 w-5 text-emerald-300"
+            className="h-5 w-5 text-accent"
             aria-hidden="true"
           />
 
-          <h2 className="text-lg font-bold text-white">
+          <h2 className="text-lg font-bold text-foreground">
             {t(
               'dashboard.marketplaceBrowse.detail.productDetails',
             )}
@@ -307,13 +297,13 @@ export function MarketplaceProductDetails({
           {detailItems.map((item) => (
             <div
               key={item.label}
-              className="min-w-0 rounded-xl bg-white/[0.025] p-3.5 transition-colors hover:bg-white/[0.045]"
+              className="min-w-0 rounded-xl border border-border bg-surface-subtle p-3.5 transition-colors hover:border-border-strong"
             >
-              <span className="block truncate text-[10px] font-medium uppercase tracking-wide text-white/35">
+              <span className="block truncate text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                 {item.label}
               </span>
 
-              <span className="mt-1 block truncate text-sm font-semibold text-white/85">
+              <span className="mt-1 block truncate text-sm font-semibold text-foreground">
                 {item.value}
               </span>
             </div>

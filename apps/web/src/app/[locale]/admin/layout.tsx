@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { isLocale } from '@/i18n/config';
 import { loadLocaleMessages } from '@/i18n/server-messages';
+import { ScopedIntlProvider } from '@/components/performance/scoped-intl-provider';
+import { ADMIN_MESSAGE_PATHS } from '@/i18n/message-scopes';
 
 export async function generateMetadata({
   params,
@@ -18,10 +20,18 @@ export async function generateMetadata({
   };
 }
 
-export default function AdminRootLayout({
+export default async function AdminRootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
-  return <>{children}</>;
+  const { locale: routeLocale } = await params;
+  const locale = isLocale(routeLocale) ? routeLocale : 'en';
+  return (
+    <ScopedIntlProvider locale={locale} paths={ADMIN_MESSAGE_PATHS}>
+      {children}
+    </ScopedIntlProvider>
+  );
 }

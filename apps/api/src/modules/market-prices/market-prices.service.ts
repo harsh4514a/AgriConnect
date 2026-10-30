@@ -51,6 +51,7 @@ export class MarketPricesService {
      * If the user explicitly selects a date, that date is respected.
      */
     let effectiveQuery = query;
+    let latestAvailableDate: Date | null | undefined;
 
     if (!query.date) {
       const latest = await this.prisma.marketPrice.findFirst({
@@ -64,6 +65,7 @@ export class MarketPricesService {
           dataDate: true,
         },
       });
+      latestAvailableDate = latest?.dataDate ?? null;
 
       if (latest?.dataDate) {
         effectiveQuery = {
@@ -86,18 +88,15 @@ export class MarketPricesService {
         skip: (page - 1) * limit,
         take: limit,
       }),
-
-      this.prisma.marketPrice.findFirst({
-        where: {
-          state: 'Gujarat',
-        },
-        orderBy: {
-          dataDate: 'desc',
-        },
-        select: {
-          dataDate: true,
-        },
-      }),
+      latestAvailableDate !== undefined
+        ? Promise.resolve(latestAvailableDate)
+        : this.prisma.marketPrice
+            .findFirst({
+              where: { state: 'Gujarat' },
+              orderBy: { dataDate: 'desc' },
+              select: { dataDate: true },
+            })
+            .then((latest) => latest?.dataDate ?? null),
     ]);
 
     return {
@@ -106,7 +105,7 @@ export class MarketPricesService {
       page,
       limit,
       totalPages: Math.ceil(total / limit),
-      latestAvailableDate: latest?.dataDate.toISOString().slice(0, 10),
+      latestAvailableDate: latest?.toISOString().slice(0, 10),
     };
   }
 

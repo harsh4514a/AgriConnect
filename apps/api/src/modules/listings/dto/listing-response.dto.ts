@@ -31,6 +31,10 @@ export class ListingResponseDto {
   @ApiProperty() readyToSell: boolean;
   @ApiPropertyOptional() lat?: number;
   @ApiPropertyOptional() lng?: number;
+  @ApiPropertyOptional({ description: 'True when exact listing GPS coordinates were explicitly captured' })
+  coordinatesVerified?: boolean;
+  @ApiPropertyOptional({ description: 'True when distanceKm is calculated from validated locations' })
+  locationDistanceVerified?: boolean;
   @ApiPropertyOptional() description?: string | null;
   @ApiPropertyOptional() variety?: string | null;
   @ApiPropertyOptional() customCropName?: string | null;
@@ -53,4 +57,6 @@ export class PaginatedListingsDto {
   @ApiProperty() page: number;
   @ApiProperty() limit: number;
   @ApiProperty() totalPages: number;
+  @ApiPropertyOptional() locationAvailable?: boolean;
+  @ApiPropertyOptional() unlocatedCount?: number;
 }

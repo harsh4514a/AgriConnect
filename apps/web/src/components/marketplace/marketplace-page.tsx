@@ -1,333 +1,11 @@
-// 'use client';
-
-// import { useCallback, useEffect, useMemo, useState } from 'react';
-// import { useRouter, useParams } from 'next/navigation';
-// import { useTranslations } from 'next-intl';
-// import { MarketplaceSearch } from '@/components/marketplace/marketplace-search';
-// import { MarketplaceQuickChips } from '@/components/marketplace/marketplace-quick-chips';
-// import { MarketplaceActionBar } from '@/components/marketplace/marketplace-action-bar';
-// import {
-//   MarketplaceFilterSheet,
-//   type FilterSheetMode,
-// } from '@/components/marketplace/marketplace-filter-sheet';
-// import {
-//   DEFAULT_FILTERS,
-//   type MarketplaceFilterState,
-// } from '@/components/marketplace/marketplace-filters';
-// import { MarketplaceGrid } from '@/components/marketplace/marketplace-grid';
-// import { MarketplaceSkeleton } from '@/components/marketplace/marketplace-skeleton';
-// import { MarketplaceEmptyState } from '@/components/marketplace/marketplace-empty-state';
-// import { Pagination } from '@/components/marketplace/pagination';
-// import { MarketplaceNearby } from '@/components/marketplace/marketplace-nearby';
-// import { MarketplaceActiveFilters } from '@/components/marketplace/marketplace-active-filters';
-// import { MarketplaceSummary } from '@/components/marketplace/marketplace-summary';
-// import { useProfileLocation, haversineKm } from '@/hooks/use-profile-location';
-// import { getListings } from '@/services/api/listings.api';
-// import {
-//   PRICE_RANGES,
-//   QUANTITY_RANGES,
-//   type CropListing,
-//   type CropKey,
-//   type SortKey,
-// } from '@/data/marketplace-listings';
-
-// const PAGE_SIZE = 12;
-
-// /**
-//  * Marketplace dashboard page.
-//  * Farmer-friendly, mobile-first browsing with search, quick chips, nearby,
-//  * and a bottom-sheet/modal filter+sort. Listings are loaded from PostgreSQL
-//  * through the marketplace API; no browser-local listing data is used here.
-//  */
-// export function MarketplacePage() {
-//   const t = useTranslations();
-//   const router = useRouter();
-//   const params = useParams();
-//   const locale = (params?.locale as string) || 'en';
-
-//   const { latitude, longitude, available, district } = useProfileLocation();
-
-//   const [listings, setListings] = useState<CropListing[]>([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [search, setSearch] = useState('');
-//   const [filters, setFilters] = useState<MarketplaceFilterState>(DEFAULT_FILTERS);
-//   const [selectedChip, setSelectedChip] = useState<CropKey | 'all'>('all');
-//   const [nearMe, setNearMe] = useState(false);
-//   const [sheetOpen, setSheetOpen] = useState(false);
-//   const [sheetMode, setSheetMode] = useState<FilterSheetMode>('filters');
-//   const [currentPage, setCurrentPage] = useState(1);
-
-//   // The marketplace is database-backed. Do not fall back to the static or
-//   // localStorage listing store when the API is unavailable.
-//   useEffect(() => {
-//     let mounted = true;
-
-//     void getListings()
-//       .then((response) => {
-//         if (mounted) setListings(response.listings);
-//       })
-//       .catch(() => {
-//         if (mounted) setListings([]);
-//       })
-//       .finally(() => {
-//         if (mounted) setIsLoading(false);
-//       });
-
-//     return () => {
-//       mounted = false;
-//     };
-//   }, []);
-
-//   // Reset page when search/filters/chip change.
-//   useEffect(() => {
-//     setCurrentPage(1);
-//   }, [search, filters, selectedChip, nearMe]);
-
-//   const isValidListing = useCallback(
-//     (listing: CropListing) => {
-//       const query = search.trim().toLowerCase();
-//       if (query) {
-//         const cropLabel = t(`dashboard.marketplaceBrowse.crop.${listing.cropKey}`).toLowerCase();
-//         const districtLabel = t(
-//           `dashboard.marketplaceBrowse.district.${listing.district}`,
-//         ).toLowerCase();
-//         const village = listing.village.toLowerCase();
-//         const farmer = listing.farmerName.toLowerCase();
-//         if (
-//           !cropLabel.includes(query) &&
-//           !districtLabel.includes(query) &&
-//           !village.includes(query) &&
-//           !farmer.includes(query)
-//         ) {
-//           return false;
-//         }
-//       }
-
-//       const activeCrop = selectedChip !== 'all' ? selectedChip : filters.crop;
-//       if (activeCrop !== 'all' && listing.cropKey !== activeCrop) return false;
-//       if (filters.district !== 'all' && listing.district !== filters.district) return false;
-//       if (filters.village !== 'all' && listing.village !== filters.village) return false;
-//       if (filters.verifiedOnly && !listing.verified) return false;
-
-//       if (filters.priceRange !== 'all') {
-//         const range = PRICE_RANGES.find((r) => r.key === filters.priceRange);
-//         if (range && (listing.price < range.min || listing.price >= range.max)) return false;
-//       }
-
-//       if (filters.quantity !== 'all') {
-//         const range = QUANTITY_RANGES.find((r) => r.key === filters.quantity);
-//         const qtyInQuintal =
-//           listing.unit === 'ton'
-//             ? listing.quantity * 10
-//             : listing.unit === 'kg'
-//               ? listing.quantity / 100
-//               : listing.quantity;
-//         if (range && (qtyInQuintal < range.min || qtyInQuintal >= range.max)) return false;
-//       }
-
-//       return true;
-//     },
-//     [search, filters, selectedChip, t],
-//   );
-
-//   const filtered = useMemo(() => {
-//     return listings.filter((l) => l.status !== 'inactive' && isValidListing(l));
-//   }, [listings, isValidListing]);
-
-//   const sorted = useMemo(() => {
-//     const list = [...filtered];
-
-//     // Near Me: sort by computed distance from the saved profile location.
-//     if (nearMe && available) {
-//       list.sort((a, b) => {
-//         const da = haversineKm(latitude, longitude, a.lat, a.lng);
-//         const db = haversineKm(latitude, longitude, b.lat, b.lng);
-//         return da - db;
-//       });
-//       return list;
-//     }
-
-//     const sorters: Record<SortKey, (a: CropListing, b: CropListing) => number> = {
-//       newest: (a, b) => a.postedHoursAgo - b.postedHoursAgo,
-//       lowestPrice: (a, b) => a.price - b.price,
-//       highestPrice: (a, b) => b.price - a.price,
-//       nearest: (a, b) => a.distanceKm - b.distanceKm,
-//       mostQty: (a, b) => b.quantity - a.quantity,
-//     };
-//     return list.sort(sorters[filters.sort]);
-//   }, [filtered, filters.sort, nearMe, available, latitude, longitude]);
-
-//   const nearbyCount = useMemo(() => {
-//     if (!available) return 0;
-//     return listings.filter(
-//       (l: CropListing) =>
-//         l.status !== 'inactive' && haversineKm(latitude, longitude, l.lat, l.lng) <= 30,
-//     ).length;
-//   }, [listings, available, latitude, longitude]);
-
-//   // Count of explicitly applied filters (used for the Filter (n) badge).
-//   const activeFilterCount = useMemo(() => {
-//     let count =
-//       (filters.district !== 'all' ? 1 : 0) +
-//       (filters.village !== 'all' ? 1 : 0) +
-//       (filters.priceRange !== 'all' ? 1 : 0) +
-//       (filters.quantity !== 'all' ? 1 : 0) +
-//       (filters.verifiedOnly ? 1 : 0);
-//     if (selectedChip !== 'all') count += 1;
-//     if (search.trim()) count += 1;
-//     if (nearMe) count += 1;
-//     return count;
-//   }, [filters, selectedChip, search, nearMe]);
-
-//   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-//   const safePage = Math.min(currentPage, totalPages);
-//   const paginated = useMemo(() => {
-//     const start = (safePage - 1) * PAGE_SIZE;
-//     return sorted.slice(start, start + PAGE_SIZE);
-//   }, [sorted, safePage]);
-
-//   const handleViewDetails = useCallback((listing: CropListing) => {
-//     router.push(`/${locale}/dashboard/marketplace/${listing.id}`);
-//   }, [locale, router]);
-
-//   const handleReset = useCallback(() => {
-//     setSearch('');
-//     setFilters(DEFAULT_FILTERS);
-//     setSelectedChip('all');
-//     setNearMe(false);
-//   }, []);
-
-//   const handleBrowseAll = useCallback(() => {
-//     setSelectedChip('all');
-//     handleReset();
-//   }, [handleReset]);
-
-//   const handleRemoveFilter = useCallback((key: string) => {
-//     switch (key) {
-//       case 'crop':
-//         setSelectedChip('all');
-//         setFilters((prev) => ({ ...prev, crop: 'all' }));
-//         break;
-//       case 'district':
-//         setFilters((prev) => ({ ...prev, district: 'all', village: 'all' }));
-//         break;
-//       case 'priceRange':
-//         setFilters((prev) => ({ ...prev, priceRange: 'all' }));
-//         break;
-//       case 'search':
-//         setSearch('');
-//         break;
-//       case 'nearMe':
-//         setNearMe(false);
-//         break;
-//     }
-//   }, []);
-
-//   const handleOpenSheet = (mode: FilterSheetMode) => {
-//     setSheetMode(mode);
-//     setSheetOpen(true);
-//   };
-
-//   const handleCompleteProfile = useCallback(() => {
-//   }, [locale, router]);
-
-//   return (
-//     <div className="space-y-3">
-//       {/* Light glass toolbar: Search + Filter/Sort/NearMe. No heavy wrapper. */}
-//       <div
-//         className="sticky top-0 z-30 -mx-4 px-4 py-2 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
-//         style={{ background: 'rgba(7,19,11,0.72)' }}
-//       >
-//         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-//           {/* Search: ~60% width on desktop, full width on mobile */}
-//           <div className="w-full sm:w-[60%]">
-//             <MarketplaceSearch value={search} onChange={setSearch} />
-//           </div>
-
-//           {/* Action buttons: Filter / Sort / Nearby (compact pills) */}
-//           <div className="w-full sm:w-auto sm:flex-1">
-//             <MarketplaceActionBar
-//               onOpenFilters={() => handleOpenSheet('filters')}
-//               onOpenSort={() => handleOpenSheet('sort')}
-//               onNearby={() => setNearMe((prev) => !prev)}
-//               nearbyActive={nearMe}
-//               nearbyDisabled={!available}
-//               filterCount={activeFilterCount}
-//             />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Quick crop chips — scrolls away naturally (below sticky toolbar) */}
-//       <MarketplaceQuickChips selected={selectedChip} onSelect={setSelectedChip} />
-
-//       {/* Active filter chips (only when a filter is applied) */}
-//       <MarketplaceActiveFilters
-//         selectedChip={selectedChip}
-//         district={filters.district}
-//         priceRange={filters.priceRange}
-//         search={search}
-//         nearMe={nearMe}
-//         onRemove={handleRemoveFilter}
-//         onClearAll={handleReset}
-//       />
-
-//       {/* Filter sheet/modal */}
-//       <MarketplaceFilterSheet
-//         open={sheetOpen}
-//         mode={sheetMode}
-//         filters={filters}
-//         onClose={() => setSheetOpen(false)}
-//         onChange={setFilters}
-//       />
-
-//       {isLoading ? (
-//         <>
-//           <MarketplaceNearby
-//             nearbyCount={0}
-//             nearbyActive={false}
-//             onCompleteProfile={handleCompleteProfile}
-//           />
-//           <MarketplaceSkeleton />
-//         </>
-//       ) : paginated.length === 0 ? (
-//         <MarketplaceEmptyState
-//           onReset={handleReset}
-//           onBrowseAll={handleBrowseAll}
-//           variant={nearMe ? 'nearby' : 'default'}
-//         />
-//       ) : (
-//         <>
-//           {/* Compact nearby row placed just above the cards */}
-//           <MarketplaceNearby
-//             nearbyCount={nearbyCount}
-//             nearbyActive={nearMe}
-//             onCompleteProfile={handleCompleteProfile}
-//           />
-
-//           {/* Compact summary chips */}
-//           <MarketplaceSummary total={sorted.length} nearby={nearbyCount} district={district} />
-
-//           <MarketplaceGrid listings={paginated} onViewDetails={handleViewDetails} />
-//           <Pagination
-//             currentPage={safePage}
-//             totalPages={totalPages}
-//             onPageChange={setCurrentPage}
-//             totalItems={sorted.length}
-//             pageSize={PAGE_SIZE}
-//           />
-//         </>
-//       )}
-//     </div>
-//   );
-// }
-
 
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
+import { usePathname, useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Plus } from 'lucide-react';
 import { getDomainSearchAliases, getLocalizedDomainName } from '@agri/domain-data';
 
 import { MarketplaceSearch } from '@/components/marketplace/marketplace-search';
@@ -348,20 +26,17 @@ import { MarketplaceGrid } from '@/components/marketplace/marketplace-grid';
 import { MarketplaceSkeleton } from '@/components/marketplace/marketplace-skeleton';
 import { MarketplaceEmptyState } from '@/components/marketplace/marketplace-empty-state';
 import { Pagination } from '@/components/marketplace/pagination';
-import { MarketplaceNearby } from '@/components/marketplace/marketplace-nearby';
 import { MarketplaceActiveFilters } from '@/components/marketplace/marketplace-active-filters';
-import { MarketplaceSummary } from '@/components/marketplace/marketplace-summary';
-
-import {
-  useProfileLocation,
-  haversineKm,
-} from '@/hooks/use-profile-location';
+import { getListingCreatedAtTimestamp } from '@/utils/listing-date';
 
 import { getListings } from '@/services/api/listings.api';
+import { useAuth } from '@/hooks/use-auth';
 
 import {
   PRICE_RANGES,
   QUANTITY_RANGES,
+  CROPS,
+  SORT_OPTIONS,
   type CropListing,
   type CropKey,
   type SortKey,
@@ -372,55 +47,41 @@ import {
  */
 const PAGE_SIZE = 12;
 
-/*
- * Nearby means:
- *
- * User's saved profile location
- *            +
- * Listing location
- *            ↓
- * Distance <= 10 km
- *
- * Keep this value in one place so the UI does not accidentally
- * use different nearby distances in different components.
- */
-const NEARBY_RADIUS_KM = 10;
-
 /**
  * Marketplace dashboard page.
  *
  * Listings come from the database through the marketplace API.
- *
- * Nearby:
- * - Uses the user's saved profile coordinates.
- * - Shows ONLY listings within 10 km.
- * - Sorts those listings from nearest to farthest.
- * - Does NOT use browser GPS.
  */
 export function MarketplacePage() {
   const t = useTranslations();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const initialQuery = new URLSearchParams(searchParams.toString());
   const params = useParams();
 
   const locale =
     (params?.locale as string) || 'en';
-
-  const {
-    latitude,
-    longitude,
-    available,
-    district,
-  } = useProfileLocation();
 
   const [listings, setListings] =
     useState<CropListing[]>([]);
 
   const [isLoading, setIsLoading] =
     useState(true);
+  const [nearestLocationAvailable, setNearestLocationAvailable] = useState<boolean | null>(null);
+  const [nearestUnlocatedCount, setNearestUnlocatedCount] = useState(0);
+  const [nearestTotal, setNearestTotal] = useState(0);
 
   const [search, setSearch] =
-    useState('');
+    useState(() => initialQuery.get('q') ?? '');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setDebouncedSearch(search), 250);
+    return () => window.clearTimeout(timeout);
+  }, [search]);
 
   const searchTerms = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -431,7 +92,22 @@ export function MarketplacePage() {
 
   const [filters, setFilters] =
     useState<MarketplaceFilterState>(
-      DEFAULT_FILTERS,
+      () => {
+        const crop = initialQuery.get('crop');
+        const priceRange = initialQuery.get('price');
+        const quantity = initialQuery.get('quantity');
+        const sort = initialQuery.get('sort');
+        return {
+          ...DEFAULT_FILTERS,
+          crop: crop && CROPS.includes(crop as CropKey) ? crop as CropKey : 'all',
+          district: initialQuery.get('district') || 'all',
+          village: initialQuery.get('village') || 'all',
+          priceRange: priceRange && PRICE_RANGES.some((range) => range.key === priceRange) ? priceRange : 'all',
+          quantity: quantity && QUANTITY_RANGES.some((range) => range.key === quantity) ? quantity : 'all',
+          verifiedOnly: initialQuery.get('verified') === '1',
+          sort: sort && SORT_OPTIONS.some((option) => option.key === sort) ? sort as SortKey : 'newest',
+        };
+      },
     );
 
   const listingDistricts = useMemo(
@@ -443,17 +119,16 @@ export function MarketplacePage() {
     () => [...new Set(
       listings
         .filter((listing) => filters.district === 'all' || listing.district === filters.district)
-        .map((listing) => listing.village)
-        .filter(Boolean),
+        .flatMap((listing) => listing.village ? [listing.village] : []),
     )].sort(),
     [filters.district, listings],
   );
 
   const [selectedChip, setSelectedChip] =
-    useState<CropKey | 'all'>('all');
-
-  const [nearMe, setNearMe] =
-    useState(false);
+    useState<CropKey | 'all'>(() => {
+      const crop = initialQuery.get('crop');
+      return crop && CROPS.includes(crop as CropKey) ? crop as CropKey : 'all';
+    });
 
   const [sheetOpen, setSheetOpen] =
     useState(false);
@@ -462,7 +137,41 @@ export function MarketplacePage() {
     useState<FilterSheetMode>('filters');
 
   const [currentPage, setCurrentPage] =
-    useState(1);
+    useState(() => {
+      const page = Number(initialQuery.get('page'));
+      return Number.isInteger(page) && page > 0 ? page : 1;
+    });
+  const hasMountedBrowseState = useRef(false);
+
+  // Keep browse state in the URL so pagination, refresh, and returning from a
+  // listing detail preserve the farmer's current result set.
+  useEffect(() => {
+    const next = new URLSearchParams();
+    if (search.trim()) next.set('q', search.trim());
+    const activeCrop = selectedChip !== 'all' ? selectedChip : filters.crop;
+    if (activeCrop !== 'all') next.set('crop', activeCrop);
+    if (filters.district !== 'all') next.set('district', filters.district);
+    if (filters.village !== 'all') next.set('village', filters.village);
+    if (filters.priceRange !== 'all') next.set('price', filters.priceRange);
+    if (filters.quantity !== 'all') next.set('quantity', filters.quantity);
+    if (filters.verifiedOnly) next.set('verified', '1');
+    if (filters.sort !== 'newest') next.set('sort', filters.sort);
+    if (currentPage > 1) next.set('page', String(currentPage));
+
+    const query = next.toString();
+    const current = searchParams.toString();
+    if (query !== current) {
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    }
+  }, [
+    currentPage,
+    filters,
+    pathname,
+    router,
+    search,
+    searchParams,
+    selectedChip,
+  ]);
 
   /*
    * ==========================================================
@@ -472,16 +181,45 @@ export function MarketplacePage() {
 
   useEffect(() => {
     let mounted = true;
+    const controller = new AbortController();
+    const activeCrop = selectedChip !== 'all' ? selectedChip : filters.crop;
+    const priceRange = PRICE_RANGES.find((range) => range.key === filters.priceRange);
+    const quantityRange = QUANTITY_RANGES.find((range) => range.key === filters.quantity);
+    const nearest = filters.sort === 'nearest';
 
-    void getListings()
+    setIsLoading(true);
+    setNearestLocationAvailable(null);
+    setNearestUnlocatedCount(0);
+    setNearestTotal(0);
+
+    void getListings(nearest
+      ? {
+          sort: 'nearest',
+          ...(debouncedSearch.trim() ? { search: debouncedSearch.trim() } : {}),
+          ...(activeCrop !== 'all' ? { cropKey: activeCrop } : {}),
+          ...(filters.district !== 'all' ? { district: filters.district } : {}),
+          ...(filters.village !== 'all' ? { village: filters.village } : {}),
+          ...(filters.verifiedOnly ? { verified: true } : {}),
+          ...(priceRange ? { priceMin: priceRange.min, ...(Number.isFinite(priceRange.max) ? { priceMax: priceRange.max } : {}) } : {}),
+          ...(quantityRange ? { quantityMin: quantityRange.min, ...(Number.isFinite(quantityRange.max) ? { quantityMax: quantityRange.max } : {}) } : {}),
+          page: currentPage,
+          limit: PAGE_SIZE,
+        }
+      : { page: 1, limit: 100 }, controller.signal)
       .then((response) => {
         if (mounted) {
           setListings(response.listings);
+          setNearestLocationAvailable(nearest ? response.locationAvailable ?? false : null);
+          setNearestUnlocatedCount(nearest ? response.unlocatedCount ?? 0 : 0);
+          setNearestTotal(nearest ? response.total : 0);
         }
       })
       .catch(() => {
         if (mounted) {
           setListings([]);
+          setNearestLocationAvailable(nearest ? false : null);
+          setNearestUnlocatedCount(0);
+          setNearestTotal(0);
         }
       })
       .finally(() => {
@@ -492,8 +230,20 @@ export function MarketplacePage() {
 
     return () => {
       mounted = false;
+      controller.abort();
     };
-  }, []);
+  }, [
+    currentPage,
+    debouncedSearch,
+    filters.district,
+    filters.crop,
+    filters.priceRange,
+    filters.quantity,
+    filters.sort,
+    filters.verifiedOnly,
+    filters.village,
+    selectedChip,
+  ]);
 
   /*
    * ==========================================================
@@ -502,12 +252,15 @@ export function MarketplacePage() {
    */
 
   useEffect(() => {
+    if (!hasMountedBrowseState.current) {
+      hasMountedBrowseState.current = true;
+      return;
+    }
     setCurrentPage(1);
   }, [
     search,
     filters,
     selectedChip,
-    nearMe,
   ]);
 
   /*
@@ -530,21 +283,21 @@ export function MarketplacePage() {
           : getLocalizedDomainName(listing.cropKey, locale, 'crop')).toLowerCase();
 
         const districtLabel = getLocalizedDomainName(listing.district, locale, 'district').toLowerCase();
-        const talukaLabel = getLocalizedDomainName(listing.taluka, locale, 'taluka').toLowerCase();
-        const villageLabel = getLocalizedDomainName(listing.village, locale, 'village').toLowerCase();
+        const talukaLabel = getLocalizedDomainName(listing.taluka ?? '', locale, 'taluka').toLowerCase();
+        const villageLabel = getLocalizedDomainName(listing.village ?? '', locale, 'village').toLowerCase();
 
         const village =
-          listing.village.toLowerCase();
+          (listing.village ?? '').toLowerCase();
 
         const farmer =
-          listing.farmerName.toLowerCase();
+          (listing.farmerName ?? '').toLowerCase();
         const searchableValues = [
           cropLabel,
           listing.cropKey.toLowerCase(),
           districtLabel,
           listing.district.toLowerCase(),
           talukaLabel,
-          listing.taluka.toLowerCase(),
+          (listing.taluka ?? '').toLowerCase(),
           villageLabel,
           village,
           farmer,
@@ -679,6 +432,7 @@ export function MarketplacePage() {
    */
 
   const filtered = useMemo(() => {
+    if (filters.sort === 'nearest') return listings;
     return listings.filter(
       (listing) =>
         listing.status !==
@@ -688,98 +442,8 @@ export function MarketplacePage() {
   }, [
     listings,
     isValidListing,
+    filters.sort,
   ]);
-
-  /*
-   * ==========================================================
-   * NEARBY DISTANCE
-   * ==========================================================
-   *
-   * Calculate distance only when both:
-   * - user's saved coordinates exist
-   * - listing coordinates exist
-   *
-   * Invalid coordinates are ignored instead of accidentally
-   * calculating distance from 0,0.
-   */
-
-  const getListingDistanceKm =
-    useCallback(
-      (listing: CropListing) => {
-        if (!available) {
-          return Number.POSITIVE_INFINITY;
-        }
-
-        if (
-          !Number.isFinite(latitude) ||
-          !Number.isFinite(longitude)
-        ) {
-          return Number.POSITIVE_INFINITY;
-        }
-
-        if (
-          !Number.isFinite(listing.lat) ||
-          !Number.isFinite(listing.lng)
-        ) {
-          return Number.POSITIVE_INFINITY;
-        }
-
-        return haversineKm(
-          latitude,
-          longitude,
-          listing.lat,
-          listing.lng,
-        );
-      },
-      [
-        available,
-        latitude,
-        longitude,
-      ],
-    );
-
-  /*
-   * ==========================================================
-   * NEARBY FILTER
-   * ==========================================================
-   *
-   * THIS IS THE IMPORTANT FIX.
-   *
-   * Previously Nearby only sorted listings.
-   *
-   * Now:
-   *
-   *        distance <= 10 km
-   *
-   * is required.
-   */
-
-  const nearbyFiltered =
-    useMemo(() => {
-      if (!nearMe || !available) {
-        return filtered;
-      }
-
-      return filtered.filter(
-        (listing) => {
-          const distance =
-            getListingDistanceKm(
-              listing,
-            );
-
-          return (
-            Number.isFinite(distance) &&
-            distance <=
-              NEARBY_RADIUS_KM
-          );
-        },
-      );
-    }, [
-      filtered,
-      nearMe,
-      available,
-      getListingDistanceKm,
-    ]);
 
   /*
    * ==========================================================
@@ -788,32 +452,8 @@ export function MarketplacePage() {
    */
 
   const sorted = useMemo(() => {
-    const list = [
-      ...nearbyFiltered,
-    ];
-
-    /*
-     * When Nearby is active:
-     *
-     * 1. ONLY listings <= 10 km exist here.
-     * 2. Sort nearest first.
-     */
-    if (
-      nearMe &&
-      available
-    ) {
-      list.sort((a, b) => {
-        const da =
-          getListingDistanceKm(a);
-
-        const db =
-          getListingDistanceKm(b);
-
-        return da - db;
-      });
-
-      return list;
-    }
+    const list = [...filtered];
+    if (filters.sort === 'nearest') return list;
 
     /*
      * Normal marketplace sorting.
@@ -825,9 +465,17 @@ export function MarketplacePage() {
         b: CropListing,
       ) => number
     > = {
-      newest: (a, b) =>
-        a.postedHoursAgo -
-        b.postedHoursAgo,
+      newest: (a, b) => {
+        const aCreatedAt = getListingCreatedAtTimestamp(a.createdAt);
+        const bCreatedAt = getListingCreatedAtTimestamp(b.createdAt);
+
+        if (aCreatedAt !== null && bCreatedAt !== null) {
+          return bCreatedAt - aCreatedAt;
+        }
+        if (aCreatedAt !== null) return -1;
+        if (bCreatedAt !== null) return 1;
+        return a.postedHoursAgo - b.postedHoursAgo;
+      },
 
       lowestPrice: (a, b) =>
         a.price - b.price,
@@ -848,51 +496,8 @@ export function MarketplacePage() {
       sorters[filters.sort],
     );
   }, [
-    nearbyFiltered,
+    filtered,
     filters.sort,
-    nearMe,
-    available,
-    getListingDistanceKm,
-  ]);
-
-  /*
-   * ==========================================================
-   * NEARBY COUNT
-   * ==========================================================
-   *
-   * Always represents listings within 10 km.
-   */
-
-  const nearbyCount = useMemo(() => {
-    if (!available) {
-      return 0;
-    }
-
-    return listings.filter(
-      (listing) => {
-        if (
-          listing.status ===
-          'inactive'
-        ) {
-          return false;
-        }
-
-        const distance =
-          getListingDistanceKm(
-            listing,
-          );
-
-        return (
-          Number.isFinite(distance) &&
-          distance <=
-            NEARBY_RADIUS_KM
-        );
-      },
-    ).length;
-  }, [
-    listings,
-    available,
-    getListingDistanceKm,
   ]);
 
   /*
@@ -947,16 +552,11 @@ export function MarketplacePage() {
         count += 1;
       }
 
-      if (nearMe) {
-        count += 1;
-      }
-
       return count;
     }, [
       filters,
       selectedChip,
       search,
-      nearMe,
     ]);
 
   /*
@@ -968,10 +568,9 @@ export function MarketplacePage() {
   const totalPages =
     Math.max(
       1,
-      Math.ceil(
-        sorted.length /
-          PAGE_SIZE,
-      ),
+      filters.sort === 'nearest'
+        ? Math.ceil(nearestTotal / PAGE_SIZE)
+        : Math.ceil(sorted.length / PAGE_SIZE),
     );
 
   const safePage =
@@ -986,6 +585,8 @@ export function MarketplacePage() {
         (safePage - 1) *
         PAGE_SIZE;
 
+      if (filters.sort === 'nearest') return sorted;
+
       return sorted.slice(
         start,
         start + PAGE_SIZE,
@@ -993,6 +594,7 @@ export function MarketplacePage() {
     }, [
       sorted,
       safePage,
+      filters.sort,
     ]);
 
   /*
@@ -1001,19 +603,6 @@ export function MarketplacePage() {
    * ==========================================================
    */
 
-  const handleViewDetails =
-    useCallback(
-      (listing: CropListing) => {
-        router.push(
-          `/${locale}/dashboard/marketplace/${listing.id}`,
-        );
-      },
-      [
-        locale,
-        router,
-      ],
-    );
-
   const handleReset =
     useCallback(() => {
       setSearch('');
@@ -1021,7 +610,6 @@ export function MarketplacePage() {
         DEFAULT_FILTERS,
       );
       setSelectedChip('all');
-      setNearMe(false);
     }, []);
 
   const handleBrowseAll =
@@ -1071,9 +659,6 @@ export function MarketplacePage() {
             setSearch('');
             break;
 
-          case 'nearMe':
-            setNearMe(false);
-            break;
         }
       },
       [],
@@ -1088,16 +673,6 @@ export function MarketplacePage() {
       [],
     );
 
-  const handleCompleteProfile =
-    useCallback(() => {
-      router.push(
-        `/${locale}/dashboard/profile`,
-      );
-    }, [
-      locale,
-      router,
-    ]);
-
   /*
    * ==========================================================
    * UI
@@ -1106,28 +681,21 @@ export function MarketplacePage() {
 
   return (
     <div className="space-y-3">
+      <h1 className="sr-only">{t('dashboard.marketplaceBrowse.header.title')}</h1>
 
       {/* ======================================================
           SEARCH + ACTION BAR
          ====================================================== */}
 
       <div
-        className="sticky top-0 z-30 -mx-4 px-4 py-2 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
-        style={{
-          background:
-            'rgba(7,19,11,0.72)',
-        }}
+        className="sticky top-0 z-30 -mx-4 border-y border-border/70 bg-canvas/95 px-4 py-2 shadow-sm backdrop-blur-lg sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
       >
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-
-          <div className="w-full sm:w-[60%]">
-            <MarketplaceSearch
-              value={search}
-              onChange={setSearch}
-            />
+        <div className="flex flex-col gap-2 xl:flex-row xl:items-center">
+          <div className="min-w-0 flex-1">
+            <MarketplaceSearch value={search} onChange={setSearch} />
           </div>
 
-          <div className="w-full sm:w-auto sm:flex-1">
+          <div className="shrink-0">
             <MarketplaceActionBar
               onOpenFilters={() =>
                 handleOpenSheet(
@@ -1139,23 +707,19 @@ export function MarketplacePage() {
                   'sort',
                 )
               }
-              onNearby={() =>
-                setNearMe(
-                  (prev) =>
-                    !prev,
-                )
-              }
-              nearbyActive={
-                nearMe
-              }
-              nearbyDisabled={
-                !available
-              }
               filterCount={
                 activeFilterCount
               }
             />
           </div>
+
+          <Link
+            href={`/${locale}/${isAuthenticated ? 'dashboard/marketplace/create' : 'auth'}`}
+            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            {t('dashboard.myListings.createCta')}
+          </Link>
         </div>
       </div>
 
@@ -1187,7 +751,6 @@ export function MarketplacePage() {
           filters.priceRange
         }
         search={search}
-        nearMe={nearMe}
         onRemove={
           handleRemoveFilter
         }
@@ -1195,6 +758,18 @@ export function MarketplacePage() {
           handleReset
         }
       />
+
+      {filters.sort === 'nearest' && nearestLocationAvailable === false ? (
+        <p role="status" className="rounded-xl border border-amber-300/60 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          {t('dashboard.marketplaceBrowse.ux.nearestLocationUnavailable')}
+        </p>
+      ) : null}
+
+      {filters.sort === 'nearest' && nearestLocationAvailable && nearestUnlocatedCount > 0 ? (
+        <p role="status" className="rounded-xl border border-border bg-surface-subtle px-4 py-3 text-sm text-muted-foreground">
+          {t('dashboard.marketplaceBrowse.ux.unlocatedListings', { count: nearestUnlocatedCount })}
+        </p>
+      ) : null}
 
       {/* ======================================================
           FILTER SHEET
@@ -1209,9 +784,10 @@ export function MarketplacePage() {
         onClose={() =>
           setSheetOpen(false)
         }
-        onChange={
-          setFilters
-        }
+        onChange={(nextFilters) => {
+          setFilters(nextFilters);
+          if (nextFilters.crop !== filters.crop) setSelectedChip('all');
+        }}
       />
 
       {/* ======================================================
@@ -1219,17 +795,7 @@ export function MarketplacePage() {
          ====================================================== */}
 
       {isLoading ? (
-        <>
-          <MarketplaceNearby
-            nearbyCount={0}
-            nearbyActive={false}
-            onCompleteProfile={
-              handleCompleteProfile
-            }
-          />
-
-          <MarketplaceSkeleton />
-        </>
+        <MarketplaceSkeleton />
       ) : paginated.length === 0 ? (
         /* ====================================================
            EMPTY
@@ -1242,46 +808,9 @@ export function MarketplacePage() {
           onBrowseAll={
             handleBrowseAll
           }
-          variant={
-            nearMe
-              ? 'nearby'
-              : 'default'
-          }
         />
       ) : (
         <>
-          {/* ==================================================
-              NEARBY STATUS
-             ================================================== */}
-
-          <MarketplaceNearby
-            nearbyCount={
-              nearbyCount
-            }
-            nearbyActive={
-              nearMe
-            }
-            onCompleteProfile={
-              handleCompleteProfile
-            }
-          />
-
-          {/* ==================================================
-              SUMMARY
-             ================================================== */}
-
-          <MarketplaceSummary
-            total={
-              sorted.length
-            }
-            nearby={
-              nearbyCount
-            }
-            district={
-              district
-            }
-          />
-
           {/* ==================================================
               LISTINGS
              ================================================== */}
@@ -1290,9 +819,8 @@ export function MarketplacePage() {
             listings={
               paginated
             }
-            onViewDetails={
-              handleViewDetails
-            }
+            isAuthenticated={isAuthenticated}
+            isAuthLoading={isAuthLoading}
           />
 
           {/* ==================================================
@@ -1310,7 +838,7 @@ export function MarketplacePage() {
               setCurrentPage
             }
             totalItems={
-              sorted.length
+              filters.sort === 'nearest' ? nearestTotal : sorted.length
             }
             pageSize={
               PAGE_SIZE

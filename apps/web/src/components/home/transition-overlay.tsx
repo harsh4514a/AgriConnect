@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 
 /**
@@ -50,14 +51,13 @@ export function useGoToAuth() {
                     transition={{ duration: 0.4, ease: 'easeInOut' }}
                 >
                     {/* Identical background to home hero + auth page — background stays constant */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{
-                            backgroundImage: 'url(/Background_Image.jpg)',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                    <Image
+                        src="/Background_Image.jpg"
+                        alt=""
+                        fill
+                        sizes="100vw"
+                        quality={60}
+                        className="object-cover object-center"
                     />
                     {/* Identical green-tinted overlays as both pages */}
                     <div className="absolute inset-0 bg-gradient-to-r from-green-950/50 via-green-900/25 to-green-800/10" />
@@ -73,14 +73,8 @@ export function useGoToAuth() {
                             transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="flex items-center gap-2.5"
                         >
-                            <div
-                                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                                style={{
-                                    background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                                    boxShadow: '0 4px 12px rgba(46,125,50,0.35)',
-                                }}
-                            >
-                                <span className="text-white text-lg font-black">🌾</span>
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-foreground shadow-sm">
+                                <span className="text-lg font-black text-white">🌾</span>
                             </div>
                         </motion.div>
                     </div>

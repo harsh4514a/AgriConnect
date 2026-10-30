@@ -76,10 +76,10 @@ function getActionBadgeStyle(action: string) {
     return 'bg-blue-50 text-blue-700 border-blue-200';
   }
   if (action.includes('USER')) {
-    return 'bg-amber-50 text-amber-700 border-amber-200';
+    return 'bg-warning/10 text-warning border-warning/30';
   }
   if (action.includes('LISTING')) {
-    return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    return 'bg-accent-soft text-accent border-accent/30';
   }
   if (action.includes('CROP_GUIDE')) {
     return 'bg-teal-50 text-teal-700 border-teal-200';
@@ -90,7 +90,7 @@ function getActionBadgeStyle(action: string) {
   if (action.includes('TRANSPORT')) {
     return 'bg-violet-50 text-violet-700 border-violet-200';
   }
-  return 'bg-slate-50 text-slate-700 border-slate-200';
+  return 'bg-surface-subtle text-foreground border-border';
 }
 
 function ActionIcon({ action, className }: { action: string; className?: string }) {
@@ -307,13 +307,13 @@ export function AdminAudit() {
       {/* Header section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800">
+          <span className="text-xs font-semibold uppercase tracking-wider text-accent">
             {t('eyebrow')}
           </span>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             {t('title')}
           </h1>
-          <p className="mt-1.5 text-sm text-slate-500 max-w-2xl">{t('subtitle')}</p>
+          <p className="mt-1.5 text-sm text-muted-foreground max-w-2xl">{t('subtitle')}</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -321,10 +321,10 @@ export function AdminAudit() {
             type="button"
             onClick={() => fetchLogs(pagination.page, true)}
             disabled={isLoading || isRefreshing}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-3.5 py-2 text-sm font-medium text-foreground shadow-sm transition hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-50"
           >
             <RefreshCw
-              className={`h-4 w-4 ${isRefreshing ? 'animate-spin text-emerald-600' : 'text-slate-500'}`}
+              className={`h-4 w-4 ${isRefreshing ? 'animate-spin text-accent' : 'text-muted-foreground'}`}
               aria-hidden="true"
             />
             <span>{t('refresh')}</span>
@@ -333,12 +333,12 @@ export function AdminAudit() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4">
+      <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm space-y-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           {/* Search box */}
           <div className="relative flex-1">
             <Search
-              className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+              className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <input
@@ -347,13 +347,13 @@ export function AdminAudit() {
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={t('searchPlaceholder')}
               aria-label={t('searchLabel')}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 transition focus:border-emerald-500 focus:bg-white focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
+              className="w-full rounded-xl border border-border bg-surface-subtle/50 py-2.5 pl-10 pr-4 text-sm text-foreground placeholder-slate-400 transition focus:border-focus focus:bg-surface focus:outline-none focus:ring-4 focus:ring-focus"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={() => setSearchInput('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-muted-foreground"
                 aria-label={t('clearFilters')}
               >
                 <X className="h-3.5 w-3.5" />
@@ -362,7 +362,7 @@ export function AdminAudit() {
           </div>
 
           {/* Quick counts */}
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>
               {t('totalRecords', { count: pagination.total })}
             </span>
@@ -370,7 +370,7 @@ export function AdminAudit() {
               <button
                 type="button"
                 onClick={handleClearFilters}
-                className="ml-3 inline-flex items-center gap-1 font-semibold text-emerald-700 hover:text-emerald-800"
+                className="ml-3 inline-flex items-center gap-1 font-semibold text-accent hover:text-accent"
               >
                 <X className="h-3.5 w-3.5" />
                 {t('clearFilters')}
@@ -380,14 +380,14 @@ export function AdminAudit() {
         </div>
 
         {/* Filter controls row */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6 pt-2 border-t border-slate-100 text-xs">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6 pt-2 border-t border-border text-xs">
           {/* Action filter */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('actionFilter')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('actionFilter')}</label>
             <select
               value={action}
               onChange={(e) => setAction(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             >
               <option value="all">{t('allActions')}</option>
               {filterOptions.actions.map((act) => (
@@ -400,11 +400,11 @@ export function AdminAudit() {
 
           {/* Resource filter */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('resourceFilter')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('resourceFilter')}</label>
             <select
               value={resource}
               onChange={(e) => setResource(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             >
               <option value="all">{t('allResources')}</option>
               {filterOptions.resources.map((res) => (
@@ -417,11 +417,11 @@ export function AdminAudit() {
 
           {/* Actor filter */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('actorFilter')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('actorFilter')}</label>
             <select
               value={actorId}
               onChange={(e) => setActorId(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             >
               <option value="all">{t('allActors')}</option>
               {filterOptions.actors.map((act) => (
@@ -434,11 +434,11 @@ export function AdminAudit() {
 
           {/* Status filter */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('statusFilter')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('statusFilter')}</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value as any)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             >
               <option value="all">{t('allStatuses')}</option>
               <option value="SUCCESS">{t('successStatus')}</option>
@@ -448,23 +448,23 @@ export function AdminAudit() {
 
           {/* Date from */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('dateFrom')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('dateFrom')}</label>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             />
           </div>
 
           {/* Date to */}
           <div>
-            <label className="block mb-1 font-medium text-slate-600">{t('dateTo')}</label>
+            <label className="block mb-1 font-medium text-muted-foreground">{t('dateTo')}</label>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/10"
+              className="w-full rounded-lg border border-border bg-surface px-2 py-1.5 text-xs text-foreground focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus"
             />
           </div>
         </div>
@@ -472,48 +472,48 @@ export function AdminAudit() {
 
       {/* Main Content Area */}
       {isLoading ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border border-border bg-surface p-8 shadow-sm">
           <div className="space-y-4">
-            <div className="h-6 w-48 animate-pulse rounded bg-slate-100" />
+            <div className="h-6 w-48 animate-pulse rounded bg-surface-subtle" />
             <div className="space-y-2.5">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-16 animate-pulse rounded-xl border border-slate-100 bg-slate-50" />
+                <div key={i} className="h-16 animate-pulse rounded-xl border border-border bg-surface-subtle" />
               ))}
             </div>
           </div>
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-red-100 bg-red-50/50 p-12 text-center shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-red-100 bg-danger-soft/50 p-12 text-center shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-danger">
             <AlertCircle className="h-6 w-6" aria-hidden="true" />
           </div>
-          <h3 className="mt-4 text-base font-semibold text-slate-900">{t('errorTitle')}</h3>
-          <p className="mt-1 text-sm text-slate-500 max-w-md">{t('errorSubtitle')}</p>
+          <h3 className="mt-4 text-base font-semibold text-foreground">{t('errorTitle')}</h3>
+          <p className="mt-1 text-sm text-muted-foreground max-w-md">{t('errorSubtitle')}</p>
           <button
             type="button"
             onClick={() => fetchLogs(pagination.page)}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800 transition"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent-strong transition"
           >
             <RefreshCw className="h-4 w-4" />
             {t('retry')}
           </button>
         </div>
       ) : logs.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-surface p-12 text-center shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-subtle text-muted-foreground">
             {hasActiveFilters ? <Filter className="h-6 w-6" /> : <Activity className="h-6 w-6" />}
           </div>
-          <h3 className="mt-4 text-base font-semibold text-slate-900">
+          <h3 className="mt-4 text-base font-semibold text-foreground">
             {hasActiveFilters ? t('noResultsTitle') : t('emptyTitle')}
           </h3>
-          <p className="mt-1 text-sm text-slate-500 max-w-md">
+          <p className="mt-1 text-sm text-muted-foreground max-w-md">
             {hasActiveFilters ? t('noResultsSubtitle') : t('emptySubtitle')}
           </p>
           {hasActiveFilters && (
             <button
               type="button"
               onClick={handleClearFilters}
-              className="mt-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-surface-subtle transition"
             >
               <X className="h-4 w-4" />
               {t('clearFilters')}
@@ -521,10 +521,10 @@ export function AdminAudit() {
           )}
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-sm text-slate-600">
-              <thead className="border-b border-slate-200 bg-slate-50/75 text-xs font-semibold text-slate-700">
+            <table className="w-full border-collapse text-left text-sm text-muted-foreground">
+              <thead className="border-b border-border bg-surface-subtle/75 text-xs font-semibold text-foreground">
                 <tr>
                   <th scope="col" className="px-4 py-3.5">
                     {t('columns.timestamp')}
@@ -555,12 +555,12 @@ export function AdminAudit() {
                   return (
                     <tr
                       key={log.id}
-                      className="group transition-colors hover:bg-emerald-50/20"
+                      className="group transition-colors hover:bg-accent-soft/20"
                     >
                       {/* Timestamp */}
-                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-500 font-mono">
+                      <td className="whitespace-nowrap px-4 py-3.5 text-xs text-muted-foreground font-mono">
                         <div className="flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+                          <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
                           <span>{formatTimestamp(log.createdAt, locale)}</span>
                         </div>
                       </td>
@@ -578,11 +578,11 @@ export function AdminAudit() {
                       {/* Resource */}
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs">
                         <div className="flex flex-col">
-                          <span className="font-semibold text-slate-800">
+                          <span className="font-semibold text-foreground">
                             {translateResource(log.resource)}
                           </span>
                           {log.resourceId && (
-                            <span className="text-[11px] font-mono text-slate-400 truncate max-w-[120px]" title={log.resourceId}>
+                            <span className="text-[11px] font-mono text-muted-foreground truncate max-w-[120px]" title={log.resourceId}>
                               ID: {log.resourceId.slice(0, 8)}…
                             </span>
                           )}
@@ -592,14 +592,14 @@ export function AdminAudit() {
                       {/* Actor */}
                       <td className="whitespace-nowrap px-4 py-3.5 text-xs">
                         <div className="flex items-center gap-2">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-600 font-semibold text-xs border border-slate-200">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-subtle text-muted-foreground font-semibold text-xs border border-border">
                             {log.actorName ? log.actorName.slice(0, 2).toUpperCase() : 'SYS'}
                           </div>
                           <div className="flex flex-col">
-                            <span className="font-medium text-slate-900">
+                            <span className="font-medium text-foreground">
                               {log.actorName || 'System'}
                             </span>
-                            <span className="text-[10px] text-slate-400 capitalize">
+                            <span className="text-[10px] text-muted-foreground capitalize">
                               {log.actorType}
                             </span>
                           </div>
@@ -607,19 +607,19 @@ export function AdminAudit() {
                       </td>
 
                       {/* Description */}
-                      <td className="px-4 py-3.5 text-xs text-slate-700 max-w-sm truncate" title={log.description}>
+                      <td className="px-4 py-3.5 text-xs text-foreground max-w-sm truncate" title={log.description}>
                         {log.description}
                       </td>
 
                       {/* Status */}
                       <td className="whitespace-nowrap px-4 py-3.5">
                         {log.status === 'SUCCESS' ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 border border-emerald-200/80">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent border border-accent/30">
                             <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
                             {t('successStatus')}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700 border border-red-200/80">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-medium text-danger border border-danger/30">
                             <AlertTriangle className="h-3 w-3" aria-hidden="true" />
                             {t('failedStatus')}
                           </span>
@@ -631,7 +631,7 @@ export function AdminAudit() {
                         <button
                           type="button"
                           onClick={() => setSelectedLogId(log.id)}
-                          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                          className="inline-flex items-center gap-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm transition hover:bg-accent-soft hover:text-accent hover:border-accent/30 focus:outline-none focus:ring-2 focus:ring-focus"
                         >
                           <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                           <span>{t('viewDetails')}</span>
@@ -645,7 +645,7 @@ export function AdminAudit() {
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/50 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between text-xs text-slate-600">
+          <div className="flex flex-col gap-3 border-t border-border bg-surface-subtle/50 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between text-xs text-muted-foreground">
             <div>
               {t('showing', {
                 from: Math.min((pagination.page - 1) * pagination.pageSize + 1, pagination.total),
@@ -662,23 +662,23 @@ export function AdminAudit() {
                 })}
               </span>
 
-              <div className="inline-flex rounded-lg border border-slate-200 bg-white shadow-sm">
+              <div className="inline-flex rounded-lg border border-border bg-surface shadow-sm">
                 <button
                   type="button"
                   onClick={() => fetchLogs(pagination.page - 1)}
                   disabled={pagination.page <= 1 || isLoading}
-                  className="inline-flex items-center gap-1 rounded-l-lg px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 transition"
+                  className="inline-flex items-center gap-1 rounded-l-lg px-3 py-1.5 text-foreground hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-40 transition"
                   aria-label={t('previous')}
                 >
                   <ChevronLeft className="h-4 w-4" />
                   <span className="hidden sm:inline">{t('previous')}</span>
                 </button>
-                <div className="w-px bg-slate-200" />
+                <div className="w-px bg-border" />
                 <button
                   type="button"
                   onClick={() => fetchLogs(pagination.page + 1)}
                   disabled={pagination.page >= pagination.totalPages || isLoading}
-                  className="inline-flex items-center gap-1 rounded-r-lg px-3 py-1.5 text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 transition"
+                  className="inline-flex items-center gap-1 rounded-r-lg px-3 py-1.5 text-foreground hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-40 transition"
                   aria-label={t('next')}
                 >
                   <span className="hidden sm:inline">{t('next')}</span>
@@ -700,24 +700,24 @@ export function AdminAudit() {
         >
           <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
             <div
-              className="w-screen max-w-xl transform bg-white shadow-2xl transition ease-in-out sm:duration-300 flex flex-col"
+              className="w-screen max-w-xl transform bg-surface shadow-2xl transition ease-in-out sm:duration-300 flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Drawer Header */}
-              <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50/75 px-6 py-4">
+              <div className="flex items-center justify-between border-b border-border bg-surface-subtle/75 px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-accent">
                     <ShieldCheck className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
-                    <h2 className="text-base font-bold text-slate-900">{t('detailsTitle')}</h2>
-                    <p className="text-xs text-slate-500">{t('detailsSubtitle')}</p>
+                    <h2 className="text-base font-bold text-foreground">{t('detailsTitle')}</h2>
+                    <p className="text-xs text-muted-foreground">{t('detailsSubtitle')}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedLogId(null)}
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="rounded-lg p-2 text-muted-foreground hover:bg-surface-subtle hover:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-focus"
                   aria-label={t('closeDetails')}
                 >
                   <X className="h-5 w-5" />
@@ -727,36 +727,36 @@ export function AdminAudit() {
               {/* Drawer Body */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {/* Immutable Notice Banner */}
-                <div className="flex items-start gap-3 rounded-xl border border-amber-200/80 bg-amber-50/60 p-3.5 text-xs text-amber-900">
+                <div className="flex items-start gap-3 rounded-xl border border-warning/30 bg-warning/10 p-3.5 text-xs text-warning">
                   <Lock className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" aria-hidden="true" />
                   <span>{t('immutableNotice')}</span>
                 </div>
 
                 {isDetailsLoading ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-slate-400 space-y-3">
-                    <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                  <div className="flex flex-col items-center justify-center py-16 text-muted-foreground space-y-3">
+                    <Loader2 className="h-8 w-8 animate-spin text-accent" />
                     <span className="text-xs">{t('searchLabel')}</span>
                   </div>
                 ) : detailsError || !selectedLog ? (
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-xs text-red-700">
-                    <AlertCircle className="mx-auto h-6 w-6 text-red-500 mb-2" />
+                  <div className="rounded-xl border border-danger/30 bg-danger-soft p-6 text-center text-xs text-danger">
+                    <AlertCircle className="mx-auto h-6 w-6 text-danger mb-2" />
                     {t('errorSubtitle')}
                   </div>
                 ) : (
                   <>
                     {/* Action & Status Card */}
-                    <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-3">
+                    <div className="rounded-xl border border-border bg-surface-subtle/50 p-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                           {t('details.actionSection')}
                         </span>
                         {selectedLog.status === 'SUCCESS' ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-accent">
                             <CheckCircle2 className="h-3.5 w-3.5" />
                             {t('successStatus')}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-danger">
                             <AlertTriangle className="h-3.5 w-3.5" />
                             {t('failedStatus')}
                           </span>
@@ -765,50 +765,50 @@ export function AdminAudit() {
 
                       <div className="grid grid-cols-2 gap-3 text-xs pt-1">
                         <div>
-                          <span className="text-slate-400">{t('details.action')}:</span>
-                          <p className="font-semibold text-slate-800 mt-0.5">
+                          <span className="text-muted-foreground">{t('details.action')}:</span>
+                          <p className="font-semibold text-foreground mt-0.5">
                             {translateAction(selectedLog.action)}
                           </p>
-                          <span className="text-[11px] font-mono text-slate-500">{selectedLog.action}</span>
+                          <span className="text-[11px] font-mono text-muted-foreground">{selectedLog.action}</span>
                         </div>
                         <div>
-                          <span className="text-slate-400">{t('details.resource')}:</span>
-                          <p className="font-semibold text-slate-800 mt-0.5">
+                          <span className="text-muted-foreground">{t('details.resource')}:</span>
+                          <p className="font-semibold text-foreground mt-0.5">
                             {translateResource(selectedLog.resource)}
                           </p>
                           {selectedLog.resourceId && (
-                            <span className="text-[11px] font-mono text-slate-500 block truncate" title={selectedLog.resourceId}>
+                            <span className="text-[11px] font-mono text-muted-foreground block truncate" title={selectedLog.resourceId}>
                               ID: {selectedLog.resourceId}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-200/60 text-xs">
-                        <span className="text-slate-400">{t('columns.description')}:</span>
-                        <p className="font-medium text-slate-800 mt-1 leading-relaxed bg-white p-2.5 rounded-lg border border-slate-200">
+                      <div className="pt-2 border-t border-border/60 text-xs">
+                        <span className="text-muted-foreground">{t('columns.description')}:</span>
+                        <p className="font-medium text-foreground mt-1 leading-relaxed bg-surface p-2.5 rounded-lg border border-border">
                           {selectedLog.description}
                         </p>
                       </div>
                     </div>
 
                     {/* Actor Information Card */}
-                    <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         {t('details.actorSection')}
                       </span>
 
                       <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800 font-bold border border-emerald-200 text-sm">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent font-bold border border-accent/30 text-sm">
                           {selectedLog.actorName ? selectedLog.actorName.slice(0, 2).toUpperCase() : 'SYS'}
                         </div>
                         <div className="text-xs flex-1">
-                          <p className="font-semibold text-slate-900 text-sm">
+                          <p className="font-semibold text-foreground text-sm">
                             {selectedLog.actorName || 'System'}
                           </p>
-                          <p className="text-slate-500 capitalize">{selectedLog.actorType}</p>
+                          <p className="text-muted-foreground capitalize">{selectedLog.actorType}</p>
                           {selectedLog.actorId && (
-                            <p className="text-[11px] font-mono text-slate-400 truncate">
+                            <p className="text-[11px] font-mono text-muted-foreground truncate">
                               ID: {selectedLog.actorId}
                             </p>
                           )}
@@ -817,54 +817,54 @@ export function AdminAudit() {
                     </div>
 
                     {/* Request Context & Timestamps */}
-                    <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3 text-xs">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    <div className="rounded-xl border border-border bg-surface p-4 space-y-3 text-xs">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         {t('details.contextSection')}
                       </span>
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100">
-                          <span className="text-slate-400">{t('details.timestamp')}:</span>
-                          <span className="font-medium text-slate-700 font-mono">
+                        <div className="flex items-center justify-between py-1 border-b border-border">
+                          <span className="text-muted-foreground">{t('details.timestamp')}:</span>
+                          <span className="font-medium text-foreground font-mono">
                             {formatTimestamp(selectedLog.createdAt, locale)}
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100">
-                          <span className="text-slate-400">{t('details.timestampUtc')}:</span>
-                          <span className="font-medium text-slate-700 font-mono text-[11px]">
+                        <div className="flex items-center justify-between py-1 border-b border-border">
+                          <span className="text-muted-foreground">{t('details.timestampUtc')}:</span>
+                          <span className="font-medium text-foreground font-mono text-[11px]">
                             {formatUtcTimestamp(selectedLog.createdAt)}
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between py-1 border-b border-slate-100">
-                          <span className="text-slate-400">{t('details.ipAddress')}:</span>
-                          <span className="font-medium text-slate-700 font-mono">
+                        <div className="flex items-center justify-between py-1 border-b border-border">
+                          <span className="text-muted-foreground">{t('details.ipAddress')}:</span>
+                          <span className="font-medium text-foreground font-mono">
                             {selectedLog.ipAddress || '—'}
                           </span>
                         </div>
 
                         <div className="py-1">
-                          <span className="text-slate-400 block mb-1">{t('details.userAgent')}:</span>
-                          <p className="font-mono text-[11px] text-slate-600 bg-slate-50 p-2 rounded border border-slate-100 break-all">
+                          <span className="text-muted-foreground block mb-1">{t('details.userAgent')}:</span>
+                          <p className="font-mono text-[11px] text-muted-foreground bg-surface-subtle p-2 rounded border border-border break-all">
                             {selectedLog.userAgent || '—'}
                           </p>
                         </div>
 
-                        <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-2">
-                          <span className="text-slate-400">{t('details.logId')}:</span>
+                        <div className="flex items-center justify-between py-1 border-t border-border pt-2">
+                          <span className="text-muted-foreground">{t('details.logId')}:</span>
                           <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-[11px] text-slate-500">
+                            <span className="font-mono text-[11px] text-muted-foreground">
                               {selectedLog.id}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleCopy(selectedLog.id, 'id')}
-                              className="text-slate-400 hover:text-emerald-700 p-1"
+                              className="text-muted-foreground hover:text-accent p-1"
                               title={t('details.copyJson')}
                             >
                               {copiedKey === 'id' ? (
-                                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                                <Check className="h-3.5 w-3.5 text-accent" />
                               ) : (
                                 <Copy className="h-3.5 w-3.5" />
                               )}
@@ -875,9 +875,9 @@ export function AdminAudit() {
                     </div>
 
                     {/* Metadata JSON Card */}
-                    <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3">
+                    <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                           <FileCode className="h-3.5 w-3.5" />
                           {t('details.metadataSection')}
                         </span>
@@ -890,11 +890,11 @@ export function AdminAudit() {
                                 'meta',
                               )
                             }
-                            className="inline-flex items-center gap-1 text-xs text-emerald-700 hover:text-emerald-800 font-medium"
+                            className="inline-flex items-center gap-1 text-xs text-accent hover:text-accent font-medium"
                           >
                             {copiedKey === 'meta' ? (
                               <>
-                                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                                <Check className="h-3.5 w-3.5 text-accent" />
                                 <span>{t('details.copied')}</span>
                               </>
                             ) : (
@@ -908,11 +908,11 @@ export function AdminAudit() {
                       </div>
 
                       {selectedLog.metadata && Object.keys(selectedLog.metadata).length > 0 ? (
-                        <pre className="rounded-xl border border-slate-200 bg-slate-900 p-3.5 text-xs text-emerald-400 font-mono overflow-x-auto max-h-72">
+                        <pre className="rounded-xl border border-border bg-slate-900 p-3.5 text-xs text-emerald-400 font-mono overflow-x-auto max-h-72">
                           {JSON.stringify(selectedLog.metadata, null, 2)}
                         </pre>
                       ) : (
-                        <p className="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <p className="text-xs text-muted-foreground italic bg-surface-subtle p-3 rounded-lg border border-border">
                           {t('details.metadataEmpty')}
                         </p>
                       )}
@@ -922,11 +922,11 @@ export function AdminAudit() {
               </div>
 
               {/* Drawer Footer */}
-              <div className="border-t border-slate-200 bg-slate-50 px-6 py-3.5 flex justify-end">
+              <div className="border-t border-border bg-surface-subtle px-6 py-3.5 flex justify-end">
                 <button
                   type="button"
                   onClick={() => setSelectedLogId(null)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-100 transition"
+                  className="rounded-xl border border-border bg-surface px-4 py-2 text-xs font-semibold text-foreground shadow-sm hover:bg-surface-subtle transition"
                 >
                   {t('closeDetails')}
                 </button>

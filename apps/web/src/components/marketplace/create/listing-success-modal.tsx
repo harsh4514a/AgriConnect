@@ -27,25 +27,25 @@ export function ListingSuccessModal({
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md overflow-hidden rounded-3xl border border-white/20 bg-green-950/90 p-6 text-center shadow-2xl backdrop-blur-2xl"
+        className="w-full max-w-md overflow-hidden rounded-3xl border border-border bg-surface p-6 text-center shadow-2xl"
       >
         {/* Animated celebration icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.15, type: 'spring', stiffness: 260, damping: 20 }}
-          className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-tr from-green-600 to-emerald-400 text-white shadow-xl shadow-green-900/50"
+          className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg shadow-black/10"
         >
           <CheckCircle2 className="h-10 w-10 stroke-[2.5]" />
         </motion.div>
 
-        <h3 className="mt-5 text-2xl font-extrabold text-white">
+        <h3 className="mt-5 text-2xl font-extrabold text-foreground">
           {isEdit
             ? t('dashboard.createListing.modal.updateSuccessTitle')
             : t('dashboard.createListing.modal.successTitle')}
         </h3>
 
-        <p className="mt-2 text-sm text-white/70">
+        <p className="mt-2 text-sm text-foreground">
           {isEdit
             ? t('dashboard.createListing.modal.updateSuccessSubtitle')
             : t('dashboard.createListing.modal.successSubtitle')}
@@ -57,11 +57,7 @@ export function ListingSuccessModal({
           <button
             type="button"
             onClick={() => router.push(`/${locale}/dashboard/marketplace/${listingId}`)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-95 shadow-lg"
-            style={{
-              background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-              boxShadow: '0 4px 16px rgba(46,125,50,0.45)',
-            }}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent text-sm font-bold text-accent-foreground shadow-sm transition-all duration-200 hover:bg-accent-strong active:scale-95"
           >
             <Store className="h-4 w-4" />
             <span>{t('dashboard.createListing.modal.viewListing')}</span>
@@ -72,7 +68,7 @@ export function ListingSuccessModal({
           <button
             type="button"
             onClick={() => router.push(`/${locale}/dashboard/my-listings`)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/15 active:scale-95"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface-subtle text-sm font-semibold text-foreground transition-all duration-200 hover:bg-surface-subtle active:scale-95"
           >
             <Package className="h-4 w-4" />
             <span>{t('dashboard.createListing.modal.viewMyListings')}</span>
@@ -83,7 +79,7 @@ export function ListingSuccessModal({
             <button
               type="button"
               onClick={onReset}
-              className="mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-white/50 hover:text-white transition-colors py-2"
+              className="mt-1 flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors py-2"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>{t('dashboard.createListing.modal.createAnother')}</span>

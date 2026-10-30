@@ -37,8 +37,8 @@ export function MarketplaceQuickChips({ selected, onSelect }: MarketplaceQuickCh
     cn(
       'inline-flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-3.5 text-[13px] font-semibold transition-all active:scale-95',
       active
-        ? 'border-green-400/70 bg-green-500 text-white shadow-lg shadow-green-900/40'
-        : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white',
+        ? 'border-green-400/70 bg-accent text-accent-foreground shadow-lg shadow-green-900/40'
+        : 'border-border bg-surface-subtle text-foreground hover:bg-surface-subtle hover:text-foreground',
     );
 
   return (

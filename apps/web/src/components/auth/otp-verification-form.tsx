@@ -1,22 +1,17 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect, ClipboardEvent, KeyboardEvent } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, Loader2, Clock, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { isFirebaseEnabled } from '@/lib/firebase/client';
-import {
-    verifyOtpWithFirebase,
-    resendOtpWithFirebase,
-    getPendingVerificationId,
-    clearPendingVerificationId,
-} from '@/lib/firebase/phone-auth';
+import { isFirebaseEnabled } from '@/lib/firebase/config';
 import { getFirebaseErrorKey } from '@/lib/firebase/errors';
 import { verifyFirebase } from '@/services/api/auth.api';
 import { API_BASE_URL } from '@/lib/api-url';
 import type { AuthUser } from '@/types/auth.types';
+import { syncSessionHintFromStorage } from '@/services/api/token';
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 30;
@@ -30,6 +25,7 @@ interface OtpVerificationFormProps {
 
 export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVerificationFormProps) {
     const t = useTranslations();
+    const prefersReducedMotion = useReducedMotion() ?? false;
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
     const [isVerifying, setIsVerifying] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -54,7 +50,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
     };
     const formattedMobile = formatMobileForDisplay(mobileNumber);
 
-    // Sanitize mobile number to ensure it's always +91 + 10 digits
+    // Sanitize mobile number to ensure it is always +91 plus 10 digits.
     const sanitizeMobileNumber = (phone: string): string => {
         const digits = phone.replace(/\D/g, '');
         const cleanedDigits = digits.startsWith('91') ? digits.substring(2) : digits;
@@ -126,6 +122,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
 
             if (isFirebaseEnabled()) {
                 // Firebase resend produces a fresh verificationId and caches it.
+                const { resendOtpWithFirebase } = await import('@/lib/firebase/phone-auth');
                 await resendOtpWithFirebase(sanitized);
             } else {
                 const response = await fetch(
@@ -177,6 +174,11 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                 // Firebase flow: exchange the OTP code for an ID Token, then
                 // send the ID Token to the backend which verifies it with the
                 // Admin SDK (never trusting the frontend).
+                const {
+                    getPendingVerificationId,
+                    verifyOtpWithFirebase,
+                    clearPendingVerificationId,
+                } = await import('@/lib/firebase/phone-auth');
                 const verificationId = getPendingVerificationId();
 
                 if (!verificationId) {
@@ -252,6 +254,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
             if (data.tokens?.refreshToken) {
                 localStorage.setItem('refreshToken', data.tokens.refreshToken);
             }
+            syncSessionHintFromStorage();
             if (data.registrationToken) {
                 localStorage.setItem('registrationToken', data.registrationToken);
             }
@@ -275,31 +278,31 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
     if (isSuccess) {
         return (
             <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
+                initial={prefersReducedMotion ? false : { scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-col items-center justify-center py-8"
             >
                 <motion.div
-                    initial={{ scale: 0 }}
+                    initial={prefersReducedMotion ? false : { scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ delay: 0.1, duration: 0.4, type: 'spring', stiffness: 200 }}
+                    transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1, duration: 0.4, type: 'spring', stiffness: 200 }}
                 >
-                    <CheckCircle2 className="w-20 h-20 text-green-500" />
+                    <CheckCircle2 className="w-20 h-20 text-accent" />
                 </motion.div>
                 <motion.p
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.4 }}
-                    className="mt-6 text-xl font-semibold text-white"
+                    transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3, duration: 0.4 }}
+                    className="mt-6 text-xl font-semibold text-foreground"
                 >
                     {t('otp.verifiedSuccess')}
                 </motion.p>
                 <motion.p
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 0.4 }}
-                    className="mt-2 text-sm text-white/60"
+                    transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.45, duration: 0.4 }}
+                    className="mt-2 text-sm text-muted-foreground"
                 >
                     {t('otp.redirecting')}
                 </motion.p>
@@ -309,68 +312,68 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
             <motion.button
                 onClick={onBack}
-                whileHover={{ x: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 text-sm font-medium text-white/70 hover:text-white transition-colors mb-6"
+                whileHover={prefersReducedMotion ? undefined : { x: -2 }}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                className="mb-5 flex items-center gap-1.5 rounded-md text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             >
                 <ArrowLeft className="w-4 h-4" />
                 {t('otp.back')}
             </motion.button>
 
             <motion.h2
-                initial={{ opacity: 0, y: 10 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05, duration: 0.4 }}
-                className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
+                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.05, duration: 0.4 }}
+                className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
             >
                 {t('otp.verifyTitle')}
             </motion.h2>
 
             <motion.p
-                initial={{ opacity: 0, y: 10 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.4 }}
-                className="mt-3 text-sm text-white/60 leading-relaxed"
+                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1, duration: 0.4 }}
+                className="mt-3 text-sm leading-relaxed text-muted-foreground"
             >
                 {t('otp.verifySubtitle')}
             </motion.p>
 
             <motion.p
-                initial={{ opacity: 0, y: 10 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15, duration: 0.4 }}
-                className="mt-1 text-base font-semibold text-green-300"
+                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.15, duration: 0.4 }}
+                className="mt-1 text-base font-semibold text-accent"
             >
                 <span>{formattedMobile}</span>
             </motion.p>
 
             <motion.button
                 onClick={onBack}
-                whileHover={{ x: 2 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-1 text-xs font-medium text-green-300 hover:text-green-200 transition-colors"
+                whileHover={prefersReducedMotion ? undefined : { x: 2 }}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+                    className="mt-1 text-xs font-medium text-accent transition-colors hover:text-accent-strong"
             >
                 {t('otp.changeNumber')}
             </motion.button>
 
             <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
-                className="mt-8 flex gap-3 justify-start"
+                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2, duration: 0.4 }}
+                className="mt-8 flex w-full justify-between gap-1.5 sm:justify-start sm:gap-2.5"
             >
                 {otp.map((digit, index) => (
                     <motion.div
                         key={index}
-                        initial={{ opacity: 0, scale: 0.8 }}
+                        initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 + index * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 + index * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="relative"
                     >
                         <input
@@ -385,16 +388,15 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                             onPaste={index === 0 ? handlePaste : undefined}
                             aria-label={t('otp.digitAria', { index: index + 1, length: OTP_LENGTH })}
                             className={`
-                                w-11 h-14
-                                text-center text-2xl font-bold
-                                rounded-2xl border-2
+                                h-12 w-10 text-center text-xl font-bold sm:h-14 sm:w-11 sm:text-2xl
+                                rounded-xl border-2 sm:rounded-2xl
                                 transition-all duration-200
                                 outline-none
                                 ${digit
-                                    ? 'border-green-300 bg-green-400/20 text-white shadow-lg shadow-green-900/30'
-                                    : 'border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/15'
+                                    ? 'border-focus bg-accent-soft text-foreground'
+                                    : 'border-border bg-surface text-foreground hover:border-border-strong'
                                 }
-                                focus:border-green-300 focus:ring-4 focus:ring-green-400/20 focus:bg-white/15
+                                focus:border-focus focus:ring-2 focus:ring-focus
                                 disabled:opacity-50 disabled:cursor-not-allowed
                                 caret-transparent
                             `}
@@ -416,7 +418,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                     variant="primary"
                     size="lg"
                     fullWidth
-                    className="h-14 text-base font-semibold rounded-full"
+                    className="h-12 rounded-xl text-sm font-semibold"
                 >
                     {isVerifying ? (
                         <span className="flex items-center gap-2">
@@ -441,35 +443,26 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.4 }}
-                className="mt-8 inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg shadow-black/10"
+                className="mt-6 inline-flex max-w-full flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-subtle px-4 py-3"
             >
-                <p className="text-xs font-semibold text-white/80">
+                <p className="text-xs font-semibold text-foreground">
                     {t('otp.didntReceive')}
                 </p>
 
-                <div className="h-4 w-px bg-white/20" />
+                <div className="h-4 w-px bg-border" />
 
                 {timer > 0 ? (
                     <motion.div
                         key={timer}
                         initial={{ opacity: 0.8, scale: 0.97 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="flex items-center gap-1.5 text-xs font-bold text-green-300"
+                        className="flex items-center gap-1.5 text-xs font-bold text-accent"
                     >
-                        <Clock className="w-3.5 h-3.5 text-green-300" />
+                        <Clock className="w-3.5 h-3.5 text-accent" />
                         <span className="tabular-nums">
-                            {t('otp.resendIn', { time: `${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(timer % 60).padStart(2, '0')}` })}
-                        </span>
-                    </motion.div>
-                ) : (
-                    <motion.button
-                        onClick={handleResend}
-                        disabled={isResending}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`
+                            {t('otp.resendIn', { time: `${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(timer % 60).padStart(2, '0')}`})} </span> </motion.div> ) : ( <motion.button onClick={handleResend} disabled={isResending} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className={`
                             flex items-center gap-1.5 text-xs font-bold transition-all duration-200
-                            ${isResending ? 'text-white/40 cursor-not-allowed' : 'text-green-300 hover:text-green-200 underline underline-offset-2'}
+                            ${isResending ? 'text-muted-foreground cursor-not-allowed' : 'text-accent hover:text-accent-strong underline underline-offset-2'}
                         `}
                     >
                         {isResending ? (

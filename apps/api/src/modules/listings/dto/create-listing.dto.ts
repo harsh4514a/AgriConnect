@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsString,
   Matches,
+  Max,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -68,6 +69,22 @@ export class CreateListingDto {
   @IsString()
   @MaxLength(100)
   village: string;
+
+  @ApiPropertyOptional({ description: 'GPS latitude captured for this listing location' })
+  @IsOptional()
+  @Transform(({ value }) => value === null || value === '' ? null : Number(value))
+  @IsNumber()
+  @Min(-90)
+  @Max(90)
+  latitude?: number | null;
+
+  @ApiPropertyOptional({ description: 'GPS longitude captured for this listing location' })
+  @IsOptional()
+  @Transform(({ value }) => value === null || value === '' ? null : Number(value))
+  @IsNumber()
+  @Min(-180)
+  @Max(180)
+  longitude?: number | null;
 
   @ApiPropertyOptional({ default: 'Gujarat' })
   @IsOptional()

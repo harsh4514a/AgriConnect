@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { AuthenticatedRedirect } from '@/components/home/authenticated-redirect';
 import { HomePage } from '@/components/home/home-page';
 import { defaultLocale, isLocale, locales, type Locale } from '@/i18n/config';
+import { loadLocaleMessages } from '@/i18n/server-messages';
 import { getSiteUrl } from '@/lib/site-url';
 
 const homeSeo: Record<Locale, { title: string; description: string; ogLocale: string }> = {
@@ -79,6 +79,7 @@ export default async function LandingPage({
 }) {
   const { locale: routeLocale } = await params;
   const locale: Locale = isLocale(routeLocale) ? routeLocale : defaultLocale;
+  const messages = await loadLocaleMessages(locale);
   const siteUrl = getSiteUrl();
   const websiteSchema = siteUrl
     ? {
@@ -101,8 +102,7 @@ export default async function LandingPage({
           }}
         />
       ) : null}
-      <AuthenticatedRedirect />
-      <HomePage />
+      <HomePage locale={locale} copy={messages.landingPage} />
     </>
   );
 }

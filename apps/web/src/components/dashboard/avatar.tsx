@@ -21,15 +21,7 @@ function getInitials(name: string): string {
 
 /**
  * Renders a profile avatar. Shows the image when `src` is provided,
- * otherwise a gradient circle with the user's initials.
- */
-export function Avatar({ name, src, className }: AvatarProps) {
-    if (src) {
-        return (
-            <span
-                className={cn(
-                    'inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-full',
-                    'ring-2 ring-white/20',
+ * otherwise a gradient circle with the user's initials. */ export function Avatar({ name, src, className }: AvatarProps) { if (src) { return ( <span className={cn('inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-full','ring-1 ring-border',
                     className,
                 )}
             >
@@ -42,8 +34,8 @@ export function Avatar({ name, src, className }: AvatarProps) {
     return (
         <span
             className={cn(
-                'inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white',
-                'bg-gradient-to-br from-green-400 to-emerald-700 ring-2 ring-white/20',
+                'inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-accent-foreground',
+                'bg-accent text-accent-foreground ring-1 ring-border',
                 className,
             )}
             aria-hidden="true"

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import {
   Plus,
   Search,
@@ -10,7 +10,7 @@ import {
   RefreshCw,
   ClipboardList,
 } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
@@ -23,11 +23,14 @@ import { getDistricts, getStates, type LocationOption } from '@/services/api/aut
 import { BuyerRequirementCard } from './buyer-requirement-card';
 import { getLocalizedDomainName } from '@agri/domain-data';
 import type { Locale } from '@/i18n/config';
+import { useAuth } from '@/hooks/use-auth';
 
 export function BuyerRequirementsPage() {
   const t = useTranslations('buyerRequirements');
   const params = useParams();
+  const router = useRouter();
   const locale = ((params?.locale as string) || 'en') as Locale;
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const cropLabels = useMemo<Record<string, string>>(
     () => ({
@@ -63,6 +66,17 @@ export function BuyerRequirementsPage() {
   const [districtOptions, setDistrictOptions] = useState<LocationOption[]>([]);
 
   useEffect(() => {
+    if (authLoading) return;
+    const requestedView = new URLSearchParams(window.location.search).get('view');
+    if (requestedView !== 'mine') return;
+    if (isAuthenticated) {
+      setTab('mine');
+    } else {
+      router.replace(`/${locale}/auth`);
+    }
+  }, [authLoading, isAuthenticated, locale, router]);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => {
       setDebouncedSearch(search.trim());
     }, 300);
@@ -91,10 +105,10 @@ export function BuyerRequirementsPage() {
         getLocalizedDomainName(b.name, locale, 'district'),
       ),
     ),
-    [districtOptions],
+    [districtOptions, locale],
   );
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(false);
 
@@ -107,36 +121,48 @@ export function BuyerRequirementsPage() {
         cropKey: cropKey || undefined,
       };
 
-      const response = await getBuyerRequirements(query);
+      const response = await getBuyerRequirements(query, signal);
       setItems(response.items);
       setTotalPages(Math.max(1, response.totalPages));
       setTotal(response.total);
     } catch {
-      setError(true);
+      if (!signal?.aborted) setError(true);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, [page, debouncedSearch, district, cropKey]);
 
-  const loadMine = useCallback(async () => {
+  const loadMine = useCallback(async (signal?: AbortSignal) => {
     setMineLoading(true);
 
     try {
-      setMine(await getMyBuyerRequirements());
+      setMine(await getMyBuyerRequirements(signal));
     } catch {
-      toast.error(t('errors.load'));
+      if (!signal?.aborted) toast.error(t('errors.load'));
     } finally {
-      setMineLoading(false);
+      if (!signal?.aborted) setMineLoading(false);
     }
   }, [t]);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (tab === 'find') {
-      void load();
+      void load(controller.signal);
+    } else if (isAuthenticated) {
+      void loadMine(controller.signal);
     } else {
-      void loadMine();
+      setTab('find');
     }
-  }, [tab, load, loadMine]);
+    return () => controller.abort();
+  }, [isAuthenticated, tab, load, loadMine]);
+
+  const changeTab = (nextTab: 'find' | 'mine') => {
+    setTab(nextTab);
+    const url = new URL(window.location.href);
+    if (nextTab === 'mine') url.searchParams.set('view', 'mine');
+    else url.searchParams.delete('view');
+    router.replace(`${url.pathname}${url.search}`, { scroll: false });
+  };
 
   useEffect(() => {
     setPage(1);
@@ -149,68 +175,61 @@ export function BuyerRequirementsPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {t('title')}
-          </h1>
-          <p className="mt-1 text-sm text-emerald-100">
-            {t('subtitle')}
-          </p>
-        </div>
+    <div className="mx-auto w-full max-w-7xl space-y-3">
+      <h1 className="sr-only">{t('title')}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-2 rounded-xl bg-surface-subtle p-1">
+          <button
+            onClick={() => changeTab('find')}
+            className={`min-h-10 rounded-lg px-4 text-sm font-semibold ${
+              tab === 'find'
+                ? 'bg-surface text-foreground shadow-sm'
+                : 'text-muted-foreground'
+            }`}
+          >
+            {t('tabs.find')}
+          </button>
 
+          {isAuthenticated ? (
+            <button
+              onClick={() => changeTab('mine')}
+              className={`min-h-10 rounded-lg px-4 text-sm font-semibold ${
+                tab === 'mine'
+                  ? 'bg-surface text-foreground shadow-sm'
+                  : 'text-muted-foreground'
+              }`}
+            >
+              {t('tabs.mine')}
+            </button>
+          ) : null}
+        </div>
         <Link
-          href={`/${locale}/dashboard/buyer-requirements/create`}
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+          href={isAuthenticated ? `/${locale}/dashboard/buyer-requirements/create` : `/${locale}/auth`}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm transition hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
           <Plus className="h-4 w-4" />
           {t('create')}
         </Link>
       </div>
 
-      <div className="mt-6 flex gap-2 rounded-xl bg-slate-100 p-1 sm:w-fit">
-        <button
-          onClick={() => setTab('find')}
-          className={`min-h-10 rounded-lg px-4 text-sm font-semibold ${
-            tab === 'find'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-500'
-          }`}
-        >
-          {t('tabs.find')}
-        </button>
-
-        <button
-          onClick={() => setTab('mine')}
-          className={`min-h-10 rounded-lg px-4 text-sm font-semibold ${
-            tab === 'mine'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-500'
-          }`}
-        >
-          {t('tabs.mine')}
-        </button>
-      </div>
-
       {tab === 'find' ? (
         <>
-          <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="mt-3 rounded-2xl border border-border bg-surface p-3 shadow-sm">
             <div className="flex flex-col gap-3 lg:flex-row">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
                 <input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder={t('searchPlaceholder')}
-                  className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-10 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  className="h-11 w-full rounded-xl border border-border bg-surface-subtle pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-focus focus:bg-surface focus:ring-2 focus:ring-focus"
                 />
 
                 {search ? (
                   <button
                     onClick={() => setSearch('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                     aria-label={t('clear')}
                   >
                     <X className="h-4 w-4" />
@@ -222,7 +241,7 @@ export function BuyerRequirementsPage() {
                 <select
                   value={cropKey}
                   onChange={(event) => setCropKey(event.target.value)}
-                  className="h-11 rounded-xl border border-slate-200 px-3 text-sm"
+                  className="h-11 rounded-xl border border-border bg-surface px-3 text-sm text-foreground"
                 >
                   <option value="">{t('filters.allCrops')}</option>
                   {Object.entries(cropLabels).map(([key, label]) => (
@@ -235,7 +254,7 @@ export function BuyerRequirementsPage() {
                 <select
                   value={district}
                   onChange={(event) => setDistrict(event.target.value)}
-                  className="h-11 rounded-xl border border-slate-200 px-3 text-sm"
+                  className="h-11 rounded-xl border border-border bg-surface px-3 text-sm text-foreground"
                 >
                   <option value="">{t('filters.allDistricts')}</option>
                   {districts.map((item) => (
@@ -248,7 +267,7 @@ export function BuyerRequirementsPage() {
 
               <button
                 onClick={() => setShowFilters((value) => !value)}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 lg:hidden"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-foreground lg:hidden"
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 {t('filters.title')}
@@ -256,11 +275,11 @@ export function BuyerRequirementsPage() {
             </div>
 
             {showFilters ? (
-              <div className="mt-3 grid gap-3 border-t border-slate-100 pt-3 sm:grid-cols-2 lg:hidden">
+              <div className="mt-3 grid gap-3 border-t border-border pt-3 sm:grid-cols-2 lg:hidden">
                 <select
                   value={cropKey}
                   onChange={(event) => setCropKey(event.target.value)}
-                  className="h-11 rounded-xl border border-slate-200 px-3 text-sm"
+                  className="h-11 rounded-xl border border-border bg-surface px-3 text-sm text-foreground"
                 >
                   <option value="">{t('filters.allCrops')}</option>
                   {Object.entries(cropLabels).map(([key, label]) => (
@@ -273,7 +292,7 @@ export function BuyerRequirementsPage() {
                 <select
                   value={district}
                   onChange={(event) => setDistrict(event.target.value)}
-                  className="h-11 rounded-xl border border-slate-200 px-3 text-sm"
+                  className="h-11 rounded-xl border border-border bg-surface px-3 text-sm text-foreground"
                 >
                   <option value="">{t('filters.allDistricts')}</option>
                   {districts.map((item) => (
@@ -285,7 +304,7 @@ export function BuyerRequirementsPage() {
 
                 <button
                   onClick={clearFilters}
-                  className="h-11 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 sm:col-span-2"
+                  className="h-11 rounded-xl border border-border text-sm font-semibold text-muted-foreground sm:col-span-2"
                 >
                   {t('filters.clear')}
                 </button>
@@ -293,7 +312,7 @@ export function BuyerRequirementsPage() {
             ) : null}
           </div>
 
-          <div className="mt-4 flex items-center justify-between text-xs text-emerald-100/80">
+          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
             <span>
               {total} {t('results')}
             </span>
@@ -301,7 +320,7 @@ export function BuyerRequirementsPage() {
             {search || district || cropKey ? (
               <button
                 onClick={clearFilters}
-                className="font-semibold text-emerald-200 hover:text-white"
+                className="font-semibold text-accent hover:text-foreground"
               >
                 {t('filters.clear')}
               </button>
@@ -313,39 +332,39 @@ export function BuyerRequirementsPage() {
               {Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
-                  className="h-52 animate-pulse rounded-2xl bg-slate-100"
+                  className="h-52 animate-pulse rounded-2xl bg-surface-subtle"
                 />
               ))}
             </div>
           ) : error ? (
-            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-              <ClipboardList className="mx-auto h-8 w-8 text-red-500" />
-              <p className="mt-3 font-semibold text-red-900">
+            <div className="mt-6 rounded-2xl border border-danger/30 bg-danger-soft p-8 text-center">
+              <ClipboardList className="mx-auto h-8 w-8 text-danger" />
+              <p className="mt-3 font-semibold text-danger">
                 {t('errors.title')}
               </p>
 
               <button
                 onClick={() => void load()}
-                className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-red-700 shadow-sm"
+                className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl bg-surface px-4 text-sm font-semibold text-danger shadow-sm"
               >
                 <RefreshCw className="h-4 w-4" />
                 {t('errors.retry')}
               </button>
             </div>
           ) : items.length === 0 ? (
-            <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-              <ClipboardList className="mx-auto h-9 w-9 text-slate-300" />
-              <p className="mt-3 font-semibold text-slate-900">
+            <div className="mt-6 rounded-2xl border border-dashed border-border-strong bg-surface p-10 text-center">
+              <ClipboardList className="mx-auto h-9 w-9 text-muted-foreground" />
+              <p className="mt-3 font-semibold text-foreground">
                 {t('empty.title')}
               </p>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {t('empty.description')}
               </p>
 
               {search || district || cropKey ? (
                 <button
                   onClick={clearFilters}
-                  className="mt-4 text-sm font-semibold text-emerald-700"
+                  className="mt-4 text-sm font-semibold text-accent"
                 >
                   {t('filters.clear')}
                 </button>
@@ -381,7 +400,7 @@ export function BuyerRequirementsPage() {
                     {t('pagination.previous')}
                   </button>
 
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-muted-foreground">
                     {page} / {totalPages}
                   </span>
 
@@ -408,23 +427,23 @@ export function BuyerRequirementsPage() {
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
-                  className="h-52 animate-pulse rounded-2xl bg-slate-100"
+                  className="h-52 animate-pulse rounded-2xl bg-surface-subtle"
                 />
               ))}
             </div>
           ) : mine.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-              <ClipboardList className="mx-auto h-9 w-9 text-slate-300" />
-              <p className="mt-3 font-semibold text-slate-900">
+            <div className="rounded-2xl border border-dashed border-border-strong bg-surface p-10 text-center">
+              <ClipboardList className="mx-auto h-9 w-9 text-muted-foreground" />
+              <p className="mt-3 font-semibold text-foreground">
                 {t('mine.emptyTitle')}
               </p>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {t('mine.emptyDescription')}
               </p>
 
               <Link
                 href={`/${locale}/dashboard/buyer-requirements/create`}
-                className="mt-4 inline-flex min-h-10 items-center rounded-xl bg-emerald-600 px-4 text-sm font-semibold text-white"
+                className="mt-4 inline-flex min-h-10 items-center rounded-xl bg-accent px-4 text-sm font-semibold text-accent-foreground"
               >
                 {t('create')}
               </Link>

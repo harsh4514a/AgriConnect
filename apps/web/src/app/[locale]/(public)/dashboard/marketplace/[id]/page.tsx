@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { MarketplaceListingDetails } from '@/components/marketplace/marketplace-listing-details';
+import { MarketplaceListingSkeleton } from '@/components/marketplace/marketplace-listing-skeleton';
 
 interface MarketplaceListingPageProps {
   params: Promise<{
@@ -9,5 +11,9 @@ interface MarketplaceListingPageProps {
 
 export default async function MarketplaceListingPage({ params }: MarketplaceListingPageProps) {
   const resolvedParams = await params;
-  return <MarketplaceListingDetails id={resolvedParams.id} />;
+  return (
+    <Suspense fallback={<MarketplaceListingSkeleton />}>
+      <MarketplaceListingDetails id={resolvedParams.id} />
+    </Suspense>
+  );
 }

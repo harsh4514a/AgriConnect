@@ -75,7 +75,7 @@ export function LocationPermissionStep({ onNext }: StepProps) {
         >
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-green-700" />
+                    <MapPin className="w-6 h-6 text-accent" />
                 </div>
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{t('locationPermission.enable')}</h2>
@@ -91,15 +91,15 @@ export function LocationPermissionStep({ onNext }: StepProps) {
                 {isLocating ? (
                     <div className="flex items-center justify-center gap-3">
                         <div className="animate-spin rounded-full border-2 border-green-300 border-t-green-700 h-6 w-6"></div>
-                        <span className="text-sm font-medium text-green-700">{t('locationPermission.detecting')}</span>
+                        <span className="text-sm font-medium text-accent">{t('locationPermission.detecting')}</span>
                     </div>
                 ) : (
                     <div className="flex items-center justify-center gap-3">
                         <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                            <Navigation className="w-6 h-6 text-green-700" />
+                            <Navigation className="w-6 h-6 text-accent" />
                         </div>
                         <div className="text-left">
-                            <span className="block text-base font-semibold text-green-800">{t('locationPermission.useCurrent')}</span>
+                            <span className="block text-base font-semibold text-accent">{t('locationPermission.useCurrent')}</span>
                             <span className="block text-xs text-gray-500">{t('locationPermission.autoDetect')}</span>
                         </div>
                     </div>
@@ -119,13 +119,13 @@ export function LocationPermissionStep({ onNext }: StepProps) {
                     <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center">
-                    <span className="px-4 text-xs font-medium text-gray-400 bg-white">{t('locationPermission.or')}</span>
+                    <span className="px-4 text-xs font-medium text-gray-400 bg-surface">{t('locationPermission.or')}</span>
                 </div>
             </div>
 
             <button
                 onClick={handleEnterManually}
-                className="w-full h-14 rounded-xl font-semibold text-base bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+                className="w-full h-14 rounded-xl font-semibold text-base bg-surface border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
             >
                 {t('locationPermission.enterManually')} <ArrowRight className="w-4 h-4" />
             </button>

@@ -90,15 +90,17 @@ export interface CreateBuyerRequirementPayload {
 
 export async function getBuyerRequirements(
   query: BuyerRequirementQuery = {},
+  signal?: AbortSignal,
 ): Promise<BuyerRequirementListResponse> {
   const { data } = await api.get<BuyerRequirementListResponse>('/buyer-requirements', {
     params: query,
+    signal,
   });
   return data;
 }
 
-export async function getMyBuyerRequirements(): Promise<BuyerRequirement[]> {
-  const { data } = await api.get<BuyerRequirement[]>('/buyer-requirements/mine');
+export async function getMyBuyerRequirements(signal?: AbortSignal): Promise<BuyerRequirement[]> {
+  const { data } = await api.get<BuyerRequirement[]>('/buyer-requirements/mine', { signal });
   return data;
 }
 

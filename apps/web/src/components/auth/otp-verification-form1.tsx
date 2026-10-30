@@ -17,6 +17,7 @@ import { getFirebaseErrorKey } from '@/lib/firebase/errors';
 import { verifyFirebase } from '@/services/api/auth.api';
 import { API_BASE_URL } from '@/lib/api-url';
 import type { AuthUser } from '@/types/auth.types';
+import { syncSessionHintFromStorage } from '@/services/api/token';
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 30;
@@ -54,7 +55,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
     };
     const formattedMobile = formatMobileForDisplay(mobileNumber);
 
-    // Sanitize mobile number to ensure it's always +91 + 10 digits
+    // Sanitize mobile number to ensure it is always +91 plus 10 digits.
     const sanitizeMobileNumber = (phone: string): string => {
         const digits = phone.replace(/\D/g, '');
         const cleanedDigits = digits.startsWith('91') ? digits.substring(2) : digits;
@@ -244,6 +245,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
             if (data.tokens?.refreshToken) {
                 localStorage.setItem('refreshToken', data.tokens.refreshToken);
             }
+            syncSessionHintFromStorage();
             if (data.registrationToken) {
                 localStorage.setItem('registrationToken', data.registrationToken);
             }
@@ -277,7 +279,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.1, duration: 0.4, type: 'spring', stiffness: 200 }}
                 >
-                    <CheckCircle2 className="w-20 h-20 text-green-500" />
+                    <CheckCircle2 className="w-20 h-20 text-[var(--hero-muted)]" />
                 </motion.div>
                 <motion.p
                     initial={{ opacity: 0, y: 10 }}
@@ -346,7 +348,7 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                 onClick={onBack}
                 whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.95 }}
-                className="mt-1 text-xs font-medium text-green-300 hover:text-green-200 transition-colors"
+                    className="mt-1 text-xs font-medium text-green-300 hover:text-[var(--hero-muted)] transition-colors"
             >
                 {t('otp.changeNumber')}
             </motion.button>
@@ -384,9 +386,9 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                                 outline-none
                                 ${digit
                                     ? 'border-green-300 bg-green-400/20 text-white shadow-lg shadow-green-900/30'
-                                    : 'border-white/25 bg-white/10 text-white hover:border-white/40 hover:bg-white/15'
+                                    : 'border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/20'
                                 }
-                                focus:border-green-300 focus:ring-4 focus:ring-green-400/20 focus:bg-white/15
+                                focus:border-focus focus:ring-4 focus:ring-focus focus:bg-surface-subtle
                                 disabled:opacity-50 disabled:cursor-not-allowed
                                 caret-transparent
                             `}
@@ -433,13 +435,13 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.4 }}
-                className="mt-8 inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg shadow-black/10"
+                className="mt-8 inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-surface-subtle backdrop-blur-md border border-border shadow-lg shadow-black/10"
             >
                 <p className="text-xs font-semibold text-white/80">
                     {t('otp.didntReceive')}
                 </p>
 
-                <div className="h-4 w-px bg-white/20" />
+                <div className="h-4 w-px bg-surface-subtle" />
 
                 {timer > 0 ? (
                     <motion.div
@@ -450,18 +452,9 @@ export function OtpVerificationForm({ mobileNumber, onBack, onSuccess }: OtpVeri
                     >
                         <Clock className="w-3.5 h-3.5 text-green-300" />
                         <span className="tabular-nums">
-                            {t('otp.resendIn', { time: `${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(timer % 60).padStart(2, '0')}` })}
-                        </span>
-                    </motion.div>
-                ) : (
-                    <motion.button
-                        onClick={handleResend}
-                        disabled={isResending}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`
+                            {t('otp.resendIn', { time: `${String(Math.floor(timer / 60)).padStart(2, '0')}:${String(timer % 60).padStart(2, '0')}`})} </span> </motion.div> ) : ( <motion.button onClick={handleResend} disabled={isResending} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className={`
                             flex items-center gap-1.5 text-xs font-bold transition-all duration-200
-                            ${isResending ? 'text-white/40 cursor-not-allowed' : 'text-green-300 hover:text-green-200 underline underline-offset-2'}
+                            ${isResending ? 'text-white/40 cursor-not-allowed' : 'text-green-300 hover:text-[var(--hero-muted)] underline underline-offset-2'}
                         `}
                     >
                         {isResending ? (

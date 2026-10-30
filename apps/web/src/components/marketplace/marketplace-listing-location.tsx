@@ -13,11 +13,13 @@ import { getLocalizedDomainName } from '@agri/domain-data';
 interface MarketplaceListingLocationProps {
   listing: CropListing;
   computedDistanceKm?: number;
+  isAuthenticated: boolean;
 }
 
 export default function MarketplaceListingLocation({
   listing,
   computedDistanceKm,
+  isAuthenticated,
 }: MarketplaceListingLocationProps) {
   const t = useTranslations();
   const locale = useLocale();
@@ -27,20 +29,11 @@ export default function MarketplaceListingLocation({
     computedDistanceKm ??
     listing.distanceKm;
 
-  /*
-   * ONE clean location string.
-   *
-   * We intentionally don't show:
-   *
-   * Jasdan, Jasdan, Rajkot, Gujarat
-   *
-   * followed by another set of location boxes.
-   */
   const locationParts = [
-    getLocalizedDomainName(listing.village, locale, 'village'),
-    getLocalizedDomainName(listing.taluka, locale, 'taluka'),
+    ...(isAuthenticated && listing.village ? [getLocalizedDomainName(listing.village, locale, 'village')] : []),
+    ...(isAuthenticated && listing.taluka ? [getLocalizedDomainName(listing.taluka, locale, 'taluka')] : []),
     districtLabel,
-    getLocalizedDomainName(listing.state, locale, 'state'),
+    ...(isAuthenticated && listing.state ? [getLocalizedDomainName(listing.state, locale, 'state')] : []),
   ].filter(Boolean);
 
   /*
@@ -59,15 +52,15 @@ export default function MarketplaceListingLocation({
     );
 
   return (
-    <section className="rounded-2xl bg-white/[0.035] p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
       {/* HEADER */}
       <div className="flex items-center gap-2">
         <MapPin
-          className="h-5 w-5 text-emerald-300"
+          className="h-5 w-5 text-accent"
           aria-hidden="true"
         />
 
-        <h2 className="text-lg font-bold text-white">
+        <h2 className="text-lg font-bold text-foreground">
           {t(
             'dashboard.marketplaceBrowse.detail.listingLocation',
           )}
@@ -76,23 +69,23 @@ export default function MarketplaceListingLocation({
 
       {/* LOCATION */}
       <div className="mt-4 flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft">
           <MapPin
-            className="h-5 w-5 text-emerald-300"
+            className="h-5 w-5 text-accent"
             aria-hidden="true"
           />
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="text-base font-bold text-white">
+          <p className="text-base font-bold text-foreground">
             {uniqueLocationParts.join(
               ', ',
             )}
           </p>
 
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-white/40">
+          {Number.isFinite(distance) && distance > 0 ? <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
             <Navigation
-              className="h-3 w-3 text-emerald-400"
+              className="h-3 w-3 text-accent"
               aria-hidden="true"
             />
 
@@ -102,12 +95,12 @@ export default function MarketplaceListingLocation({
                 'dashboard.marketplaceBrowse.detail.kmAway',
               )}
             </span>
-          </div>
+          </div> : null}
         </div>
       </div>
 
       {/* PRIVACY NOTE */}
-      <p className="mt-4 text-[10px] leading-5 text-white/30">
+      <p className="mt-4 text-[10px] leading-5 text-muted-foreground">
         {t(
           'dashboard.marketplaceBrowse.detail.locationPrivacyNotice',
         )}

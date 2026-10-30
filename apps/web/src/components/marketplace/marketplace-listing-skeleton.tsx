@@ -29,19 +29,19 @@ export function MarketplaceListingSkeleton() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Left: Gallery skeleton (5 cols lg) */}
         <div className="lg:col-span-5 space-y-3">
-          <div className="aspect-[4/3] w-full rounded-2xl border border-white/10 bg-white/5 skeleton-shimmer" />
+          <div className="aspect-[4/3] w-full rounded-2xl border border-border bg-surface-subtle skeleton-shimmer" />
           <div className="flex gap-2">
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="h-16 w-16 rounded-xl border border-white/10 bg-white/5 skeleton-shimmer"
+                className="h-16 w-16 rounded-xl border border-border bg-surface-subtle skeleton-shimmer"
               />
             ))}
           </div>
         </div>
 
         {/* Right: Listing info skeleton (7 cols lg) */}
-        <div className="lg:col-span-7 flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl space-y-4">
+        <div className="lg:col-span-7 flex flex-col justify-between rounded-2xl border border-border bg-surface-subtle p-6 backdrop-blur-xl space-y-4">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="h-5 w-28 rounded-full skeleton-shimmer" />
@@ -54,7 +54,7 @@ export function MarketplaceListingSkeleton() {
 
           <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-16 rounded-xl bg-white/5 skeleton-shimmer" />
+              <div key={i} className="h-16 rounded-xl bg-surface-subtle skeleton-shimmer" />
             ))}
           </div>
 
@@ -70,7 +70,7 @@ export function MarketplaceListingSkeleton() {
       {/* Structured details & description grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Description skeleton */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl space-y-3">
+        <div className="rounded-2xl border border-border bg-surface-subtle p-6 backdrop-blur-xl space-y-3">
           <div className="h-5 w-40 rounded-full skeleton-shimmer" />
           <div className="h-4 w-full rounded-full skeleton-shimmer" />
           <div className="h-4 w-5/6 rounded-full skeleton-shimmer" />
@@ -78,11 +78,11 @@ export function MarketplaceListingSkeleton() {
         </div>
 
         {/* Product details skeleton */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl space-y-3">
+        <div className="rounded-2xl border border-border bg-surface-subtle p-6 backdrop-blur-xl space-y-3">
           <div className="h-5 w-36 rounded-full skeleton-shimmer" />
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-12 rounded-xl bg-white/5 skeleton-shimmer" />
+              <div key={i} className="h-12 rounded-xl bg-surface-subtle skeleton-shimmer" />
             ))}
           </div>
         </div>
@@ -90,12 +90,12 @@ export function MarketplaceListingSkeleton() {
 
       {/* Location & Farmer grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl space-y-3">
+        <div className="rounded-2xl border border-border bg-surface-subtle p-6 backdrop-blur-xl space-y-3">
           <div className="h-5 w-36 rounded-full skeleton-shimmer" />
-          <div className="h-14 rounded-xl bg-white/5 skeleton-shimmer" />
+          <div className="h-14 rounded-xl bg-surface-subtle skeleton-shimmer" />
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl space-y-3">
+        <div className="rounded-2xl border border-border bg-surface-subtle p-6 backdrop-blur-xl space-y-3">
           <div className="h-5 w-36 rounded-full skeleton-shimmer" />
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 rounded-full skeleton-shimmer" />

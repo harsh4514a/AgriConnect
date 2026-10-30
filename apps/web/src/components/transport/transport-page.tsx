@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useParams, useRouter } from 'next/navigation';
 import {
   useCallback,
   useEffect,
@@ -49,6 +50,7 @@ import {
 import { TransportCard } from './transport-card';
 import { TransportForm } from './transport-form';
 import { TransportSkeleton } from './transport-skeleton';
+import { useAuth } from '@/hooks/use-auth';
 
 type ViewMode = 'discover' | 'mine';
 
@@ -84,6 +86,10 @@ const VEHICLE_TYPES: TransportVehicleType[] = [
 export function TransportPage() {
   const t = useTranslations('dashboard.transport');
   const locale = useLocale();
+  const params = useParams();
+  const router = useRouter();
+  const routeLocale = (params?.locale as string) || locale;
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [view, setView] = useState<ViewMode>('discover');
 
@@ -160,12 +166,13 @@ export function TransportPage() {
    * Initial location loading
    */
   useEffect(() => {
+    if (authLoading) return;
     let cancelled = false;
 
     async function initialise() {
       try {
         const [profileResult, statesResult] = await Promise.allSettled([
-          getProfile(),
+          isAuthenticated ? getProfile() : Promise.resolve(null),
           getStates(),
         ]);
 
@@ -236,7 +243,29 @@ export function TransportPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [authLoading, isAuthenticated]);
+
+  useEffect(() => {
+    if (authLoading) return;
+    const requestedView = new URLSearchParams(window.location.search).get('view');
+    if (requestedView !== 'mine') return;
+    if (isAuthenticated) {
+      setView('mine');
+    } else {
+      router.replace(`/${routeLocale}/auth`);
+    }
+  }, [authLoading, isAuthenticated, routeLocale, router]);
+
+  const changeView = (nextView: ViewMode) => {
+    setView(nextView);
+    const url = new URL(window.location.href);
+    if (nextView === 'mine') {
+      url.searchParams.set('view', 'mine');
+    } else {
+      url.searchParams.delete('view');
+    }
+    router.replace(`${url.pathname}${url.search}`, { scroll: false });
+  };
 
   /*
    * Load public transport providers
@@ -322,7 +351,7 @@ export function TransportPage() {
    * Load my transport providers
    */
   const loadMine = useCallback(async () => {
-    if (view !== 'mine') return;
+    if (view !== 'mine' || !isAuthenticated) return;
 
     setIsMineLoading(true);
     setMineError(false);
@@ -344,7 +373,7 @@ export function TransportPage() {
     } finally {
       setIsMineLoading(false);
     }
-  }, [myPage, view]);
+  }, [isAuthenticated, myPage, view]);
 
   useEffect(() => {
     if (view !== 'mine') return;
@@ -428,11 +457,16 @@ export function TransportPage() {
    * Create / edit
    */
   const openCreate = () => {
+    if (!isAuthenticated) {
+      router.push(`/${routeLocale}/auth`);
+      return;
+    }
     setEditingProvider(null);
     setFormOpen(true);
   };
 
   const openEdit = (provider: TransportProvider) => {
+    if (!isAuthenticated) return;
     setEditingProvider(provider);
     setFormOpen(true);
   };
@@ -473,6 +507,7 @@ export function TransportPage() {
     provider: TransportProvider,
     isAvailable: boolean,
   ) => {
+    if (!isAuthenticated) return;
     try {
       const updated = await updateTransportAvailability(
         provider.id,
@@ -505,7 +540,7 @@ export function TransportPage() {
    * Delete
    */
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || !isAuthenticated) return;
 
     setDeleting(true);
 
@@ -541,6 +576,10 @@ export function TransportPage() {
    * Contact confirmation
    */
   const handleContact = (provider: TransportProvider) => {
+    if (!provider.phoneNumber) {
+      router.push(`/${routeLocale}/auth`);
+      return;
+    }
     setContactTarget(provider);
   };
 
@@ -570,9 +609,9 @@ export function TransportPage() {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
-        className="h-10 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.045] px-3 pr-8 text-sm text-white outline-none transition-colors focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/15 disabled:cursor-not-allowed disabled:opacity-40"
+        className="h-10 w-full appearance-none rounded-xl border border-border bg-surface px-3 pr-8 text-sm text-foreground outline-none transition-colors focus:border-focus focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-40"
       >
-        <option value="" className="bg-green-950">
+        <option value="" className="bg-surface">
           {placeholder}
         </option>
 
@@ -580,7 +619,7 @@ export function TransportPage() {
           <option
             key={option.id}
             value={option.id}
-            className="bg-green-950"
+            className="bg-surface"
           >
             {locationDomain
               ? getLocalizedDomainName(option.name, locale, locationDomain)
@@ -590,7 +629,7 @@ export function TransportPage() {
       </select>
 
       <ChevronDown
-        className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35"
+        className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
         aria-hidden="true"
       />
     </div>
@@ -675,89 +714,72 @@ export function TransportPage() {
   const resultsPages =
     view === 'discover' ? totalPages : myTotalPages;
 
+  const visibleViews: ViewMode[] = isAuthenticated
+    ? ['discover', 'mine']
+    : ['discover'];
+
   const currentPage =
     view === 'discover' ? page : myPage;
+
+  const addTransportButton = (
+    <button
+      type="button"
+      onClick={openCreate}
+      className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-accent-foreground shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+    >
+      <Plus className="h-4 w-4" aria-hidden="true" />
+      {t('actions.add')}
+    </button>
+  );
 
   return (
     <section
       aria-labelledby="transport-page-title"
-      className="space-y-5"
+      className="space-y-3"
     >
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1
-            id="transport-page-title"
-            className="text-2xl font-black tracking-tight text-white sm:text-3xl"
-          >
-            {t('title')}
-          </h1>
-
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-white/55 sm:text-base">
-            {t('subtitle')}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={openCreate}
-          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white shadow-lg shadow-green-900/20 transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-        >
-          <Plus
-            className="h-4 w-4"
-            aria-hidden="true"
-          />
-          {t('actions.add')}
-        </button>
-      </header>
-
-      <div className="flex gap-1 rounded-xl border border-white/10 bg-white/[0.025] p-1 sm:w-fit">
-        {(['discover', 'mine'] as const).map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => setView(item)}
-            className={`inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 ${
-              view === item
-                ? 'bg-white/10 text-white'
-                : 'text-white/45 hover:bg-white/5 hover:text-white/75'
-            }`}
-            aria-pressed={view === item}
-          >
-            {item === 'discover' ? (
-              <Search
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-            ) : (
-              <Truck
-                className="h-4 w-4"
-                aria-hidden="true"
-              />
-            )}
-
-            {item === 'discover'
-              ? t('tabs.find')
-              : t('tabs.mine')}
-
-            {item === 'mine' && myTotal > 0 ? (
-              <span className="rounded-full bg-emerald-400/10 px-1.5 py-0.5 text-[10px] text-emerald-300">
-                {myTotal}
-              </span>
-            ) : null}
-          </button>
-        ))}
+      <h1 id="transport-page-title" className="sr-only">{t('title')}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        {visibleViews.length > 1 ? (
+          <div className="flex gap-1 rounded-xl border border-border bg-surface-subtle p-1">
+            {visibleViews.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => changeView(item)}
+                className={`inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus ${
+                  view === item
+                    ? 'bg-accent-soft text-accent'
+                    : 'text-muted-foreground hover:bg-surface hover:text-foreground'
+                }`}
+                aria-pressed={view === item}
+              >
+                {item === 'discover' ? (
+                  <Search className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Truck className="h-4 w-4" aria-hidden="true" />
+                )}
+                {item === 'discover' ? t('tabs.find') : t('tabs.mine')}
+                {item === 'mine' && myTotal > 0 ? (
+                  <span className="rounded-full bg-accent-soft px-1.5 py-0.5 text-[10px] text-accent">
+                    {myTotal}
+                  </span>
+                ) : null}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
-      {view === 'discover' ? (
+      {view === 'discover' || !isAuthenticated ? (
         <>
           <form
             onSubmit={submitSearch}
-            className="rounded-2xl border border-white/10 bg-white/[0.035] p-3"
+            className="rounded-2xl border border-border bg-surface p-3"
           >
             <div className="flex gap-2">
               <div className="relative min-w-0 flex-1">
                 <Search
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35"
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden="true"
                 />
 
@@ -775,7 +797,7 @@ export function TransportPage() {
                     setDraftSearch(event.target.value)
                   }
                   placeholder={t('searchPlaceholder')}
-                  className="h-11 w-full rounded-xl border border-white/10 bg-black/10 pl-9 pr-9 text-sm text-white placeholder:text-white/30 outline-none focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/15"
+                  className="h-11 w-full rounded-xl border border-border bg-surface pl-9 pr-9 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-focus focus:ring-2 focus:ring-focus"
                 />
 
                 {draftSearch ? (
@@ -787,7 +809,7 @@ export function TransportPage() {
                         search: '',
                       });
                     }}
-                    className="absolute right-1.5 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-white/40 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                    className="absolute right-1.5 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                     aria-label={t('clearSearch')}
                   >
                     <X
@@ -800,7 +822,7 @@ export function TransportPage() {
 
               <button
                 type="submit"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-accent to-accent px-4 text-sm font-bold text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <Search
                   className="h-4 w-4"
@@ -817,7 +839,7 @@ export function TransportPage() {
                 onClick={() =>
                   setMobileFiltersOpen(true)
                 }
-                className="relative inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold text-white/75 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 lg:hidden"
+                className="relative inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-subtle px-3 text-sm font-semibold text-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus lg:hidden"
                 aria-expanded={mobileFiltersOpen}
                 aria-controls="transport-mobile-filters"
               >
@@ -831,17 +853,24 @@ export function TransportPage() {
                 </span>
 
                 {activeFilterCount > 0 ? (
-                  <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-bold text-white">
+                  <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-foreground">
                     {activeFilterCount}
                   </span>
                 ) : null}
               </button>
             </div>
 
-            <div className="mt-2.5 hidden lg:block">
-              {filterPanel}
+            <div className="mt-2.5 hidden items-center gap-3 lg:flex">
+              <div className="min-w-0 flex-1">
+                {filterPanel}
+              </div>
+              {addTransportButton}
             </div>
           </form>
+
+          <div className="flex justify-end lg:hidden">
+            {addTransportButton}
+          </div>
 
           {isInitialising || resultsLoading ? (
             <TransportSkeleton />
@@ -896,6 +925,10 @@ export function TransportPage() {
         </>
       ) : (
         <>
+          <div className="flex justify-end">
+            {addTransportButton}
+          </div>
+
           {isMineLoading ? (
             <TransportSkeleton />
           ) : mineError ? (
@@ -964,14 +997,14 @@ export function TransportPage() {
 
           <div
             id="transport-mobile-filters"
-            className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-3xl border-t border-white/10 bg-green-950 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl"
+            className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-3xl border-t border-border bg-surface p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl"
           >
-            <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-white/15" />
+            <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-surface-subtle" />
 
             <div className="flex items-center justify-between gap-3">
               <h2
                 id="transport-mobile-filters-title"
-                className="text-lg font-bold text-white"
+                className="text-lg font-bold text-foreground"
               >
                 {t('filters.title')}
               </h2>
@@ -981,7 +1014,7 @@ export function TransportPage() {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-surface-subtle text-muted-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                 aria-label={t('filters.close')}
               >
                 <X
@@ -999,7 +1032,7 @@ export function TransportPage() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 text-sm font-semibold text-white/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-subtle text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <RotateCcw
                   className="h-4 w-4"
@@ -1013,7 +1046,7 @@ export function TransportPage() {
                 onClick={() =>
                   setMobileFiltersOpen(false)
                 }
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-accent to-accent text-sm font-bold text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <Filter
                   className="h-4 w-4"
@@ -1026,16 +1059,18 @@ export function TransportPage() {
         </div>
       ) : null}
 
-      <TransportForm
-        key={editingProvider?.id ?? 'new'}
-        open={formOpen}
-        initial={editingProvider}
-        onClose={() => {
-          setFormOpen(false);
-          setEditingProvider(null);
-        }}
-        onSaved={handleSaved}
-      />
+      {isAuthenticated ? (
+        <TransportForm
+          key={editingProvider?.id ?? 'new'}
+          open={formOpen}
+          initial={editingProvider}
+          onClose={() => {
+            setFormOpen(false);
+            setEditingProvider(null);
+          }}
+          onSaved={handleSaved}
+        />
+      ) : null}
 
       {deleteTarget ? (
         <ConfirmDeleteDialog
@@ -1052,6 +1087,7 @@ export function TransportPage() {
       {contactTarget ? (
         <ConfirmContactDialog
           provider={contactTarget}
+          t={t}
           onCancel={() => setContactTarget(null)}
           onConfirm={confirmContact}
         />
@@ -1093,12 +1129,12 @@ function Results({
   return (
     <>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-white/45">
+        <p className="text-sm text-muted-foreground">
           {t('resultsCount', { count: total })}
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {providers.map((provider) => (
           <TransportCard
             key={provider.id}
@@ -1121,7 +1157,7 @@ function Results({
             type="button"
             onClick={onPrevious}
             disabled={page <= 1}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/75 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface-subtle text-foreground hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             aria-label={t('pagination.previous')}
           >
             <ChevronLeft
@@ -1130,7 +1166,7 @@ function Results({
             />
           </button>
 
-          <span className="text-sm font-semibold text-white/60">
+          <span className="text-sm font-semibold text-muted-foreground">
             {t('pagination.page', {
               page,
               totalPages,
@@ -1141,7 +1177,7 @@ function Results({
             type="button"
             onClick={onNext}
             disabled={page >= totalPages}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/75 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface-subtle text-foreground hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             aria-label={t('pagination.next')}
           >
             <ChevronRight
@@ -1167,19 +1203,19 @@ function StateMessage({
   onAction?: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-12 text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-400/10 text-emerald-300">
+    <div className="rounded-2xl border border-border bg-surface px-6 py-12 text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-soft text-accent">
         <MapPin
           className="h-6 w-6"
           aria-hidden="true"
         />
       </div>
 
-      <h2 className="mt-4 text-lg font-bold text-white">
+      <h2 className="mt-4 text-lg font-bold text-foreground">
         {title}
       </h2>
 
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/50">
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
         {description}
       </p>
 
@@ -1187,7 +1223,7 @@ function StateMessage({
         <button
           type="button"
           onClick={onAction}
-          className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-white/10 px-5 text-sm font-semibold text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-surface-subtle px-5 text-sm font-semibold text-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
           {actionLabel}
         </button>
@@ -1198,10 +1234,12 @@ function StateMessage({
 
 function ConfirmContactDialog({
   provider,
+  t,
   onCancel,
   onConfirm,
 }: {
   provider: TransportProvider;
+  t: ReturnType<typeof useTranslations>;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
@@ -1212,8 +1250,8 @@ function ConfirmContactDialog({
       aria-modal="true"
       aria-labelledby="transport-contact-title"
     >
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-green-950 p-5 shadow-2xl sm:p-6">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-300">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-5 shadow-2xl sm:p-6">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
           <Phone
             className="h-5 w-5"
             aria-hidden="true"
@@ -1222,42 +1260,37 @@ function ConfirmContactDialog({
 
         <h2
           id="transport-contact-title"
-          className="mt-4 text-lg font-bold text-white"
+          className="mt-4 text-lg font-bold text-foreground"
         >
-          Contact transporter?
+          {t('contactConfirmation.title')}
         </h2>
 
-        <p className="mt-2 text-sm leading-6 text-white/55">
-          You are about to call{' '}
-          <span className="font-semibold text-white">
-            {provider.businessName}
-          </span>{' '}
-          at{' '}
-          <span className="font-semibold text-white">
-            {provider.phoneNumber}
-          </span>
-          .
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {t('contactConfirmation.description', {
+            name: provider.businessName,
+            phone: provider.phoneNumber ?? '',
+          })}
         </p>
 
         <div className="mt-5 grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="inline-flex h-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-sm font-semibold text-white/75 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-border bg-surface-subtle text-sm font-semibold text-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
-            Cancel
+            {t('contactConfirmation.cancel')}
           </button>
 
           <button
             type="button"
             onClick={onConfirm}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 text-sm font-bold text-white hover:from-green-500 hover:to-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-accent to-accent text-sm font-bold text-accent-foreground hover:from-accent hover:to-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             <Phone
               className="h-4 w-4"
               aria-hidden="true"
             />
-            Call
+            {t('contactConfirmation.call')}
           </button>
         </div>
       </div>
@@ -1285,8 +1318,8 @@ function ConfirmDeleteDialog({
       aria-modal="true"
       aria-labelledby="transport-delete-title"
     >
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-green-950 p-5 shadow-2xl sm:p-6">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-400/10 text-red-300">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-5 shadow-2xl sm:p-6">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-danger-soft text-danger">
           <Trash2
             className="h-5 w-5"
             aria-hidden="true"
@@ -1295,12 +1328,12 @@ function ConfirmDeleteDialog({
 
         <h2
           id="transport-delete-title"
-          className="mt-4 text-lg font-bold text-white"
+          className="mt-4 text-lg font-bold text-foreground"
         >
           {t('myTransport.deleteTitle')}
         </h2>
 
-        <p className="mt-2 text-sm leading-6 text-white/50">
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {t('myTransport.deleteDescription', {
             name: provider.businessName,
           })}
@@ -1311,7 +1344,7 @@ function ConfirmDeleteDialog({
             type="button"
             onClick={onCancel}
             disabled={deleting}
-            className="inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-sm font-semibold text-white/75 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 disabled:opacity-40"
+            className="inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-border bg-surface-subtle text-sm font-semibold text-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus disabled:opacity-40"
           >
             {t('myTransport.cancel')}
           </button>
@@ -1320,7 +1353,7 @@ function ConfirmDeleteDialog({
             type="button"
             onClick={onConfirm}
             disabled={deleting}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-red-600/90 text-sm font-bold text-white hover:bg-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:opacity-50"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-danger text-sm font-bold text-danger-foreground hover:bg-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
           >
             <Trash2
               className="h-4 w-4"

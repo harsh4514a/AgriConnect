@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { DashboardUser } from '@/types/dashboard.types';
-import type { CropListing } from '@/data/marketplace-listings';
-import { getMyListings, getListings, getNearbyListings } from '@/services/api/listings.api';
+import { getListings, getMyRecentListings, type RecentListingPreview } from '@/services/api/listings.api';
 import { getBuyerRequirements, type BuyerRequirement } from '@/services/api/buyer-requirements.api';
 import { getMarketPrices, type MarketPrice } from '@/services/api/market-prices.api';
 
@@ -15,10 +14,9 @@ export interface DashboardDataState<T> {
 }
 
 export interface DashboardData {
-  myListings: DashboardDataState<CropListing[]>;
+  myListings: DashboardDataState<RecentListingPreview[]>;
   activeListingsCount: DashboardDataState<number>;
   buyerRequirements: DashboardDataState<BuyerRequirement[]>;
-  marketplace: DashboardDataState<CropListing[]>;
   marketPrices: DashboardDataState<MarketPrice[]> & { latestAvailableDate?: string };
 }
 
@@ -26,7 +24,6 @@ const initialState: DashboardData = {
   myListings: { data: [], isLoading: true, error: false },
   activeListingsCount: { data: 0, isLoading: true, error: false },
   buyerRequirements: { data: [], isLoading: true, error: false },
-  marketplace: { data: [], isLoading: true, error: false },
   marketPrices: { data: [], latestAvailableDate: undefined, isLoading: true, error: false },
 };
 
@@ -37,8 +34,6 @@ export function useDashboardData(
   const [retryKey, setRetryKey] = useState(0);
   const hasUser = user !== null;
   const userId = user?.id;
-  const latitude = user?.location?.latitude;
-  const longitude = user?.location?.longitude;
 
   const retry = useCallback(() => setRetryKey((value) => value + 1), []);
 
@@ -50,7 +45,6 @@ export function useDashboardData(
         myListings: { data: [], isLoading: false, error: false },
         activeListingsCount: { data: 0, isLoading: false, error: false },
         buyerRequirements: { data: [], isLoading: false, error: false },
-        marketplace: { data: [], isLoading: false, error: false },
         marketPrices: { data: [], latestAvailableDate: undefined, isLoading: false, error: false },
       });
       return () => {
@@ -58,32 +52,20 @@ export function useDashboardData(
       };
     }
 
+    const controller = new AbortController();
     setState((current) => ({
       myListings: { ...current.myListings, isLoading: true, error: false },
       activeListingsCount: { ...current.activeListingsCount, isLoading: true, error: false },
       buyerRequirements: { ...current.buyerRequirements, isLoading: true, error: false },
-      marketplace: { ...current.marketplace, isLoading: true, error: false },
       marketPrices: { ...current.marketPrices, isLoading: true, error: false },
     }));
 
     const load = () => {
-      const hasSavedCoordinates =
-        Number.isFinite(latitude) &&
-        Number.isFinite(longitude) &&
-        latitude !== 0 &&
-        longitude !== 0;
-
-      const marketplaceRequest = hasSavedCoordinates
-        ? getNearbyListings({ radius: 25, page: 1, limit: 3 }).catch(() =>
-            getListings({ page: 1, limit: 3 }),
-          )
-        : getListings({ page: 1, limit: 3 });
-
       const finish = (update: (current: DashboardData) => DashboardData) => {
         if (!cancelled) setState(update);
       };
 
-      void getMyListings()
+      void getMyRecentListings(controller.signal)
         .then((data) => {
           finish((current) => ({
             ...current,
@@ -97,7 +79,7 @@ export function useDashboardData(
           }));
         });
 
-      void getListings({ status: 'active', page: 1, limit: 1 })
+      void getListings({ status: 'active', page: 1, limit: 1 }, controller.signal)
         .then((result) => {
           finish((current) => ({
             ...current,
@@ -115,7 +97,7 @@ export function useDashboardData(
           }));
         });
 
-      void getBuyerRequirements({ page: 1, limit: 3 })
+      void getBuyerRequirements({ page: 1, limit: 3 }, controller.signal)
         .then((result) => {
           finish((current) => ({
             ...current,
@@ -134,25 +116,7 @@ export function useDashboardData(
           }));
         });
 
-      void marketplaceRequest
-        .then((result) => {
-          finish((current) => ({
-            ...current,
-            marketplace: {
-              data: result.listings,
-              isLoading: false,
-              error: false,
-            },
-          }));
-        })
-        .catch(() => {
-          finish((current) => ({
-            ...current,
-            marketplace: { data: [], isLoading: false, error: true },
-          }));
-        });
-
-      void getMarketPrices({ page: 1, limit: 3 })
+      void getMarketPrices({ page: 1, limit: 3 }, controller.signal)
         .then((result) => {
           finish((current) => ({
             ...current,
@@ -181,8 +145,9 @@ export function useDashboardData(
 
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, [retryKey, hasUser, userId, latitude, longitude]);
+  }, [retryKey, hasUser, userId]);
 
   return { ...state, retry };
 }

@@ -10,7 +10,8 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "build/**"]
+      "outputs": ["dist/**", ".next/**", "build/**"],
+      "env": ["NEXT_PUBLIC_*", "SITE_URL", "GOOGLE_SITE_VERIFICATION"]
     },
     "dev": {
       "cache": false,

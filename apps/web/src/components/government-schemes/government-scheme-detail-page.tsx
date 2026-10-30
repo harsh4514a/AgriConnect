@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -76,7 +76,7 @@ export function GovernmentSchemeDetailPage() {
   if (notFound) {
     return (
       <State
-        icon={<Landmark className="h-10 w-10 text-emerald-300/60" aria-hidden="true" />}
+        icon={<Landmark className="h-10 w-10 text-accent/60" aria-hidden="true" />}
         title={t('states.notFoundTitle')}
         description={t('states.notFoundDescription')}
         action={t('backToSchemes')}
@@ -87,7 +87,7 @@ export function GovernmentSchemeDetailPage() {
   if (error || !scheme) {
     return (
       <State
-        icon={<ShieldCheck className="h-10 w-10 text-emerald-300/60" aria-hidden="true" />}
+        icon={<ShieldCheck className="h-10 w-10 text-accent/60" aria-hidden="true" />}
         title={t('states.errorTitle')}
         description={t('states.errorDescription')}
         action={t('states.retry')}
@@ -100,13 +100,13 @@ export function GovernmentSchemeDetailPage() {
     <article className="mx-auto max-w-6xl space-y-6">
       <Link
         href={`/${locale}/dashboard/government-schemes`}
-        className="inline-flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-semibold text-white/55 hover:bg-white/5 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+        className="inline-flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-semibold text-muted-foreground hover:bg-surface-subtle hover:text-foreground focus:outline-none focus:ring-2 focus:ring-focus"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         {t('backToSchemes')}
       </Link>
 
-      <header className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-xl backdrop-blur-xl sm:p-7">
+      <header className="rounded-3xl border border-border bg-surface p-5 shadow-xl backdrop-blur-xl sm:p-7">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap gap-2">
@@ -114,8 +114,8 @@ export function GovernmentSchemeDetailPage() {
               <Badge tone="blue">{t(`levels.${scheme.governmentLevel}` as never)}</Badge>
               <Badge tone="status">{t(`statuses.${scheme.status}` as never)}</Badge>
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-white sm:text-4xl">{scheme.name}</h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-white/60 sm:text-base">{scheme.shortDescription}</p>
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-foreground sm:text-4xl">{scheme.name}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground sm:text-base">{scheme.shortDescription}</p>
           </div>
 
           {scheme.applicationUrl && (
@@ -123,7 +123,7 @@ export function GovernmentSchemeDetailPage() {
               href={scheme.applicationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-400 px-5 text-sm font-bold text-emerald-950 shadow-lg shadow-emerald-950/20 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/80"
+              className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-bold text-accent-foreground shadow-lg shadow-emerald-950/20 transition hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-focus"
             >
               {t('applyOfficially')}
               <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -139,7 +139,7 @@ export function GovernmentSchemeDetailPage() {
 
       <div className="lg:hidden">
         <label className="block">
-          <span className="mb-2 block text-xs font-semibold text-white/45">{t('jumpTo')}</span>
+          <span className="mb-2 block text-xs font-semibold text-muted-foreground">{t('jumpTo')}</span>
           <select
             value={open}
             onChange={(event) => {
@@ -147,7 +147,7 @@ export function GovernmentSchemeDetailPage() {
               setOpen(next);
               document.getElementById(`scheme-section-${next}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="h-11 w-full rounded-xl border border-white/10 bg-green-950/70 px-3 text-sm text-white outline-none focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20"
+            className="h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm text-foreground outline-none focus:border-focus/50 focus:ring-2 focus:ring-focus"
           >
             {jumpOptions.map((option) => (
               <option key={option.key} value={option.key}>{option.label}</option>
@@ -158,7 +158,7 @@ export function GovernmentSchemeDetailPage() {
 
       <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
-          <nav className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.04] p-2" aria-label={t('jumpTo')}>
+          <nav className="sticky top-24 rounded-2xl border border-border bg-surface-subtle p-2" aria-label={t('jumpTo')}>
             {jumpOptions.map((option) => (
               <button
                 key={option.key}
@@ -168,8 +168,8 @@ export function GovernmentSchemeDetailPage() {
                   document.getElementById(`scheme-section-${option.key}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
                 className={cn(
-                  'flex min-h-11 w-full items-center rounded-xl px-3 text-left text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-emerald-400/60',
-                  open === option.key ? 'bg-emerald-400/10 text-emerald-200' : 'text-white/55 hover:bg-white/5 hover:text-white',
+                  'flex min-h-11 w-full items-center rounded-xl px-3 text-left text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-focus',
+                  open === option.key ? 'bg-accent-soft text-accent' : 'text-muted-foreground hover:bg-surface-subtle hover:text-foreground',
                 )}
               >
                 {option.label}
@@ -180,7 +180,7 @@ export function GovernmentSchemeDetailPage() {
 
         <div className="space-y-3">
           <DetailSection id="scheme-section-about" title={t('sections.about.title')} icon={<Sparkles className="h-4 w-4" />} open={open === 'about'} onToggle={() => setOpen('about')}>
-            <p className="text-sm leading-7 text-white/65">{scheme.description}</p>
+            <p className="text-sm leading-7 text-foreground">{scheme.description}</p>
           </DetailSection>
 
           <DetailSection id="scheme-section-benefits" title={t('sections.benefits.title')} icon={<CheckCircle2 className="h-4 w-4" />} open={open === 'benefits'} onToggle={() => setOpen('benefits')}>
@@ -188,8 +188,8 @@ export function GovernmentSchemeDetailPage() {
           </DetailSection>
 
           <DetailSection id="scheme-section-eligibility" title={t('sections.eligibility.title')} icon={<ShieldCheck className="h-4 w-4" />} open={open === 'eligibility'} onToggle={() => setOpen('eligibility')}>
-            <div className="mb-4 rounded-xl border border-amber-200/10 bg-amber-100/[0.04] p-3 text-xs leading-5 text-white/55">
-              <strong className="font-semibold text-amber-100/80">{t('eligibilityNoticeTitle')}</strong>{' '}
+            <div className="mb-4 rounded-xl border border-warning/25 bg-warning/10 p-3 text-xs leading-5 text-muted-foreground">
+              <strong className="font-semibold text-warning">{t('eligibilityNoticeTitle')}</strong>{' '}
               {t('eligibilityNotice')}
             </div>
             <BulletList items={scheme.eligibility} emptyLabel={t('notAvailable')} />
@@ -202,18 +202,18 @@ export function GovernmentSchemeDetailPage() {
           <DetailSection id="scheme-section-application" title={t('sections.application.title')} icon={<ListChecks className="h-4 w-4" />} open={open === 'application'} onToggle={() => setOpen('application')}>
             <ol className="space-y-3">
               {scheme.applicationSteps.length ? scheme.applicationSteps.map((step, index) => (
-                <li key={step} className="flex gap-3 rounded-xl border border-white/8 bg-white/[0.035] p-3.5">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-400/10 text-xs font-bold text-emerald-300">{index + 1}</span>
-                  <span className="pt-1 text-sm leading-6 text-white/65">{step}</span>
+                <li key={step} className="flex gap-3 rounded-xl border border-border bg-surface-subtle p-3.5">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-xs font-bold text-accent">{index + 1}</span>
+                  <span className="pt-1 text-sm leading-6 text-foreground">{step}</span>
                 </li>
-              )) : <li className="text-sm text-white/50">{t('notAvailable')}</li>}
+              )) : <li className="text-sm text-muted-foreground">{t('notAvailable')}</li>}
             </ol>
             {scheme.applicationUrl && (
               <a
                 href={scheme.applicationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-400/10 px-4 text-sm font-bold text-emerald-200 hover:bg-emerald-400/15 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-accent-soft px-4 text-sm font-bold text-accent hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-focus"
               >
                 {t('openOfficialPortal')}
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -227,17 +227,17 @@ export function GovernmentSchemeDetailPage() {
         </div>
       </div>
 
-      <footer className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+      <footer className="rounded-2xl border border-border bg-surface-subtle p-5">
         <div className="flex items-start gap-3">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" aria-hidden="true" />
+          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
           <div className="min-w-0">
-            <h2 className="text-sm font-bold text-white">{t('source.title')}</h2>
-            <p className="mt-1 text-xs leading-5 text-white/45">{t('source.description')}</p>
+            <h2 className="text-sm font-bold text-foreground">{t('source.title')}</h2>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">{t('source.description')}</p>
             <a
               href={scheme.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 inline-flex max-w-full items-center gap-2 break-all text-xs font-semibold text-emerald-300 underline decoration-emerald-300/30 underline-offset-4 hover:text-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+              className="mt-3 inline-flex max-w-full items-center gap-2 break-all text-xs font-semibold text-accent underline decoration-accent/30 underline-offset-4 hover:text-accent focus:outline-none focus:ring-2 focus:ring-focus"
             >
               {scheme.sourceUrl}
               <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -266,22 +266,22 @@ function DetailSection({
 }) {
   const contentId = `${id}-content`;
   return (
-    <section id={id} className="scroll-mt-24 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045]">
+    <section id={id} className="scroll-mt-24 overflow-hidden rounded-2xl border border-border bg-surface">
       <h2>
         <button
           type="button"
           aria-expanded={open}
           aria-controls={contentId}
           onClick={onToggle}
-          className="flex min-h-14 w-full items-center gap-3 px-4 text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-400/60 sm:px-5"
+          className="flex min-h-14 w-full items-center gap-3 px-4 text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-focus sm:px-5"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400/10 text-emerald-300">{icon}</span>
-          <span className="flex-1 text-sm font-bold text-white sm:text-base">{title}</span>
-          <ChevronDown className={cn('h-4 w-4 shrink-0 text-white/40 transition-transform', open && 'rotate-180')} aria-hidden="true" />
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">{icon}</span>
+          <span className="flex-1 text-sm font-bold text-foreground sm:text-base">{title}</span>
+          <ChevronDown className={cn('h-4 w-4 shrink-0 text-muted-foreground transition-transform', open && 'rotate-180')} aria-hidden="true" />
         </button>
       </h2>
       {open && (
-        <div id={contentId} className="border-t border-white/8 px-4 py-5 sm:px-5">
+        <div id={contentId} className="border-t border-border px-4 py-5 sm:px-5">
           {children}
         </div>
       )}
@@ -290,12 +290,12 @@ function DetailSection({
 }
 
 function BulletList({ items, emptyLabel }: { items: string[]; emptyLabel: string }) {
-  if (!items.length) return <p className="text-sm text-white/50">{emptyLabel}</p>;
+  if (!items.length) return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
   return (
     <ul className="space-y-3">
       {items.map((item) => (
-        <li key={item} className="flex gap-3 text-sm leading-6 text-white/65">
-          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-300" aria-hidden="true" />
+        <li key={item} className="flex gap-3 text-sm leading-6 text-foreground">
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
           <span>{item}</span>
         </li>
       ))}
@@ -307,7 +307,7 @@ function Badge({ children, tone = 'default' }: { children: React.ReactNode; tone
   return (
     <span className={cn(
       'rounded-full px-3 py-1 text-[11px] font-semibold',
-      tone === 'blue' ? 'bg-sky-400/10 text-sky-200' : tone === 'status' ? 'bg-emerald-400/10 text-emerald-200' : 'bg-white/10 text-white/65',
+      tone === 'blue' ? 'bg-surface-subtle text-muted-foreground' : tone === 'status' ? 'bg-accent-soft text-accent' : 'bg-surface-subtle text-foreground',
     )}>
       {children}
     </span>
@@ -316,11 +316,11 @@ function Badge({ children, tone = 'default' }: { children: React.ReactNode; tone
 
 function InfoTile({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.035] p-3.5">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-400/10 text-emerald-300">{icon}</span>
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-surface-subtle p-3.5">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent">{icon}</span>
       <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-white/35">{label}</p>
-        <p className="mt-0.5 truncate text-sm font-semibold text-white/75">{value}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
+        <p className="mt-0.5 truncate text-sm font-semibold text-foreground">{value}</p>
       </div>
     </div>
   );
@@ -329,14 +329,14 @@ function InfoTile({ icon, label, value }: { icon: React.ReactNode; label: string
 function DetailSkeleton() {
   return (
     <div className="mx-auto max-w-6xl space-y-5" aria-hidden="true">
-      <div className="h-5 w-40 animate-pulse rounded bg-white/10" />
-      <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-7">
-        <div className="h-5 w-52 animate-pulse rounded bg-white/10" />
-        <div className="mt-5 h-10 w-3/4 animate-pulse rounded bg-white/10" />
-        <div className="mt-4 h-12 w-full animate-pulse rounded bg-white/10" />
+      <div className="h-5 w-40 animate-pulse rounded bg-surface-subtle" />
+      <div className="rounded-3xl border border-border bg-surface-subtle p-7">
+        <div className="h-5 w-52 animate-pulse rounded bg-surface-subtle" />
+        <div className="mt-5 h-10 w-3/4 animate-pulse rounded bg-surface-subtle" />
+        <div className="mt-4 h-12 w-full animate-pulse rounded bg-surface-subtle" />
       </div>
       {Array.from({ length: 5 }, (_, index) => (
-        <div key={index} className="h-16 animate-pulse rounded-2xl border border-white/10 bg-white/[0.05]" />
+        <div key={index} className="h-16 animate-pulse rounded-2xl border border-border bg-surface-subtle" />
       ))}
     </div>
   );
@@ -356,14 +356,14 @@ function State({
   onAction: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.04] px-6 py-16 text-center">
+    <div className="rounded-2xl border border-dashed border-border bg-surface-subtle px-6 py-16 text-center">
       {icon}
-      <h1 className="mt-4 text-lg font-bold text-white">{title}</h1>
-      <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-white/50">{description}</p>
+      <h1 className="mt-4 text-lg font-bold text-foreground">{title}</h1>
+      <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">{description}</p>
       <button
         type="button"
         onClick={onAction}
-        className="mt-5 rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-emerald-950 hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/70"
+        className="mt-5 rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-accent-foreground hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-focus"
       >
         {action}
       </button>

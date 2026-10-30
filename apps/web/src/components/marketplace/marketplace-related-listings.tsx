@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
 
@@ -11,16 +10,16 @@ import { MarketplaceCard } from '@/components/marketplace/marketplace-card';
 
 interface MarketplaceRelatedListingsProps {
   currentListing: CropListing;
+  isAuthenticated: boolean;
+  isAuthLoading?: boolean;
 }
 
 export function MarketplaceRelatedListings({
   currentListing,
+  isAuthenticated,
+  isAuthLoading = false,
 }: MarketplaceRelatedListingsProps) {
   const t = useTranslations();
-  const router = useRouter();
-  const params = useParams();
-
-  const locale = (params?.locale as string) || 'en';
 
   const [relatedListings, setRelatedListings] = useState<CropListing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,10 +68,6 @@ export function MarketplaceRelatedListings({
     };
   }, [currentListing.id, currentListing.cropKey]);
 
-  const handleSelectRelated = (listing: CropListing) => {
-    router.push(`/${locale}/dashboard/marketplace/${listing.id}`);
-  };
-
   /*
    * Don't render anything while loading or when the database
    * has no actually related listings.
@@ -88,10 +83,10 @@ export function MarketplaceRelatedListings({
   );
 
   return (
-    <div className="space-y-4 pt-4 border-t border-white/10">
-      <div className="flex items-center gap-2 text-white">
+    <div className="space-y-4 pt-4 border-t border-border">
+      <div className="flex items-center gap-2 text-foreground">
         <Sparkles
-          className="h-5 w-5 text-amber-300"
+          className="h-5 w-5 text-warning"
           aria-hidden="true"
         />
 
@@ -99,7 +94,7 @@ export function MarketplaceRelatedListings({
           {t('dashboard.marketplaceBrowse.detail.relatedListings')}
         </h2>
 
-        <span className="text-sm font-medium text-white/50">
+        <span className="text-sm font-medium text-muted-foreground">
           • {cropLabel}
         </span>
       </div>
@@ -110,7 +105,8 @@ export function MarketplaceRelatedListings({
             key={listing.id}
             listing={listing}
             index={index}
-            onViewDetails={handleSelectRelated}
+            isAuthenticated={isAuthenticated}
+            isAuthLoading={isAuthLoading}
           />
         ))}
       </div>

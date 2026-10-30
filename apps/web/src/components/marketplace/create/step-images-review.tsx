@@ -137,9 +137,9 @@ export function StepImagesReview({
     <div className="space-y-8">
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <label className="block text-sm font-semibold text-white">
+          <label className="block text-sm font-semibold text-foreground">
             {t('dashboard.createListing.fields.images')}{' '}
-            <span className="text-xs font-medium text-white/45">
+            <span className="text-xs font-medium text-muted-foreground">
               ({t('dashboard.createListing.fields.optional')})
             </span>
           </label>
@@ -147,7 +147,7 @@ export function StepImagesReview({
             <button
               type="button"
               onClick={handleUsePreset}
-              className="min-h-10 text-xs font-semibold text-green-300 underline hover:text-green-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="min-h-10 text-xs font-semibold text-accent underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               {t('dashboard.createListing.fields.usePresetCrop')}
             </button>
@@ -167,27 +167,27 @@ export function StepImagesReview({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="group flex min-h-[140px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-white/5 p-6 text-center transition-all hover:border-green-400/50 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+          className="group flex min-h-[140px] w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-surface-subtle p-6 text-center transition-all hover:border-accent/30 hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-green-300 transition-transform group-hover:scale-110">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-subtle text-accent transition-transform group-hover:scale-110">
             <UploadCloud className="h-6 w-6" aria-hidden />
           </div>
-          <p className="mt-3 text-sm font-bold text-white">
+          <p className="mt-3 text-sm font-bold text-foreground">
             {t('dashboard.createListing.fields.uploadInstructions')}
           </p>
-          <p className="mt-1 text-xs text-white/40">{t('dashboard.createListing.fields.uploadNote')}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t('dashboard.createListing.fields.uploadNote')}</p>
         </button>
 
         {images.length === 0 ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 text-white/40">
+          <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface/[0.03] p-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-subtle text-muted-foreground">
               <ImageIcon className="h-5 w-5" aria-hidden />
             </div>
             <div>
-              <p className="text-sm font-semibold text-white">
+              <p className="text-sm font-semibold text-foreground">
                 {t('dashboard.createListing.fields.imagesEmpty')}
               </p>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-muted-foreground">
                 {t('dashboard.createListing.fields.imagesEmptyHint')}
               </p>
             </div>
@@ -197,7 +197,7 @@ export function StepImagesReview({
             {images.map((img, idx) => (
               <div
                 key={`${img.url}-${idx}`}
-                className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-white/5 p-1"
+                className="relative aspect-[4/3] overflow-hidden rounded-xl border border-border bg-surface-subtle p-1"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -209,7 +209,7 @@ export function StepImagesReview({
                   type="button"
                   onClick={() => handleRemoveImage(idx)}
                   aria-label={t('dashboard.createListing.fields.remove')}
-                  className="absolute right-2 top-2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-white hover:bg-red-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+                  className="absolute right-2 top-2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-danger-foreground hover:bg-danger focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -219,17 +219,17 @@ export function StepImagesReview({
         )}
       </div>
 
-      <div className="space-y-4 border-t border-white/10 pt-6">
+      <div className="space-y-4 border-t border-border pt-6">
         <div>
-          <h3 className="text-base font-bold text-white">{t('dashboard.createListing.review.title')}</h3>
-          <p className="mt-1 text-xs text-white/50">{t('dashboard.createListing.review.subtitle')}</p>
+          <h3 className="text-base font-bold text-foreground">{t('dashboard.createListing.review.title')}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{t('dashboard.createListing.review.subtitle')}</p>
         </div>
 
-        <dl className="divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+        <dl className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-surface-subtle">
           {summaryRows.map((row) => (
             <div key={row.label} className="grid grid-cols-3 gap-3 px-4 py-3 sm:grid-cols-4">
-              <dt className="col-span-1 text-xs font-semibold text-white/50">{row.label}</dt>
-              <dd className="col-span-2 break-words text-sm font-semibold text-white sm:col-span-3">
+              <dt className="col-span-1 text-xs font-semibold text-muted-foreground">{row.label}</dt>
+              <dd className="col-span-2 break-words text-sm font-semibold text-foreground sm:col-span-3">
                 {row.value}
               </dd>
             </div>
@@ -238,7 +238,7 @@ export function StepImagesReview({
 
         {images.length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-semibold text-white/50">
+            <p className="text-xs font-semibold text-muted-foreground">
               {t('dashboard.createListing.review.photos')}
             </p>
             <div className="grid grid-cols-4 gap-2">
@@ -248,7 +248,7 @@ export function StepImagesReview({
                   key={`review-${img.url}-${idx}`}
                   src={img.url}
                   alt={t('dashboard.createListing.review.photoAlt', { index: idx + 1 })}
-                  className="h-16 w-full rounded-xl border border-white/10 object-cover"
+                  className="h-16 w-full rounded-xl border border-border object-cover"
                 />
               ))}
             </div>

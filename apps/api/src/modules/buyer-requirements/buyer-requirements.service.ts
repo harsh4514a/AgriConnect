@@ -96,13 +96,13 @@ export class BuyerRequirementsService {
       quantity: row.quantity,
       unit: row.unit,
       district: row.district,
-      taluka: row.taluka ?? undefined,
-      village: row.village ?? undefined,
+      taluka: includeContact ? row.taluka ?? undefined : undefined,
+      village: includeContact ? row.village ?? undefined : undefined,
       additionalRequirements: row.additionalRequirements ?? undefined,
       status: row.status,
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
-      postedBy: row.buyer
+      postedBy: includeContact && row.buyer
         ? {
             firstName: row.buyer.firstName ?? undefined,
             lastName: row.buyer.lastName ?? undefined,
@@ -134,6 +134,7 @@ export class BuyerRequirementsService {
 
   async findAll(
     query: QueryBuyerRequirementsDto,
+    includeContact = false,
   ): Promise<BuyerRequirementListResponseDto> {
     const page = Math.max(1, query.page ?? 1);
     const limit = Math.min(50, Math.max(1, query.limit ?? 12));
@@ -193,7 +194,7 @@ export class BuyerRequirementsService {
     ]);
 
     return {
-      items: rows.map((row) => this.toDto(row)),
+      items: rows.map((row) => this.toDto(row, includeContact)),
       total,
       page,
       limit,
@@ -212,11 +213,13 @@ export class BuyerRequirementsService {
   }
 
   async findOne(
-    _userId: string,
+    userId: string | null,
     id: string,
   ): Promise<BuyerRequirementResponseDto> {
-    const row = await this.prisma.buyerRequirement.findUnique({
-      where: { id },
+    const row = await this.prisma.buyerRequirement.findFirst({
+      where: userId
+        ? { id, OR: [{ status: ACTIVE }, { buyerId: userId }] }
+        : { id, status: ACTIVE },
       include: { buyer: { select: this.buyerSelect } },
     });
 
@@ -224,7 +227,7 @@ export class BuyerRequirementsService {
       throw new NotFoundException('Buyer requirement not found');
     }
 
-    return this.toDto(row, true);
+    return this.toDto(row, Boolean(userId));
   }
 
   async create(

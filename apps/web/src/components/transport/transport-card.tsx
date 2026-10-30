@@ -9,10 +9,8 @@ import {
   Trash2,
   Truck,
   User,
-  X,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
 import { getLocalizedDomainName } from '@agri/domain-data';
 
 import type { TransportProvider } from '@/services/api/transport.api';
@@ -42,9 +40,6 @@ export function TransportCard({
   const t = useTranslations('dashboard.transport');
   const locale = useLocale();
 
-  const [contactConfirmationOpen, setContactConfirmationOpen] =
-    useState(false);
-
   const location = [
     provider.village?.name ? getLocalizedDomainName(provider.village.name, locale, 'village') : '',
     provider.taluka?.name ? getLocalizedDomainName(provider.taluka.name, locale, 'taluka') : '',
@@ -67,34 +62,26 @@ export function TransportCard({
       : getLocalizedDomainName(provider.vehicleType, locale, 'vehicleType');
 
   const handleContact = () => {
-    setContactConfirmationOpen(true);
-  };
-
-  const handleConfirmContact = () => {
-    setContactConfirmationOpen(false);
-
     onContact?.(provider);
-
-    window.location.href = `tel:${provider.phoneNumber}`;
   };
 
-  const handleCancelContact = () => {
-    setContactConfirmationOpen(false);
-  };
+  const providerLabel = provider.phoneNumber
+    ? provider.businessName
+    : t('publicProviderLabel');
 
   return (
     <>
-      <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.045] p-4 shadow-lg shadow-black/5 backdrop-blur-sm sm:p-5">
+      <article className="flex h-full flex-col rounded-2xl border border-border bg-surface p-4 shadow-lg shadow-black/5 backdrop-blur-sm sm:p-5">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="truncate text-base font-bold text-white">
-              {provider.businessName}
+            <h2 className="truncate text-base font-bold text-foreground">
+              {providerLabel}
             </h2>
 
             {provider.isVerified ? (
               <div className="mt-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs font-semibold text-emerald-300">
+                <span className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">
                   <BadgeCheck
                     className="h-3.5 w-3.5"
                     aria-hidden="true"
@@ -104,8 +91,8 @@ export function TransportCard({
               </div>
             ) : null}
 
-            {provider.contactName ? (
-              <p className="mt-2 flex items-center gap-1.5 text-xs text-white/45">
+            {provider.phoneNumber && provider.contactName ? (
+              <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <User
                   className="h-3.5 w-3.5 shrink-0"
                   aria-hidden="true"
@@ -117,8 +104,8 @@ export function TransportCard({
         </div>
 
         {/* Vehicle */}
-        <div className="mt-4 rounded-xl border border-white/8 bg-black/10 p-3">
-          <div className="flex items-center gap-1.5 text-[11px] text-white/45">
+        <div className="mt-3 rounded-xl border border-border bg-surface-subtle p-3">
+          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
             <Truck
               className="h-3.5 w-3.5"
               aria-hidden="true"
@@ -126,7 +113,7 @@ export function TransportCard({
             {t('vehicleType')}
           </div>
 
-          <p className="mt-1 text-sm font-semibold text-white">
+          <p className="mt-1 text-sm font-semibold text-foreground">
             {vehicleName}
           </p>
         </div>
@@ -134,9 +121,9 @@ export function TransportCard({
         {/* Location & Availability */}
         <div className="mt-4 space-y-2">
           {location ? (
-            <div className="flex items-start gap-2 text-sm text-white/70">
+            <div className="flex items-start gap-2 text-sm text-foreground">
               <MapPin
-                className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300"
+                className="mt-0.5 h-4 w-4 shrink-0 text-accent"
                 aria-hidden="true"
               />
 
@@ -145,7 +132,7 @@ export function TransportCard({
           ) : null}
 
           {provider.additionalDetails ? (
-            <p className="line-clamp-2 pl-6 text-xs leading-5 text-white/40">
+            <p className="line-clamp-2 pl-6 text-xs leading-5 text-muted-foreground">
               {provider.additionalDetails}
             </p>
           ) : null}
@@ -153,8 +140,8 @@ export function TransportCard({
           <span
             className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
               provider.isAvailable
-                ? 'bg-emerald-400/10 text-emerald-300'
-                : 'bg-white/7 text-white/50'
+                ? 'bg-accent-soft text-accent'
+                : 'bg-surface-subtle text-muted-foreground'
             }`}
           >
             {provider.isAvailable
@@ -165,9 +152,9 @@ export function TransportCard({
 
         {/* Management Actions */}
         {management ? (
-          <div className="mt-4 border-t border-white/10 pt-3">
+          <div className="mt-4 border-t border-border pt-3">
             <div className="flex items-center justify-between gap-3">
-              <label className="flex items-center gap-2 text-xs font-semibold text-white/55">
+              <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
                 <input
                   type="checkbox"
                   checked={provider.isAvailable}
@@ -177,7 +164,7 @@ export function TransportCard({
                       event.target.checked,
                     )
                   }
-                  className="h-4 w-4 accent-emerald-500"
+                  className="h-4 w-4 accent-accent"
                 />
 
                 {t('myTransport.availableToggle')}
@@ -187,7 +174,7 @@ export function TransportCard({
                 <button
                   type="button"
                   onClick={() => onEdit?.(provider)}
-                  className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-white/60 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-muted-foreground hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                   aria-label={`${t('myTransport.edit')} ${provider.businessName}`}
                 >
                   <Edit3
@@ -201,7 +188,7 @@ export function TransportCard({
                 <button
                   type="button"
                   onClick={() => onDelete?.(provider)}
-                  className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-red-300/75 hover:bg-red-400/10 hover:text-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-danger hover:bg-danger-soft hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
                   aria-label={`${t('myTransport.delete')} ${provider.businessName}`}
                 >
                   <Trash2
@@ -216,19 +203,19 @@ export function TransportCard({
           </div>
         ) : (
           /* Discover Actions */
-          <div className="mt-auto grid gap-2 pt-4 sm:grid-cols-2">
+          <div className="mt-auto grid gap-2 pt-4">
             <button
               type="button"
               onClick={handleContact}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white shadow-lg shadow-green-900/20 transition-transform hover:-translate-y-0.5 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-              aria-label={`${t('contact')} ${provider.businessName}`}
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-accent px-4 text-sm font-bold text-accent-foreground shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-accent-strong active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+              aria-label={`${provider.phoneNumber ? t('contact') : t('contactSignIn')} ${providerLabel}`}
             >
               <Phone
                 className="h-4 w-4"
                 aria-hidden="true"
               />
 
-              {t('contact')}
+              {provider.phoneNumber ? t('contact') : t('contactSignIn')}
             </button>
 
             {mapUrl ? (
@@ -236,8 +223,8 @@ export function TransportCard({
                 href={mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-                aria-label={`${t('directions')} ${provider.businessName}`}
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface-subtle px-4 text-sm font-semibold text-foreground hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                aria-label={`${t('directions')} ${providerLabel}`}
               >
                 <Navigation
                   className="h-4 w-4"
@@ -251,89 +238,6 @@ export function TransportCard({
         )}
       </article>
 
-      {/* Contact Confirmation */}
-      {contactConfirmationOpen ? (
-        <div
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="transport-contact-title"
-        >
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-green-950 p-5 shadow-2xl sm:p-6">
-            {/* Dialog Header */}
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-300">
-                  <Phone
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                  />
-                </div>
-
-                <div>
-                  <h2
-                    id="transport-contact-title"
-                    className="text-lg font-bold text-white"
-                  >
-                    {t('contactConfirmation.title')}
-                  </h2>
-
-                  <p className="mt-1 text-sm text-white/45">
-                    {provider.businessName}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleCancelContact}
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/45 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-                aria-label={t('contactConfirmation.cancel')}
-              >
-                <X
-                  className="h-5 w-5"
-                  aria-hidden="true"
-                />
-              </button>
-            </div>
-
-            {/* Message */}
-            <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.035] p-4">
-              <p className="text-sm leading-6 text-white/65">
-                {t('contactConfirmation.description')}
-              </p>
-
-              <p className="mt-3 text-base font-semibold text-white">
-                {provider.phoneNumber}
-              </p>
-            </div>
-
-            {/* Actions */}
-            <div className="mt-5 flex gap-2">
-              <button
-                type="button"
-                onClick={handleCancelContact}
-                className="inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-sm font-semibold text-white/75 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-              >
-                {t('contactConfirmation.cancel')}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleConfirmContact}
-                className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 text-sm font-bold text-white shadow-lg shadow-green-900/20 hover:from-green-500 hover:to-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-              >
-                <Phone
-                  className="h-4 w-4"
-                  aria-hidden="true"
-                />
-
-                {t('contactConfirmation.call')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </>
   );
 }

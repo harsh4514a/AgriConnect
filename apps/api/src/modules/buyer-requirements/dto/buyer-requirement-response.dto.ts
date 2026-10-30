@@ -11,10 +11,10 @@ export class BuyerRequirementResponseDto {
   @ApiProperty()
   district!: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Returned to signed-in users only.' })
   taluka?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'Returned to signed-in users only.' })
   village?: string;
 
   @ApiPropertyOptional()

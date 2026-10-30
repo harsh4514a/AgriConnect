@@ -85,16 +85,16 @@ export function OnboardingWizard({ onComplete, onBack }: OnboardingWizardProps) 
                     </div>
                     <span className="text-xs font-medium text-green-300">{t('wizard.mobile')}</span>
                 </div>
-                <div className="w-6 h-px bg-white/20" />
+                <div className="w-6 h-px bg-white/10" />
                 <div className="flex items-center gap-1.5">
                     <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
                         <CheckCircle2 className="w-3 h-3 text-white" />
                     </div>
                     <span className="text-xs font-medium text-green-300">{t('wizard.otp')}</span>
                 </div>
-                <div className="w-6 h-px bg-white/20" />
+                <div className="w-6 h-px bg-white/10" />
                 <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-5 rounded-full bg-green-400 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center">
                         <User className="w-3 h-3 text-white" />
                     </div>
                     <span className="text-xs font-medium text-white">{t('wizard.profile')}</span>

@@ -1,11 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import type { DashboardUser } from '@/types/dashboard.types';
 import { useDashboardData } from '@/hooks/use-dashboard-data';
 import { PrimaryActions } from '@/components/dashboard/widgets/primary-actions';
-import { QuickActions } from '@/components/dashboard/widgets/quick-actions';
 import { StatisticsCards } from '@/components/dashboard/widgets/statistics-cards';
 import { RecentListings } from '@/components/dashboard/widgets/recent-listings';
 import { BuyerRequirements } from '@/components/dashboard/widgets/buyer-requirements';
@@ -19,15 +17,11 @@ export function DashboardHome({ user }: { user: DashboardUser | null }) {
 
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <p className="text-sm text-white/50">{t('dashboard.welcome.greeting')}</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">{firstName},</h2>
-        <p className="mt-1 text-sm text-white/60">{t('dashboard.welcome.subtitle')}</p>
-      </motion.div>
+      <header>
+        <p className="text-sm font-medium text-muted-foreground">{t('dashboard.welcome.greeting')}</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[28px]">{firstName}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('dashboard.welcome.subtitle')}</p>
+      </header>
 
       <PrimaryActions />
 
@@ -37,11 +31,7 @@ export function DashboardHome({ user }: { user: DashboardUser | null }) {
         buyerRequirements={dashboard.buyerRequirements}
       />
 
-      <QuickActions />
-
-
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <RecentListings state={dashboard.myListings} retry={dashboard.retry} />
         <BuyerRequirements state={dashboard.buyerRequirements} retry={dashboard.retry} />
         <MarketPrices state={dashboard.marketPrices} retry={dashboard.retry} />

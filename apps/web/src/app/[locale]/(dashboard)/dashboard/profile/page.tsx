@@ -42,7 +42,7 @@ function ProfileSkeleton() {
   return (
     <div className="mx-auto w-full max-w-4xl animate-pulse space-y-6" aria-hidden="true">
       <div className="h-44 rounded-2xl bg-gray-100" />
-      <div className="rounded-2xl border border-gray-100 bg-white p-6">
+      <div className="rounded-2xl border border-gray-100 bg-surface p-6">
         <div className="h-6 w-48 rounded bg-gray-100" />
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <div className="h-14 rounded-xl bg-gray-100" />
@@ -89,7 +89,7 @@ function SelectField({
         onChange={(event) => onChange(event.target.value)}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`h-14 w-full rounded-xl border-2 bg-white px-4 text-base text-gray-900 outline-none transition-colors focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 ${
+        className={`h-14 w-full rounded-xl border-2 bg-surface px-4 text-base text-gray-900 outline-none transition-colors focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 ${
           error ? 'border-red-300' : 'border-gray-200 hover:border-gray-300'
         }`}
       >
@@ -319,7 +319,7 @@ export default function ProfilePage() {
   if (loadError || !profile) {
     return (
       <main className="px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto flex min-h-[360px] w-full max-w-xl flex-col items-center justify-center rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
+        <div className="mx-auto flex min-h-[360px] w-full max-w-xl flex-col items-center justify-center rounded-2xl border border-red-100 bg-surface p-8 text-center shadow-sm">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
             <AlertCircle className="h-6 w-6" aria-hidden="true" />
           </div>
@@ -339,7 +339,7 @@ export default function ProfilePage() {
   return (
     <main className="px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-4xl space-y-6">
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7" aria-labelledby="profile-heading">
+        <section className="rounded-2xl border border-gray-200 bg-surface p-5 shadow-sm sm:p-7" aria-labelledby="profile-heading">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-4">
               <Avatar name={fullName} src={undefined} className="h-16 w-16 text-lg" />
@@ -365,7 +365,7 @@ export default function ProfilePage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <UserRound className="h-5 w-5 text-brand-700" aria-hidden="true" />
+              <UserRound className="h-5 w-5 text-accent" aria-hidden="true" />
               {t('profilePage.personalInformation')}
             </CardTitle>
           </CardHeader>
@@ -428,7 +428,7 @@ export default function ProfilePage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <MapPin className="h-5 w-5 text-brand-700" aria-hidden="true" />
+              <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
               {t('profilePage.location')}
             </CardTitle>
           </CardHeader>
@@ -492,14 +492,14 @@ export default function ProfilePage() {
         </Card>
 
         {isEditing ? (
-          <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white/95 p-3 shadow-lg backdrop-blur sm:flex-row sm:justify-end">
+          <div className="sticky bottom-4 z-10 flex flex-col gap-3 rounded-2xl border border-gray-200 bg-surface-subtle p-3 shadow-lg backdrop-blur sm:flex-row sm:justify-end">
             <Button variant="outline" onClick={cancelEditing} disabled={isSaving} className="w-full sm:w-auto">
               {t('profilePage.cancel')}
             </Button>
             <Button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto">
               {isSaving ? (
                 <>
-                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-border border-t-white" aria-hidden="true" />
                   {t('profilePage.saving')}
                 </>
               ) : (

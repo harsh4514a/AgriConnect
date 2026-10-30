@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
@@ -60,30 +60,30 @@ const QUICK_ACTIONS: ReadonlyArray<{
 ];
 
 const TONE_CLASSES = {
-  emerald: 'bg-emerald-50 text-emerald-700 ring-emerald-100',
+  emerald: 'bg-accent-soft text-accent ring-focus',
   olive: 'bg-lime-50 text-lime-700 ring-lime-100',
-  amber: 'bg-amber-50 text-amber-700 ring-amber-100',
+  amber: 'bg-warning/10 text-warning ring-amber-100',
   blue: 'bg-sky-50 text-sky-700 ring-sky-100',
   teal: 'bg-teal-50 text-teal-700 ring-teal-100',
   violet: 'bg-violet-50 text-violet-700 ring-violet-100',
-  green: 'bg-green-50 text-green-700 ring-green-100',
+  green: 'bg-green-50 text-accent ring-focus',
 } as const;
 
 function DashboardSkeleton() {
   return (
     <div className="space-y-6" aria-busy="true">
-      <div className="h-36 animate-pulse rounded-3xl border border-slate-200/70 bg-white/80" />
+      <div className="h-36 animate-pulse rounded-3xl border border-border/70 bg-surface-subtle" />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 7 }).map((_, index) => (
           <div
             key={index}
-            className="h-32 animate-pulse rounded-2xl border border-slate-200/70 bg-white/80"
+            className="h-32 animate-pulse rounded-2xl border border-border/70 bg-surface-subtle"
           />
         ))}
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.45fr_0.9fr]">
-        <div className="h-[430px] animate-pulse rounded-2xl border border-slate-200/70 bg-white/80" />
-        <div className="h-[430px] animate-pulse rounded-2xl border border-slate-200/70 bg-white/80" />
+        <div className="h-[430px] animate-pulse rounded-2xl border border-border/70 bg-surface-subtle" />
+        <div className="h-[430px] animate-pulse rounded-2xl border border-border/70 bg-surface-subtle" />
       </div>
     </div>
   );
@@ -106,21 +106,21 @@ function ActivityRow({ activity }: { activity: AdminRecentActivity }) {
 
   return (
     <li className="relative flex items-start gap-3 py-4 first:pt-0 last:pb-0">
-      <div className="absolute bottom-0 left-[17px] top-12 w-px bg-slate-100 last:hidden" aria-hidden="true" />
-      <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700">
+      <div className="absolute bottom-0 left-[17px] top-12 w-px bg-surface-subtle last:hidden" aria-hidden="true" />
+      <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-accent-soft text-accent">
         <Icon className="h-4 w-4" aria-hidden="true" />
       </div>
       <div className="min-w-0 flex-1 pt-0.5">
-        <p className="truncate text-sm font-semibold text-slate-900">
+        <p className="truncate text-sm font-semibold text-foreground">
           {activity.title || t(`dashboard.activity.${activity.type}Fallback`)}
         </p>
-        <p className="mt-1 truncate text-xs text-slate-500">
+        <p className="mt-1 truncate text-xs text-muted-foreground">
           {t(`dashboard.activity.${activity.type}`)}
-          {activity.detail ? ` · ${activity.detail}` : ''}
+          {activity.detail ? `· ${activity.detail}` : ''}
         </p>
       </div>
       <time
-        className="hidden shrink-0 pt-1 text-[11px] font-medium text-slate-400 sm:block"
+        className="hidden shrink-0 pt-1 text-[11px] font-medium text-muted-foreground sm:block"
         dateTime={activity.createdAt}
       >
         {timestamp}
@@ -160,17 +160,17 @@ export function AdminOverview() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border border-[#2d5e47] bg-gradient-to-br from-[#173f2f] via-[#1d4b37] to-[#285941] p-5 shadow-[0_18px_45px_rgba(20,55,38,0.18)] sm:p-7">
+      <section className="relative overflow-hidden rounded-3xl border border-border-strong bg-[var(--hero)] p-5 shadow-[0_12px_32px_rgba(20,55,38,0.12)] sm:p-7">
         <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-emerald-100/40 blur-3xl" aria-hidden="true" />
         <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-3xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-200">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--hero-muted)]">
               {t('dashboard.eyebrow')}
             </p>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-[30px]">
+            <h1 className="mt-2 text-2xl font-bold tracking-tight text-[var(--hero-foreground)] sm:text-[30px]">
               {t('dashboard.title')}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-emerald-50/80">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--hero-muted)]">
               {t('dashboard.subtitle', {
                 username: admin?.username || t('layout.defaultAdministrator'),
               })}
@@ -180,7 +180,7 @@ export function AdminOverview() {
           <button
             type="button"
             onClick={() => void loadDashboard()}
-            className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white shadow-sm transition hover:border-emerald-200/40 hover:bg-white/15 hover:text-white"
+            className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-bold text-foreground shadow-sm transition hover:bg-surface-subtle"
           >
             <RefreshCw className="h-4 w-4" aria-hidden="true" />
             {t('dashboard.refresh')}
@@ -191,20 +191,20 @@ export function AdminOverview() {
       {error ? (
         <section
           role="alert"
-          className="rounded-2xl border border-red-200 bg-red-50/80 p-5 text-red-900"
+          className="rounded-2xl border border-danger/30 bg-danger-soft p-5 text-danger"
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
-              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" aria-hidden="true" />
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true" />
               <div>
                 <p className="text-sm font-bold">{t('dashboard.errorTitle')}</p>
-                <p className="mt-1 text-sm text-red-700">{t('dashboard.loadError')}</p>
+                <p className="mt-1 text-sm text-danger">{t('dashboard.loadError')}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => void loadDashboard()}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-bold text-red-700 hover:bg-red-50"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-danger/30 bg-surface px-4 text-sm font-bold text-danger hover:bg-danger-soft"
             >
               <RefreshCw className="h-4 w-4" aria-hidden="true" />
               {t('dashboard.retry')}
@@ -217,10 +217,10 @@ export function AdminOverview() {
         <>
           <section aria-labelledby="admin-kpi-heading">
             <div className="mb-3 flex items-center justify-between gap-4 px-1">
-              <h2 id="admin-kpi-heading" className="text-base font-bold text-slate-900">
+              <h2 id="admin-kpi-heading" className="text-base font-bold text-foreground">
                 {t('dashboard.overviewHeading')}
               </h2>
-              <span className="hidden rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700 sm:inline-flex">
+              <span className="hidden rounded-full border border-emerald-100 bg-accent-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-accent sm:inline-flex">
                 {t('dashboard.liveData')}
               </span>
             </div>
@@ -229,20 +229,20 @@ export function AdminOverview() {
               {METRIC_CONFIG.map(({ key, icon: Icon, tone }) => (
                 <article
                   key={key}
-                  className="group rounded-2xl border border-[#d7ddd6] bg-[#fbfcfa] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] transition duration-150 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-[0_16px_35px_rgba(15,76,45,0.07)]"
+                  className="group rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] transition duration-150 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-[0_16px_35px_rgba(15,76,45,0.07)]"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-xl ring-1 ${TONE_CLASSES[tone]}`}>
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-300">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                       {t('dashboard.database')}
                     </span>
                   </div>
-                  <p className="mt-6 text-[28px] font-bold tracking-tight text-slate-950">
+                  <p className="mt-6 text-[28px] font-bold tracking-tight text-foreground">
                     {data.metrics[key].toLocaleString(locale)}
                   </p>
-                  <p className="mt-1 text-sm font-semibold leading-5 text-slate-500">
+                  <p className="mt-1 text-sm font-semibold leading-5 text-muted-foreground">
                     {t(`dashboard.metrics.${key}`)}
                   </p>
                 </article>
@@ -253,18 +253,18 @@ export function AdminOverview() {
           <div className="grid gap-6 xl:grid-cols-[1.45fr_0.9fr]">
             <section
               aria-labelledby="recent-activity-heading"
-              className="rounded-2xl border border-[#d7ddd6] bg-[#fbfcfa] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6"
             >
-              <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
+              <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
                 <div>
-                  <h2 id="recent-activity-heading" className="text-base font-bold text-slate-900">
+                  <h2 id="recent-activity-heading" className="text-base font-bold text-foreground">
                     {t('dashboard.recentActivityTitle')}
                   </h2>
-                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
                     {t('dashboard.recentActivitySubtitle')}
                   </p>
                 </div>
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-500">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-subtle text-muted-foreground">
                   <Activity className="h-4 w-4" aria-hidden="true" />
                 </div>
               </div>
@@ -277,9 +277,9 @@ export function AdminOverview() {
                     ))}
                   </ul>
                 ) : (
-                  <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 p-10 text-center">
-                    <Activity className="mx-auto h-6 w-6 text-slate-300" aria-hidden="true" />
-                    <p className="mt-3 text-sm font-semibold text-slate-700">
+                  <div className="rounded-xl border border-dashed border-border bg-surface-subtle/70 p-10 text-center">
+                    <Activity className="mx-auto h-6 w-6 text-muted-foreground" aria-hidden="true" />
+                    <p className="mt-3 text-sm font-semibold text-foreground">
                       {t('dashboard.noRecentActivity')}
                     </p>
                   </div>
@@ -289,13 +289,13 @@ export function AdminOverview() {
 
             <section
               aria-labelledby="quick-actions-heading"
-              className="rounded-2xl border border-[#d7ddd6] bg-[#f3f5f0] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6"
             >
               <div>
-                <h2 id="quick-actions-heading" className="text-base font-bold text-slate-900">
+                <h2 id="quick-actions-heading" className="text-base font-bold text-foreground">
                   {t('dashboard.quickActionsTitle')}
                 </h2>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">
                   {t('dashboard.quickActionsSubtitle')}
                 </p>
               </div>
@@ -305,17 +305,17 @@ export function AdminOverview() {
                   const content = (
                     <>
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-muted-foreground shadow-sm">
                           <Icon className="h-4 w-4" aria-hidden="true" />
                         </div>
-                        <span className="truncate text-sm font-semibold text-slate-700">
+                        <span className="truncate text-sm font-semibold text-foreground">
                           {t(`nav.${key}`)}
                         </span>
                       </div>
                       {href ? (
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
                       ) : (
-                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                           {t('nav.comingSoon')}
                         </span>
                       )}
@@ -327,7 +327,8 @@ export function AdminOverview() {
                       <Link
                         key={key}
                         href={`/${locale}${href}`}
-                        className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-slate-200/80 bg-[#fbfcfa] px-3.5 py-2.5 transition hover:border-emerald-200 hover:bg-emerald-50/40 hover:shadow-sm"
+                        prefetch={false}
+                        className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-border/80 bg-[var(--surface)] px-3.5 py-2.5 transition hover:border-accent/30 hover:bg-accent-soft/40 hover:shadow-sm"
                       >
                         {content}
                       </Link>
@@ -337,7 +338,7 @@ export function AdminOverview() {
                   return (
                     <div
                       key={key}
-                      className="flex min-h-12 cursor-default items-center justify-between gap-3 rounded-xl border border-slate-200/70 bg-slate-50/70 px-3.5 py-2.5"
+                      className="flex min-h-12 cursor-default items-center justify-between gap-3 rounded-xl border border-border/70 bg-surface-subtle/70 px-3.5 py-2.5"
                       aria-disabled="true"
                     >
                       {content}

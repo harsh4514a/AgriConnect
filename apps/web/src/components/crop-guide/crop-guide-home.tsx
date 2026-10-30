@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import { useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { BookOpen, ChevronLeft, ChevronRight, Search, Sprout, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, Sprout, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from '@/i18n/locale-provider';
 import {
@@ -112,27 +112,16 @@ export function CropGuideHome() {
   const showingEnd = Math.min(page * PAGE_SIZE, total);
 
   return (
-    <div className="space-y-6">
-      <header className="max-w-3xl">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-200">
-          <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-          {t('badge')}
-        </div>
-        <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-          {t('title')}
-        </h1>
-        <p className="mt-2 text-sm leading-6 text-white/60 sm:text-base">
-          {t('subtitle')}
-        </p>
-      </header>
+    <div className="space-y-3">
+      <h1 className="sr-only">{t('title')}</h1>
 
       <section
         aria-label={t('filters.label')}
-        className="rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-xl"
+        className="rounded-2xl border border-border bg-surface p-3 shadow-sm"
       >
         <div className="relative">
           <Search
-            className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40"
+            className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
           />
           <input
@@ -142,14 +131,14 @@ export function CropGuideHome() {
             aria-label={t('searchLabel')}
             type="search"
             autoComplete="off"
-            className="h-14 w-full rounded-xl border border-white/10 bg-black/10 pl-12 pr-11 text-sm text-white outline-none placeholder:text-white/35 focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20"
+            className="h-11 w-full rounded-xl border border-border bg-surface-subtle pl-12 pr-11 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-focus/50 focus:ring-2 focus:ring-focus"
           />
           {search && (
             <button
               type="button"
               onClick={() => updateSearch('')}
               aria-label={t('clearSearch')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-white/50 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-muted-foreground hover:bg-surface-subtle hover:text-foreground focus:outline-none focus:ring-2 focus:ring-focus"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -202,15 +191,15 @@ export function CropGuideHome() {
       <section aria-live="polite" aria-busy={loading}>
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
-            {/* <h2 className="text-lg font-bold text-white">
+            {/* <h2 className="text-lg font-bold text-foreground">
               {hasFilters ? t('resultsTitle') : t('allCropsTitle')}
             </h2> */}
-            <p className="mt-1 text-xs text-white/45">
+            <p className="mt-1 text-xs text-muted-foreground">
               {hasFilters ? t('resultsSubtitle') : t('allCropsSubtitle')}
             </p>
           </div>
           {!loading && !error && (
-            <span className="text-xs text-white/40">
+            <span className="text-xs text-muted-foreground">
               {t('countLabel', { count: total })}
             </span>
           )}
@@ -258,8 +247,8 @@ export function CropGuideHome() {
             </div>
 
             {totalPages > 1 && (
-              <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs text-white/45">
+              <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-surface p-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs text-muted-foreground">
                   {t('pagination.range', {
                     start: showingStart,
                     end: showingEnd,
@@ -276,12 +265,12 @@ export function CropGuideHome() {
                     onClick={() => setPage((value) => Math.max(value - 1, 1))}
                     disabled={page <= 1}
                     aria-label={t('pagination.previous')}
-                    className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-white/10 px-3 text-xs font-semibold text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-35 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                    className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-border px-3 text-xs font-semibold text-foreground transition hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-35 focus:outline-none focus:ring-2 focus:ring-focus"
                   >
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                     <span className="hidden sm:inline">{t('pagination.previous')}</span>
                   </button>
-                  <span className="min-w-20 text-center text-xs font-semibold text-white/60">
+                  <span className="min-w-20 text-center text-xs font-semibold text-muted-foreground">
                     {t('pagination.page', { page, totalPages })}
                   </span>
                   <button
@@ -291,7 +280,7 @@ export function CropGuideHome() {
                     }
                     disabled={page >= totalPages}
                     aria-label={t('pagination.next')}
-                    className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-white/10 px-3 text-xs font-semibold text-white/70 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-35 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                    className="inline-flex min-h-10 items-center gap-1 rounded-xl border border-border px-3 text-xs font-semibold text-foreground transition hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-35 focus:outline-none focus:ring-2 focus:ring-focus"
                   >
                     <span className="hidden sm:inline">{t('pagination.next')}</span>
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -315,7 +304,7 @@ function FilterGroup({
 }) {
   return (
     <div className="min-w-0">
-      <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wide text-white/40">
+      <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </p>
       {children}
@@ -338,10 +327,10 @@ function FilterButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'min-h-10 shrink-0 rounded-xl px-3.5 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-emerald-400/60',
+        'min-h-10 shrink-0 rounded-xl px-3.5 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-focus',
         active
-          ? 'bg-emerald-400 text-emerald-950'
-          : 'bg-white/10 text-white/65 hover:bg-white/15 hover:text-white',
+          ? 'bg-accent text-accent-foreground'
+          : 'bg-surface-subtle text-foreground hover:bg-surface-subtle hover:text-foreground',
       )}
     >
       {children}
@@ -363,9 +352,10 @@ function CropListItem({
   return (
     <Link
       href={`/${locale}/dashboard/crop-guide/${item.slug}`}
-      className="group flex min-h-20 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.05] p-3 transition hover:border-emerald-300/30 hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+      prefetch={false}
+      className="group flex min-h-20 items-center gap-3 rounded-2xl border border-border bg-surface p-3 transition hover:border-accent/30 hover:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-focus"
     >
-      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-emerald-950/50">
+      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-subtle">
         <Image
           src={item.image}
           alt={item.imageAlt}
@@ -376,15 +366,15 @@ function CropListItem({
       </div>
 
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-sm font-bold text-white">
+        <h3 className="truncate text-sm font-bold text-foreground">
           {item.name}
         </h3>
         <div className="mt-1 flex flex-wrap gap-1.5">
-          <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-white/55">
+          <span className="rounded-full bg-surface-subtle px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
             {categoryLabel(item.category)}
           </span>
           {item.seasonKeys.length > 0 && (
-            <span className="truncate rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-200">
+            <span className="truncate rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-medium text-accent">
               {item.seasonKeys.map(seasonLabel).join(' / ')}
             </span>
           )}
@@ -392,7 +382,7 @@ function CropListItem({
       </div>
 
       <ChevronRight
-        className="h-4 w-4 shrink-0 text-white/25 transition group-hover:translate-x-0.5 group-hover:text-emerald-300"
+        className="h-4 w-4 shrink-0 text-foreground/25 transition group-hover:translate-x-0.5 group-hover:text-accent"
         aria-hidden="true"
       />
     </Link>
@@ -405,13 +395,13 @@ function CropSkeleton() {
       {Array.from({ length: PAGE_SIZE }, (_, index) => (
         <div
           key={index}
-          className="flex min-h-20 items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.05] p-3"
+          className="flex min-h-20 items-center gap-3 rounded-2xl border border-border bg-surface p-3"
           aria-hidden="true"
         >
-          <div className="h-14 w-14 shrink-0 animate-pulse rounded-xl bg-white/10" />
+          <div className="h-14 w-14 shrink-0 animate-pulse rounded-xl bg-surface-subtle" />
           <div className="min-w-0 flex-1 space-y-2">
-            <div className="h-4 w-2/3 animate-pulse rounded bg-white/10" />
-            <div className="h-3 w-1/2 animate-pulse rounded bg-white/10" />
+            <div className="h-4 w-2/3 animate-pulse rounded bg-surface-subtle" />
+            <div className="h-3 w-1/2 animate-pulse rounded bg-surface-subtle" />
           </div>
         </div>
       ))}
@@ -431,20 +421,20 @@ function EmptyState({
   onAction?: () => void;
 }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.04] px-6 py-14 text-center">
+    <div className="rounded-2xl border border-dashed border-border bg-surface px-6 py-14 text-center">
       <Sprout
-        className="mx-auto h-10 w-10 text-emerald-300/60"
+        className="mx-auto h-10 w-10 text-accent/60"
         aria-hidden="true"
       />
-      <h3 className="mt-4 text-lg font-bold text-white">{title}</h3>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/50">
+      <h3 className="mt-4 text-lg font-bold text-foreground">{title}</h3>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
         {description}
       </p>
       {action && onAction && (
         <button
           type="button"
           onClick={onAction}
-          className="mt-5 min-h-10 rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-emerald-950 hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-300/70"
+          className="mt-5 min-h-10 rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-accent-foreground hover:bg-accent-strong focus:outline-none focus:ring-2 focus:ring-focus"
         >
           {action}
         </button>

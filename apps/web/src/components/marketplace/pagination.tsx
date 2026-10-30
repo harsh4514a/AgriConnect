@@ -36,11 +36,11 @@ export function Pagination({
 
     return (
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
                 {t('dashboard.marketplaceBrowse.pagination.showing')}{' '}
-                <span className="font-semibold text-white">{startItem}</span>{' '}
+                <span className="font-semibold text-foreground">{startItem}</span>{' '}
                 {t('dashboard.marketplaceBrowse.pagination.of')}{' '}
-                <span className="font-semibold text-white">{endItem}</span>{' '}
+                <span className="font-semibold text-foreground">{endItem}</span>{' '}
                 {t('dashboard.marketplaceBrowse.filters.results')}
             </p>
 
@@ -53,7 +53,7 @@ export function Pagination({
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                     aria-label={t('dashboard.marketplaceBrowse.pagination.previous')}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface-subtle text-foreground transition-colors hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <ChevronLeft className="h-4 w-4" />
                 </button>
@@ -68,14 +68,9 @@ export function Pagination({
                         className={cn(
                             'flex h-10 w-10 items-center justify-center rounded-xl text-sm font-medium transition-colors',
                             page === currentPage
-                                ? 'text-white'
-                                : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10',
+                                ? 'bg-accent text-accent-foreground shadow-sm'
+                                : 'border border-border bg-surface-subtle text-muted-foreground hover:bg-surface-subtle',
                         )}
-                        style={
-                            page === currentPage
-                                ? { background: 'linear-gradient(135deg, #2E7D32, #1B5E20)' }
-                                : undefined
-                        }
                     >
                         {page}
                     </button>
@@ -86,7 +81,7 @@ export function Pagination({
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     aria-label={t('dashboard.marketplaceBrowse.pagination.next')}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface-subtle text-foreground transition-colors hover:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <ChevronRight className="h-4 w-4" />
                 </button>

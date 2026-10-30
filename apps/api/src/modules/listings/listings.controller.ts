@@ -25,6 +25,9 @@ import {
 import { ListingsService } from './listings.service';
 import { QueryListingsDto } from './dto/query-listings.dto';
 import { ListingResponseDto, PaginatedListingsDto } from './dto/listing-response.dto';
+import { RecentListingResponseDto } from './dto/recent-listing-response.dto';
+import { QueryMyListingsManagementDto } from './dto/query-my-listings-management.dto';
+import { MyListingsManagementResponseDto } from './dto/my-listings-management-response.dto';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { UpdateListingDto } from './dto/update-listing.dto';
 import { UpdateListingStatusDto } from './dto/update-listing-status.dto';
@@ -100,7 +103,7 @@ export class ListingsController {
     @Query() query: QueryListingsDto,
     @CurrentUser('id') userId: string | null,
   ): Promise<PaginatedListingsDto> {
-    return this.listingsService.findAll(query, Boolean(userId));
+    return this.listingsService.findAll(query, userId);
   }
 
   /**
@@ -131,6 +134,29 @@ export class ListingsController {
     query: NearbyListingsQueryDto,
   ): Promise<PaginatedListingsDto> {
     return this.listingsService.findNearby(userId, query);
+  }
+
+  /** GET /listings/mine/recent — bounded dashboard preview for the authenticated user. */
+  @Get('mine/recent')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get up to three recent listings for the authenticated farmer' })
+  @ApiResponse({ status: HttpStatus.OK, type: [RecentListingResponseDto] })
+  findRecentMine(@CurrentUser('id') userId: string): Promise<RecentListingResponseDto[]> {
+    return this.listingsService.findRecentMine(userId);
+  }
+
+  /** GET /listings/mine/management — bounded and filterable owner listing view. */
+  @Get('mine/management')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get a paginated, searchable listing page and owner listing counts' })
+  @ApiResponse({ status: HttpStatus.OK, type: MyListingsManagementResponseDto })
+  findMineManagement(
+    @CurrentUser('id') userId: string,
+    @Query() query: QueryMyListingsManagementDto,
+  ): Promise<MyListingsManagementResponseDto> {
+    return this.listingsService.findMineManagement(userId, query);
   }
 
   /** GET /listings/mine — only listings owned by the authenticated user. */

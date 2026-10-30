@@ -69,20 +69,20 @@ export function StepQuantityPricing({
 
   const inputClass = (hasError: boolean) =>
     cn(
-      'h-12 w-full rounded-xl border bg-white/5 px-4 text-base font-semibold text-white placeholder-white/40 backdrop-blur-xl transition-all focus:bg-white/10 focus:outline-none focus:ring-2',
+      'h-12 w-full rounded-xl border bg-surface-subtle px-4 text-base font-semibold text-foreground placeholder-muted-foreground backdrop-blur-xl transition-all focus:bg-surface-subtle focus:outline-none focus:ring-2',
       hasError
-        ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
-        : 'border-white/15 focus:border-green-400 focus:ring-green-400/30',
+        ? 'border-red-400 focus:border-red-400 focus:ring-danger/30'
+        : 'border-border focus:border-focus focus:ring-focus',
     );
 
   return (
     <div className="space-y-6">
       <div className="space-y-3">
         <div>
-          <label htmlFor="quantity" className="block text-sm font-semibold text-white">
-            {t('dashboard.createListing.fields.quantity')} <span className="text-red-400">*</span>
+          <label htmlFor="quantity" className="block text-sm font-semibold text-foreground">
+            {t('dashboard.createListing.fields.quantity')} <span className="text-danger">*</span>
           </label>
-          <p className="mt-1 text-xs text-white/50">{t('dashboard.createListing.fields.quantityHelper')}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t('dashboard.createListing.fields.quantityHelper')}</p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -106,7 +106,7 @@ export function StepQuantityPricing({
           <div
             role="radiogroup"
             aria-label={t('dashboard.createListing.fields.unit')}
-            className="flex min-h-12 gap-1.5 rounded-xl border border-white/10 bg-white/5 p-1"
+            className="flex min-h-12 gap-1.5 rounded-xl border border-border bg-surface-subtle p-1"
           >
             {unitOptions.map((u) => (
               <button
@@ -116,10 +116,10 @@ export function StepQuantityPricing({
                 aria-checked={unit === u.value}
                 onClick={() => onChange({ unit: u.value })}
                 className={cn(
-                  'min-h-10 flex-1 rounded-lg px-3 py-2 text-xs font-semibold capitalize transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:flex-initial',
+                  'min-h-10 flex-1 rounded-lg px-3 py-2 text-xs font-semibold capitalize transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:flex-initial',
                   unit === u.value
-                    ? 'bg-green-600 text-white shadow-md'
-                    : 'text-white/60 hover:text-white',
+                    ? 'bg-accent text-accent-foreground shadow-md'
+                    : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 {u.label}
@@ -129,7 +129,7 @@ export function StepQuantityPricing({
         </div>
 
         {errors.quantity && (
-          <p id="quantity-error" role="alert" className="text-xs font-medium text-red-400">
+          <p id="quantity-error" role="alert" className="text-xs font-medium text-danger">
             {errors.quantity}
           </p>
         )}
@@ -137,15 +137,15 @@ export function StepQuantityPricing({
 
       <div className="space-y-3">
         <div>
-          <label htmlFor="price" className="block text-sm font-semibold text-white">
-            {t('dashboard.createListing.fields.price')} <span className="text-red-400">*</span>
+          <label htmlFor="price" className="block text-sm font-semibold text-foreground">
+            {t('dashboard.createListing.fields.price')} <span className="text-danger">*</span>
           </label>
-          <p className="mt-1 text-xs text-white/50">{t('dashboard.createListing.fields.priceHelper')}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t('dashboard.createListing.fields.priceHelper')}</p>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-white/70">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-foreground">
               ₹
             </span>
             <input
@@ -167,7 +167,7 @@ export function StepQuantityPricing({
           <div
             role="radiogroup"
             aria-label={t('dashboard.createListing.fields.priceUnit')}
-            className="flex min-h-12 gap-1.5 rounded-xl border border-white/10 bg-white/5 p-1"
+            className="flex min-h-12 gap-1.5 rounded-xl border border-border bg-surface-subtle p-1"
           >
             {priceUnitOptions.map((pu) => (
               <button
@@ -177,10 +177,10 @@ export function StepQuantityPricing({
                 aria-checked={primaryUnit === pu.value}
                 onClick={() => onChange({ primaryUnit: pu.value })}
                 className={cn(
-                  'min-h-10 flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:flex-initial',
+                  'min-h-10 flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:flex-initial',
                   primaryUnit === pu.value
-                    ? 'bg-green-600 text-white shadow-md'
-                    : 'text-white/60 hover:text-white',
+                    ? 'bg-accent text-accent-foreground shadow-md'
+                    : 'text-muted-foreground hover:text-foreground',
                 )}
               >
                 {pu.label}
@@ -190,13 +190,13 @@ export function StepQuantityPricing({
         </div>
 
         {errors.price && (
-          <p id="price-error" role="alert" className="text-xs font-medium text-red-400">
+          <p id="price-error" role="alert" className="text-xs font-medium text-danger">
             {errors.price}
           </p>
         )}
 
         {price && Number(price) > 0 && (
-          <p id="price-unit-hint" className="text-xs text-white/50">
+          <p id="price-unit-hint" className="text-xs text-muted-foreground">
             {t('dashboard.createListing.fields.pricePerUnitHint', {
               price: new Intl.NumberFormat('en-IN').format(Number(price)),
               unit: selectedPriceUnitLabel,
@@ -206,13 +206,13 @@ export function StepQuantityPricing({
       </div>
 
       {totalValue !== null && (
-        <div className="rounded-2xl border border-green-500/20 bg-green-950/40 p-4 backdrop-blur-xl">
+        <div className="rounded-2xl border border-border bg-accent-soft p-4">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-green-300">
+            <div className="flex items-center gap-2 text-xs text-accent">
               <Calculator className="h-4 w-4" aria-hidden />
               <span>{t('dashboard.createListing.fields.totalValue')}</span>
             </div>
-            <div className="text-xl font-extrabold text-white">
+            <div className="text-xl font-extrabold text-foreground">
               ₹{new Intl.NumberFormat('en-IN').format(totalValue)}
             </div>
           </div>

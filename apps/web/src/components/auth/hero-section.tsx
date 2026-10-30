@@ -42,21 +42,21 @@ export function HeroSection() {
             <motion.div
                 animate={{ y: [0, -12, 0], rotate: [0, 10, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute top-28 left-16 text-brand-300/20"
+                className="absolute top-28 left-16 text-accent/20"
             >
                 <Sprout className="h-16 w-16" />
             </motion.div>
             <motion.div
                 animate={{ y: [0, 10, 0], rotate: [0, -8, 0] }}
                 transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-                className="absolute bottom-32 right-16 text-brand-200/15"
+                className="absolute bottom-32 right-16 text-accent/15"
             >
                 <Wheat className="h-20 w-20" />
             </motion.div>
             <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-                className="absolute top-1/2 left-3/4 text-brand-300/10"
+                className="absolute top-1/2 left-3/4 text-accent/10"
             >
                 <Tractor className="h-12 w-12" />
             </motion.div>
@@ -69,9 +69,9 @@ export function HeroSection() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 mb-8"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-border mb-8"
                     >
-                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                        <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                         <span className="text-xs font-medium text-white/80">Farmers Marketplace</span>
                     </motion.div>
 
@@ -84,7 +84,7 @@ export function HeroSection() {
                         Connecting Farmers
                         <br />
 
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-200 ">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-emerald-200">
                             Directly with Buyers
                         </span>
                     </motion.h1>

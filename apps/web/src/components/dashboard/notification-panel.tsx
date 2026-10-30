@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import { useEffect, useState } from 'react';
 import { Bell } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
@@ -71,14 +71,15 @@ export function NotificationPanel() {
   return (
     <Link
       href={`/${locale}/dashboard/notifications`}
-      className="relative flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+      prefetch={false}
+      className="relative flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
       aria-label={t('dashboard.notifications.ariaLabel')}
     >
       <Bell className="h-5 w-5" aria-hidden="true" />
 
       {unreadCount > 0 && (
         <span
-          className="absolute -right-1 -top-1 flex min-h-4 min-w-4 items-center justify-center rounded-full border border-green-950 bg-emerald-400 px-1 text-[9px] font-black leading-none text-green-950"
+          className="absolute -right-1 -top-1 flex min-h-4 min-w-4 items-center justify-center rounded-full border border-surface bg-accent px-1 text-[9px] font-bold leading-none text-accent-foreground"
           aria-label={t('dashboard.notifications.unreadCount', {
             count: unreadCount,
           })}

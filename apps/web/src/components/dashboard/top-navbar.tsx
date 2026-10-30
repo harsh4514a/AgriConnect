@@ -1,80 +1,167 @@
 'use client';
 
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
+import Image from 'next/image';
+import { useParams, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Menu, Search, Sprout } from 'lucide-react';
+import { ChevronDown, Leaf } from 'lucide-react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { LanguageSwitcher } from '@/components/auth/language-switcher';
 import { NotificationPanel } from '@/components/dashboard/notification-panel';
 import { ProfileDropdown } from '@/components/dashboard/profile-dropdown';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { DASHBOARD_NAV } from '@/constants/dashboard.constants';
+import type { DashboardNavItem } from '@/types/dashboard.types';
 import { cn } from '@/utils/cn';
 
-interface TopNavbarProps {
-  /** Current page title shown next to the logo. */
-  title: string;
-  /** Opens the mobile drawer. */
-  onOpenMobile: () => void;
+function isCurrentPath(pathname: string, locale: string, href: string) {
+  const target = `/${locale}${href}`;
+  return href === '/dashboard'
+    ? pathname === target
+    : pathname === target || pathname.startsWith(`${target}/`);
 }
 
-export function TopNavbar({ title, onOpenMobile }: TopNavbarProps) {
+function NavigationMenu({
+  label,
+  items,
+  locale,
+  pathname,
+}: {
+  label: string;
+  items: DashboardNavItem[];
+  locale: string;
+  pathname: string;
+}) {
   const t = useTranslations();
+  const active = items.some((item) => isCurrentPath(pathname, locale, item.href));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-green-950/70 backdrop-blur-2xl">
-      <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
-        {/* Mobile menu button */}
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
         <button
-          onClick={onOpenMobile}
-          className="flex h-9 w-9 items-center justify-center rounded-xl text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
-          aria-label={t('dashboard.sidebar.open')}
+          type="button"
+          className={cn(
+            'inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus',
+            active ? 'bg-accent-soft text-accent-strong' : 'text-muted-foreground',
+          )}
+          aria-label={label}
         >
-          <Menu className="h-5 w-5" />
+          {label}
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </button>
-
-        {/* Logo (mobile only; sidebar shows it on desktop) */}
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-xl lg:hidden"
-          style={{
-            background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-            boxShadow: '0 4px 12px rgba(46,125,50,0.35)',
-          }}
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="start"
+          sideOffset={8}
+          className="z-50 min-w-56 rounded-xl border border-border bg-surface p-1.5 text-foreground shadow-xl shadow-black/10"
         >
-          <Sprout className="h-5 w-5 text-white" />
-        </div>
+          {items.map((item) => {
+            const Icon = item.icon;
+            const current = isCurrentPath(pathname, locale, item.href);
+            return (
+              <DropdownMenu.Item key={item.key} asChild>
+                <Link
+                  href={`/${locale}${item.href}`}
+                  prefetch={false}
+                  aria-current={current ? 'page' : undefined}
+                  className={cn(
+                    'flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm outline-none transition-colors focus:bg-surface-subtle',
+                    current ? 'bg-accent-soft font-semibold text-accent-strong' : 'text-foreground',
+                  )}
+                >
+                  <Icon className="h-4 w-4 text-accent" aria-hidden="true" />
+                  {t(item.labelKey)}
+                </Link>
+              </DropdownMenu.Item>
+            );
+          })}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
 
-        {/* Page title */}
-        <h1 className="truncate text-lg font-bold tracking-tight text-white sm:text-xl">{title}</h1>
+export function TopNavbar() {
+  const t = useTranslations();
+  const pathname = usePathname();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
+  const marketItems = DASHBOARD_NAV.filter((item) => item.group === 'marketplace');
+  const informationItems = DASHBOARD_NAV.filter((item) => item.group === 'information');
+  const dashboardHref = `/${locale}/dashboard`;
+  const transport = DASHBOARD_NAV.find((item) => item.key === 'transport');
 
-        {/* Search (UI only) */}
-        <div className="ml-auto hidden w-full max-w-sm md:block">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-            <input
-              type="search"
-              placeholder={t('dashboard.search.placeholder')}
-              aria-label={t('dashboard.search.placeholder')}
-              className={cn(
-                'h-10 w-full rounded-xl border border-white/15 bg-white/10 pl-9 pr-4',
-                'text-sm text-white placeholder:text-white/40 outline-none',
-                'transition-colors focus:border-green-400/60 focus:bg-white/15',
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2 md:ml-0">
-          {/* Mobile search icon (UI only) */}
-          <button
-            className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white md:hidden"
-            aria-label={t('dashboard.search.placeholder')}
-          >
-            <Search className="h-5 w-5" />
-          </button>
-
-          <LanguageSwitcher
-            className="[&>button]:!text-white [&>button]:hover:!bg-white/10 [&>button>svg]:!text-white [&>button>span]:!text-white"
+  return (
+    <header className="sticky top-0 z-40 border-b border-border bg-surface">
+      <div className="mx-auto flex h-16 max-w-screen-2xl items-center gap-3 px-4 sm:px-6 xl:px-8">
+        <Link
+          href={dashboardHref}
+          prefetch={false}
+          className="inline-flex min-w-10 items-center gap-2.5 rounded-lg text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+          aria-label={t('common.appName')}
+        >
+          <Image
+            src="/logo.png"
+            alt="AgriConnect"
+            width={420}
+            height={140}
+            priority
+            className="h-10 w-[126px] object-contain sm:h-11 sm:w-[144px]"
           />
+        </Link>
 
+        <nav
+          className="ml-3 hidden min-w-0 items-center gap-1 lg:flex"
+          aria-label={t('dashboard.menu.label')}
+        >
+          <Link
+            href={dashboardHref}
+            prefetch={false}
+            aria-current={isCurrentPath(pathname, locale, '/dashboard') ? 'page' : undefined}
+            className={cn(
+              'inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-surface-subtle',
+              isCurrentPath(pathname, locale, '/dashboard')
+                ? 'bg-accent-soft text-accent-strong'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            <Leaf className="h-4 w-4" aria-hidden="true" />
+            {t('dashboard.menu.dashboard')}
+          </Link>
+          <NavigationMenu
+            label={t('dashboard.menu.groupMarketplace')}
+            items={marketItems}
+            locale={locale}
+            pathname={pathname}
+          />
+          <NavigationMenu
+            label={t('dashboard.menu.groupInformation')}
+            items={informationItems}
+            locale={locale}
+            pathname={pathname}
+          />
+          {transport && (
+            <Link
+              href={`/${locale}${transport.href}`}
+              prefetch={false}
+              aria-current={isCurrentPath(pathname, locale, transport.href) ? 'page' : undefined}
+              className={cn(
+                'inline-flex h-10 items-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-surface-subtle',
+                isCurrentPath(pathname, locale, transport.href)
+                  ? 'bg-accent-soft text-accent-strong'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {t(transport.labelKey)}
+            </Link>
+          )}
+        </nav>
+
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <ThemeToggle />
+          <LanguageSwitcher compact />
           <NotificationPanel />
-
           <ProfileDropdown />
         </div>
       </div>

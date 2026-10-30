@@ -27,32 +27,24 @@ export function ProfileChecklist() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -3 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-shadow hover:shadow-xl hover:shadow-black/20"
+            className="rounded-2xl border border-border bg-surface-subtle p-5 backdrop-blur-xl transition-shadow hover:shadow-xl hover:shadow-black/20"
         >
-            <p className="text-sm font-semibold text-white">{t('dashboard.profileChecklist.title')}</p>
+            <p className="text-sm font-semibold text-foreground">{t('dashboard.profileChecklist.title')}</p>
             <ul className="mt-4 space-y-2.5">
                 {items.map((item) => (
                     <li key={item.key} className="flex items-center gap-2.5">
                         {item.done ? (
-                            <CheckCircle2 className="h-5 w-5 shrink-0 text-green-300" />
+                            <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
                         ) : (
-                            <XCircle className="h-5 w-5 shrink-0 text-amber-300" />
+                            <XCircle className="h-5 w-5 shrink-0 text-warning" />
                         )}
-                        <span className={`text-sm ${item.done ? 'text-white/70' : 'font-medium text-white'}`}>
-                            {item.label}
-                        </span>
-                    </li>
-                ))}
-            </ul>
-
-            <button
-                onClick={() => router.push(`/${locale}/dashboard/profile`)}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-green-400/40 bg-green-400/10 px-4 py-3 text-sm font-semibold text-green-200 transition-all hover:bg-green-400/20"
+                        <span className={`text-sm ${item.done ? 'text-foreground' : 'font-medium text-foreground'}`}> {item.label} </span> </li> ))} </ul> <button onClick={() => router.push(`/${locale}/dashboard/profile`)}
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-accent/30 bg-accent-soft px-4 py-3 text-sm font-semibold text-accent transition-all hover:bg-accent/10"
             >
                 {t('dashboard.profileChecklist.completeProfile')}
                 <ArrowRight className="h-4 w-4" />
             </button>
-            <p className="mt-2 text-[11px] text-white/40">
+            <p className="mt-2 text-[11px] text-muted-foreground">
                 {t('dashboard.profileChecklist.completeProfileDesc')}
             </p>
         </motion.div>

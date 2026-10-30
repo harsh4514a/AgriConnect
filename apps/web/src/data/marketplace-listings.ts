@@ -34,13 +34,13 @@ export interface CropListing {
   image: string;
   /** Plain-text alt describing the image (not i18n — used for a11y). */
   imageAlt: string;
-  farmerName: string;
-  farmerNameShort: string;
+  farmerName?: string | null;
+  farmerNameShort?: string | null;
   /** District name — used both for display and as the i18n dictionary key. */
   district: string;
-  village: string;
+  village?: string | null;
   /** Taluka (sub-district) — shown in the location line as "Village, Taluka, District". */
-  taluka: string;
+  taluka?: string | null;
   quantity: number;
   unit: UnitKey;
   /** Price in Indian Rupees (whole number) — the per-bag/20kg price. */
@@ -57,15 +57,19 @@ export interface CropListing {
   postedHoursAgo: number;
   availability: 'available' | 'soldOut';
   verified: boolean;
-  /** Mobile number used for the tel: "Call Farmer" link. */
-  mobileNumber: string;
+  /** Private mobile number; public listing responses omit this field. */
+  mobileNumber?: string | null;
   /** Short display label for the mobile number (privacy-friendly). */
-  phoneLabel: string;
+  phoneLabel?: string | null;
   /** Ready-to-sell badge (e.g. "Ready to Sell"). */
   readyToSell: boolean;
   /** Approx. coordinates for distance calculations (Nearest sort). */
-  lat: number;
-  lng: number;
+  lat?: number | null;
+  lng?: number | null;
+  /** Exact listing GPS point was captured by its owner (owned-listing forms only). */
+  coordinatesVerified?: boolean;
+  /** True when distanceKm was calculated from validated reference/listing coordinates. */
+  locationDistanceVerified?: boolean;
 
   /* ─── Part 2 & 3: Listing Details & Management fields ─── */
 

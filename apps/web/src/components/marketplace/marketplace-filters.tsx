@@ -51,7 +51,7 @@ function FilterSelect({
 }) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label htmlFor={id} className="text-[11px] font-semibold uppercase tracking-wide text-white/40">
+            <label htmlFor={id} className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                 {label}
             </label>
             <div className="relative">
@@ -59,11 +59,11 @@ function FilterSelect({
                     id={id}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-green-400/50 focus:bg-white/10"
+                    className="h-11 w-full appearance-none rounded-xl border border-border bg-surface-subtle pl-3 pr-9 text-sm text-foreground outline-none transition-colors focus:border-focus/50 focus:bg-surface-subtle"
                 >
                     {children}
                 </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
         </div>
     );
@@ -162,7 +162,7 @@ export function MarketplaceFilters({ filters, districts, onChange }: Marketplace
                 <button
                     type="button"
                     onClick={() => onChange(DEFAULT_FILTERS)}
-                    className="inline-flex h-11 items-center gap-1.5 self-end rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                    className="inline-flex h-11 items-center gap-1.5 self-end rounded-xl border border-border bg-surface-subtle px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface-subtle hover:text-foreground"
                 >
                     <X className="h-4 w-4" />
                     {t('dashboard.marketplaceBrowse.filters.reset')}
@@ -172,7 +172,7 @@ export function MarketplaceFilters({ filters, districts, onChange }: Marketplace
     );
 
     return (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
+        <div className="rounded-2xl border border-border bg-surface-subtle p-4 backdrop-blur-xl">
             {/* Mobile toggle */}
             <button
                 type="button"
@@ -181,14 +181,14 @@ export function MarketplaceFilters({ filters, districts, onChange }: Marketplace
                 aria-controls="marketplace-filters"
                 className="flex w-full items-center justify-between lg:hidden"
             >
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-white">
-                    <SlidersHorizontal className="h-4 w-4 text-green-300" />
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                    <SlidersHorizontal className="h-4 w-4 text-accent" />
                     {t('dashboard.marketplaceBrowse.filters.label')}
                     {hasActiveFilters && (
-                        <span className="h-2 w-2 rounded-full bg-green-400" aria-label={t('dashboard.marketplaceBrowse.filters.activeFilters')} />
+                        <span className="h-2 w-2 rounded-full bg-accent" aria-label={t('dashboard.marketplaceBrowse.filters.activeFilters')} />
                     )}
                 </span>
-                <ChevronDown className={cn('h-4 w-4 text-white/50 transition-transform', open && 'rotate-180')} />
+                <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform', open && 'rotate-180')} />
             </button>
 
             {/* Desktop: horizontal row */}

@@ -50,9 +50,9 @@ function NotificationIcon({ type }: { type: NotificationItem['type'] }) {
                   : CircleAlert;
 
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-subtle">
       <Icon
-        className="h-5 w-5 text-emerald-200"
+        className="h-5 w-5 text-accent"
         aria-hidden="true"
       />
     </div>
@@ -61,14 +61,14 @@ function NotificationIcon({ type }: { type: NotificationItem['type'] }) {
 
 function NotificationSkeleton() {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+    <div className="rounded-2xl border border-border bg-surface/[0.045] p-4">
       <div className="flex gap-3">
-        <div className="h-11 w-11 animate-pulse rounded-xl bg-white/10" />
+        <div className="h-11 w-11 animate-pulse rounded-xl bg-surface-subtle" />
 
         <div className="min-w-0 flex-1 space-y-2">
-          <div className="h-4 w-2/5 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-4/5 animate-pulse rounded bg-white/10" />
-          <div className="h-3 w-1/4 animate-pulse rounded bg-white/10" />
+          <div className="h-4 w-2/5 animate-pulse rounded bg-surface-subtle" />
+          <div className="h-3 w-4/5 animate-pulse rounded bg-surface-subtle" />
+          <div className="h-3 w-1/4 animate-pulse rounded bg-surface-subtle" />
         </div>
       </div>
     </div>
@@ -283,12 +283,12 @@ export function NotificationsPage() {
         <div>
           <h2
             id="notifications-page-title"
-            className="text-2xl font-black tracking-tight text-white sm:text-3xl"
+            className="text-2xl font-black tracking-tight text-foreground sm:text-3xl"
           >
             {t('dashboard.notifications.pageTitle')}
           </h2>
 
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-white/55 sm:text-base">
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
             {t('dashboard.notifications.pageDescription')}
           </p>
         </div>
@@ -302,7 +302,7 @@ export function NotificationsPage() {
             loading ||
             error
           }
-          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3.5 text-sm font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-surface/[0.06] px-3.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
         >
           {markingAll ? (
             <RefreshCw
@@ -322,7 +322,7 @@ export function NotificationsPage() {
 
       <div className="flex flex-wrap items-center gap-2">
         <div
-          className="inline-flex rounded-xl border border-white/10 bg-white/[0.04] p-1"
+          className="inline-flex rounded-xl border border-border bg-surface/[0.04] p-1"
           role="tablist"
           aria-label={t(
             'dashboard.notifications.filterLabel',
@@ -338,8 +338,8 @@ export function NotificationsPage() {
               className={cn(
                 'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
                 filter === item.value
-                  ? 'bg-white/12 text-white'
-                  : 'text-white/50 hover:text-white',
+                  ? 'bg-surface-subtle text-foreground'
+                  : 'text-muted-foreground hover:text-foreground',
               )}
             >
               {item.label}
@@ -348,7 +348,7 @@ export function NotificationsPage() {
         </div>
 
         {unreadCount > 0 && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-200">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1.5 text-xs font-semibold text-accent">
             <BellRing
               className="h-3.5 w-3.5"
               aria-hidden="true"
@@ -368,17 +368,17 @@ export function NotificationsPage() {
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-2xl border border-red-300/15 bg-red-400/5 p-6 text-center">
+        <div className="rounded-2xl border border-danger/15 bg-danger-soft p-6 text-center">
           <CircleAlert
-            className="mx-auto h-8 w-8 text-red-200/80"
+            className="mx-auto h-8 w-8 text-danger/80"
             aria-hidden="true"
           />
 
-          <h3 className="mt-3 text-base font-semibold text-white">
+          <h3 className="mt-3 text-base font-semibold text-foreground">
             {t('dashboard.notifications.errorTitle')}
           </h3>
 
-          <p className="mx-auto mt-1 max-w-md text-sm text-white/50">
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
             {t(
               'dashboard.notifications.errorDescription',
             )}
@@ -387,7 +387,7 @@ export function NotificationsPage() {
           <button
             type="button"
             onClick={() => void loadNotifications()}
-            className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl bg-white/10 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+            className="mt-4 inline-flex h-10 items-center gap-2 rounded-xl bg-surface-subtle px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-subtle"
           >
             <RefreshCw
               className="h-4 w-4"
@@ -398,19 +398,19 @@ export function NotificationsPage() {
           </button>
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.045] px-6 py-14 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10">
+        <div className="rounded-2xl border border-border bg-surface/[0.045] px-6 py-14 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-subtle">
             <Bell
-              className="h-7 w-7 text-white/45"
+              className="h-7 w-7 text-muted-foreground"
               aria-hidden="true"
             />
           </div>
 
-          <h3 className="mt-4 text-base font-semibold text-white">
+          <h3 className="mt-4 text-base font-semibold text-foreground">
             {emptyTitle}
           </h3>
 
-          <p className="mx-auto mt-1 max-w-md text-sm text-white/50">
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
             {emptyDescription}
           </p>
         </div>
@@ -449,8 +449,8 @@ export function NotificationsPage() {
                   className={cn(
                     'rounded-2xl border p-4 transition-colors sm:p-5',
                     notification.isRead
-                      ? 'border-white/10 bg-white/[0.035]'
-                      : 'border-emerald-300/20 bg-emerald-400/[0.06]',
+                      ? 'border-border bg-surface/[0.035]'
+                      : 'border-border bg-surface-subtle',
                   )}
                 >
                   <div className="flex gap-3 sm:gap-4">
@@ -461,14 +461,14 @@ export function NotificationsPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-white">
+                          <h3 className="font-semibold text-foreground">
                             {t(
                               notification.titleKey,
                               values as never,
                             )}
                           </h3>
 
-                          <p className="mt-1 text-sm leading-6 text-white/60">
+                          <p className="mt-1 text-sm leading-6 text-muted-foreground">
                             {t(
                               notification.messageKey,
                               values as never,
@@ -477,8 +477,8 @@ export function NotificationsPage() {
                         </div>
 
                         {!notification.isRead && (
-                          <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-emerald-300/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-200">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                          <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-semibold text-accent">
+                            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
 
                             {t(
                               'dashboard.notifications.unread',
@@ -490,7 +490,7 @@ export function NotificationsPage() {
                       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <time
                           dateTime={notification.createdAt}
-                          className="text-xs text-white/40"
+                          className="text-xs text-muted-foreground"
                         >
                           {formatDateTime(
                             notification.createdAt,
@@ -510,7 +510,7 @@ export function NotificationsPage() {
                                 markingId ===
                                 notification.id
                               }
-                              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-white/60 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-40"
+                              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-surface-subtle hover:text-foreground disabled:opacity-40"
                             >
                               {markingId ===
                               notification.id ? (
@@ -539,7 +539,7 @@ export function NotificationsPage() {
                                   notification,
                                 )
                               }
-                              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-white/10 px-3 text-xs font-semibold text-white transition-colors hover:bg-white/15"
+                              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-surface-subtle px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-subtle"
                             >
                               {t(
                                 'dashboard.notifications.open',
@@ -562,7 +562,7 @@ export function NotificationsPage() {
 
           {totalPages > 1 && (
             <nav
-              className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.035] px-3 py-2.5 sm:px-4"
+              className="flex items-center justify-between rounded-2xl border border-border bg-surface/[0.035] px-3 py-2.5 sm:px-4"
               aria-label={t(
                 'dashboard.notifications.paginationLabel',
               )}
@@ -575,7 +575,7 @@ export function NotificationsPage() {
                   )
                 }
                 disabled={page <= 1}
-                className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-xs font-semibold text-foreground hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ChevronLeft
                   className="h-4 w-4"
@@ -585,7 +585,7 @@ export function NotificationsPage() {
                 {t('dashboard.notifications.previous')}
               </button>
 
-              <span className="text-xs text-white/45">
+              <span className="text-xs text-muted-foreground">
                 {t('dashboard.notifications.pageOf', {
                   page,
                   totalPages,
@@ -603,7 +603,7 @@ export function NotificationsPage() {
                   )
                 }
                 disabled={page >= totalPages}
-                className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                className="inline-flex h-9 items-center gap-1 rounded-lg px-2.5 text-xs font-semibold text-foreground hover:bg-surface-subtle hover:text-foreground disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {t('dashboard.notifications.next')}
 
@@ -616,7 +616,7 @@ export function NotificationsPage() {
           )}
 
           {total > 0 && (
-            <p className="text-center text-xs text-white/30">
+            <p className="text-center text-xs text-muted-foreground">
               {t('dashboard.notifications.totalCount', {
                 count: total,
               })}

@@ -45,7 +45,7 @@ export function MarketplaceSkeleton() {
                 {Array.from({ length: 8 }).map((_, index) => (
                     <div
                         key={index}
-                        className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
+                        className="overflow-hidden rounded-2xl border border-border bg-surface-subtle"
                     >
                         {/* Image placeholder */}
                         <div className="aspect-[16/10] skeleton-shimmer" />

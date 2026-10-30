@@ -5,12 +5,13 @@ import { NotificationsModule } from '../notifications/notifications.module';
 import { ConfigModule } from '../../config/config.module';
 import { AuthModule } from '../authentication/auth.module';
 import { ListingImagesService } from './listing-images.service';
+import { LocationGeographyService } from './location-geography.service';
 
 
 @Module({
   imports: [AuthModule, ConfigModule, NotificationsModule],
   controllers: [ListingsController],
-  providers: [ListingsService, ListingImagesService],
+  providers: [ListingsService, ListingImagesService, LocationGeographyService],
   exports: [ListingsService],
 })
 export class ListingsModule {}

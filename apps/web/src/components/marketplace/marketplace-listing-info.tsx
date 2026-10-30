@@ -4,7 +4,6 @@ import {
   Calendar,
   Clock,
   Scale,
-  Trophy,
   Wallet,
 } from 'lucide-react';
 
@@ -18,6 +17,8 @@ import { getLocalizedDomainName } from '@agri/domain-data';
 interface MarketplaceListingInfoProps {
   listing: CropListing;
   computedDistanceKm?: number;
+  isAuthenticated: boolean;
+  isAuthLoading?: boolean;
 }
 
 /* ---------------------------------------------------------
@@ -78,23 +79,6 @@ function getUnitKg(unit: string): number {
   }
 
   return 20;
-}
-
-/**
- * marketPrice is stored per quintal.
- *
- * Convert it into the same unit used by the seller.
- */
-function getMarketPriceInSellerUnit(
-  listing: CropListing,
-): number {
-  const sellerUnitKg = getUnitKg(
-    listing.primaryUnit,
-  );
-
-  return listing.marketPrice * (
-    sellerUnitKg / 100
-  );
 }
 
 /**
@@ -272,6 +256,8 @@ function formatPostedTime(
 
 export function MarketplaceListingInfo({
   listing,
+  isAuthenticated,
+  isAuthLoading = false,
 }: MarketplaceListingInfoProps) {
   const t = useTranslations();
   const locale = useLocale();
@@ -280,11 +266,6 @@ export function MarketplaceListingInfo({
   const cropLabel = listing.cropKey === 'other' && !listing.customCropName
     ? t('dashboard.marketplaceBrowse.crop.other')
     : getLocalizedDomainName(cropSource, locale, 'crop');
-
-  const marketPrice =
-    getMarketPriceInSellerUnit(
-      listing,
-    );
 
   const totalEstimatedValue =
     getTotalEstimatedValue(listing);
@@ -301,11 +282,8 @@ export function MarketplaceListingInfo({
       locale,
     );
 
-  const isBestPrice =
-    listing.price <= marketPrice;
-
   return (
-    <div className="flex h-full flex-col rounded-2xl bg-white/[0.035] p-5 backdrop-blur-xl sm:p-6">
+    <div className="flex h-full flex-col rounded-2xl border border-border bg-surface p-5 sm:p-6">
       {/* =====================================================
           HEADER
       ====================================================== */}
@@ -317,15 +295,12 @@ export function MarketplaceListingInfo({
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
               listing.availability ===
               'available'
-                ? 'bg-emerald-400/10 text-emerald-300'
-                : 'bg-red-400/10 text-red-300'
-            }`}
-          >
-            <span
-              className={`h-1.5 w-1.5 rounded-full ${
+                ? 'bg-accent-soft text-accent'
+                : 'bg-danger-soft text-danger'
+            }`} > <span className={`h-1.5 w-1.5 rounded-full ${
                 listing.availability ===
                 'available'
-                  ? 'bg-emerald-400'
+                  ? 'bg-accent'
                   : 'bg-red-400'
               }`}
             />
@@ -340,28 +315,16 @@ export function MarketplaceListingInfo({
                 )}
           </span>
 
-          {isBestPrice && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-semibold text-amber-300">
-              <Trophy
-                className="h-3 w-3"
-                aria-hidden="true"
-              />
-
-              {t(
-                'dashboard.marketplaceBrowse.detail.bestPrice',
-              )}
-            </span>
-          )}
         </div>
 
         {/* TITLE */}
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           {cropLabel}
         </h1>
 
         {/* POSTED TIME */}
         {postedTime && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-white/40">
+          <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
             <Clock
               className="h-3.5 w-3.5"
               aria-hidden="true"
@@ -379,49 +342,29 @@ export function MarketplaceListingInfo({
           PRICE
       ====================================================== */}
 
-      <div className="mt-5 rounded-xl bg-white/[0.025] p-4 sm:p-5">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <div className="mt-5 rounded-xl border border-border bg-surface-subtle p-4 sm:p-5">
+        <div className="grid grid-cols-1 gap-5">
           {/* SELLER PRICE */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {t(
                 'dashboard.marketplaceBrowse.detail.sellerPrice',
               )}
             </p>
 
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-emerald-300">
+              <span className="text-3xl font-extrabold text-accent">
                 {formatPrice(
                   listing.price,
                 )}
               </span>
 
-              <span className="text-sm font-semibold text-white/45">
+              <span className="text-sm font-semibold text-muted-foreground">
                 / {getLocalizedDomainName(listing.primaryUnit, locale, 'unit')}
               </span>
             </div>
           </div>
 
-          {/* MARKET PRICE */}
-          <div className="sm:text-right">
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
-              {t(
-                'dashboard.marketplaceBrowse.detail.marketPrice',
-              )}
-            </p>
-
-            <div className="mt-1 flex items-baseline gap-2 sm:justify-end">
-              <span className="text-xl font-bold text-white/85">
-                {formatPrice(
-                  marketPrice,
-                )}
-              </span>
-
-              <span className="text-sm font-semibold text-white/45">
-                / {getLocalizedDomainName(listing.primaryUnit, locale, 'unit')}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -431,10 +374,10 @@ export function MarketplaceListingInfo({
 
       <div className="mt-3 grid grid-cols-3 gap-2.5">
         {/* QUANTITY */}
-        <div className="min-w-0 rounded-xl bg-white/[0.025] p-3">
-          <div className="flex items-center gap-1.5 text-[10px] text-white/40">
+        <div className="min-w-0 rounded-xl border border-border bg-surface-subtle p-3">
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <Scale
-              className="h-3.5 w-3.5 shrink-0 text-emerald-400"
+              className="h-3.5 w-3.5 shrink-0 text-accent"
               aria-hidden="true"
             />
 
@@ -445,14 +388,14 @@ export function MarketplaceListingInfo({
             </span>
           </div>
 
-          <p className="mt-1.5 truncate text-sm font-bold text-white">
+          <p className="mt-1.5 truncate text-sm font-bold text-foreground">
             {quintals}{' '}
             {t(
               'dashboard.marketplaceBrowse.ux.quintals',
             )}
           </p>
 
-          <p className="truncate text-[10px] text-white/30">
+          <p className="truncate text-[10px] text-muted-foreground">
             {kilograms}{' '}
             {t(
               'dashboard.marketplaceBrowse.ux.kilograms',
@@ -461,10 +404,10 @@ export function MarketplaceListingInfo({
         </div>
 
         {/* TOTAL VALUE */}
-        <div className="min-w-0 rounded-xl bg-emerald-400/[0.045] p-3">
-          <div className="flex items-center gap-1.5 text-[10px] text-white/40">
+        <div className="min-w-0 rounded-xl bg-accent-soft p-3">
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <Wallet
-              className="h-3.5 w-3.5 shrink-0 text-emerald-400"
+              className="h-3.5 w-3.5 shrink-0 text-accent"
               aria-hidden="true"
             />
 
@@ -475,13 +418,13 @@ export function MarketplaceListingInfo({
             </span>
           </div>
 
-          <p className="mt-1.5 truncate text-sm font-extrabold text-white">
+          <p className="mt-1.5 truncate text-sm font-extrabold text-foreground">
             {formatPrice(
               totalEstimatedValue,
             )}
           </p>
 
-          <p className="truncate text-[10px] text-white/30">
+          <p className="truncate text-[10px] text-muted-foreground">
             {t(
               'dashboard.marketplaceBrowse.detail.estimatedLotValue',
             )}
@@ -489,10 +432,10 @@ export function MarketplaceListingInfo({
         </div>
 
         {/* CROP DATE */}
-        <div className="min-w-0 rounded-xl bg-white/[0.025] p-3">
-          <div className="flex items-center gap-1.5 text-[10px] text-white/40">
+        <div className="min-w-0 rounded-xl border border-accent/20 bg-accent-soft p-3">
+          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
             <Calendar
-              className="h-3.5 w-3.5 shrink-0 text-emerald-400"
+              className="h-3.5 w-3.5 shrink-0 text-accent"
               aria-hidden="true"
             />
 
@@ -503,12 +446,12 @@ export function MarketplaceListingInfo({
             </span>
           </div>
 
-          <p className="mt-1.5 truncate text-sm font-bold text-white">
+          <p className="mt-1.5 truncate text-sm font-bold text-foreground">
             {listing.cropDate ||
               '—'}
           </p>
 
-          <p className="truncate text-[10px] text-white/30">
+          <p className="truncate text-[10px] text-muted-foreground">
             {getLocalizedDomainName(listing.state || '', locale, 'state')}
           </p>
         </div>
@@ -521,6 +464,8 @@ export function MarketplaceListingInfo({
       <div className="mt-auto pt-5">
         <MarketplaceContactAction
           listing={listing}
+          isAuthenticated={isAuthenticated}
+          isAuthLoading={isAuthLoading}
           variant="desktop"
         />
       </div>

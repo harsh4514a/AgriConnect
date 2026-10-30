@@ -154,9 +154,8 @@ export function RouteProgressBar() {
           width: `${progress}%`,
           opacity: isFinishing ? 0 : 1,
           transitionDuration: isFinishing ? '200ms' : '220ms',
-          background:
-            'linear-gradient(90deg, #10b981 0%, #22c55e 40%, #4ade80 75%, #a7f3d0 100%)',
-          boxShadow: '0 0 12px rgba(34, 197, 94, 0.9), 0 0 4px rgba(16, 185, 129, 0.8)',
+          background: 'linear-gradient(90deg, var(--accent-strong), var(--accent), var(--focus))',
+          boxShadow: '0 0 12px color-mix(in srgb, var(--accent) 70%, transparent), 0 0 4px color-mix(in srgb, var(--focus) 65%, transparent)',
         }}
       />
     </div>

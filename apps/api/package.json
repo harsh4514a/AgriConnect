@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
+    "test": "node --test -r ts-node/register -r tsconfig-paths/register test/listings-geography.spec.ts",
     "start": "node dist/main.js",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:seed": "prisma db seed",
+    "db:import-gujarat-geography": "ts-node --transpile-only scripts/import-gujarat-geography.ts",
     "db:localization-audit": "ts-node --transpile-only scripts/localization-inventory.ts",
     "db:migrate:deploy": "prisma migrate deploy",
     "prisma:generate": "prisma generate",

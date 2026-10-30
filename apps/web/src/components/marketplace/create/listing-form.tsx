@@ -56,6 +56,12 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
   const [district, setDistrict] = useState<string>(initialListing?.district || profileDistrict || '');
   const [taluka, setTaluka] = useState<string>(initialListing?.taluka || profileTaluka || '');
   const [village, setVillage] = useState<string>(initialListing?.village || profileVillage || '');
+  const [listingLatitude, setListingLatitude] = useState<number | null>(
+    initialListing?.coordinatesVerified ? initialListing.lat ?? null : null,
+  );
+  const [listingLongitude, setListingLongitude] = useState<number | null>(
+    initialListing?.coordinatesVerified ? initialListing.lng ?? null : null,
+  );
   const [state] = useState<string>(initialListing?.state || 'Gujarat');
   const [cropDate, setCropDate] = useState<string>(
     initialListing?.cropDate || new Date().toISOString().split('T')[0],
@@ -203,6 +209,8 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
       district,
       taluka: taluka.trim() || village.trim(),
       village: village.trim(),
+      latitude: listingLatitude,
+      longitude: listingLongitude,
       state,
       cropDate,
       description: description.trim(),
@@ -254,6 +262,8 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
     setDistrict(profileDistrict || '');
     setTaluka(profileTaluka || '');
     setVillage(profileVillage || '');
+    setListingLatitude(null);
+    setListingLongitude(null);
     setCropDate(new Date().toISOString().split('T')[0]);
     setDescription('');
     images.forEach((image) => {
@@ -267,30 +277,30 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <button
             type="button"
             onClick={() => router.push(`/${locale}/dashboard/my-listings`)}
-            className="mb-2 inline-flex min-h-10 items-center gap-1 text-xs font-semibold text-white/60 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            className="mb-2 inline-flex min-h-10 items-center gap-1 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>{t('dashboard.createListing.actions.back')}</span>
           </button>
 
-          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+          <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">
             {isEdit
               ? t('dashboard.createListing.header.editTitle')
               : t('dashboard.createListing.header.title')}
           </h1>
-          <p className="mt-1 text-xs text-white/60 sm:text-sm">
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             {isEdit
               ? t('dashboard.createListing.header.editSubtitle')
               : t('dashboard.createListing.header.subtitle')}
           </p>
         </div>
 
-        <div className="rounded-full border border-white/10 bg-white/5 px-3.5 py-1 text-xs font-bold text-green-300 backdrop-blur-xl">
+        <div className="rounded-full border border-border bg-surface-subtle px-3.5 py-1 text-xs font-bold text-accent backdrop-blur-xl">
           {t('dashboard.createListing.step', { current: currentStep, total: 4 })}
         </div>
       </div>
@@ -314,22 +324,22 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
               }}
               disabled={!isCompleted && !isCurrent}
               className={cn(
-                'flex min-h-[72px] flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 sm:p-3',
+                'flex min-h-[72px] flex-col items-center justify-center gap-1.5 rounded-2xl border p-2 text-center transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus sm:p-3',
                 isCurrent
-                  ? 'border-green-400 bg-green-900/30 text-green-300 ring-2 ring-green-400/30'
+                  ? 'border-green-400 bg-accent/15 text-accent ring-2 ring-focus'
                   : isCompleted
-                    ? 'cursor-pointer border-white/20 bg-white/10 text-white/80 hover:bg-white/15'
-                    : 'cursor-not-allowed border-white/5 bg-white/[0.02] text-white/40',
+                    ? 'cursor-pointer border-border bg-surface-subtle text-foreground hover:bg-surface-subtle'
+                    : 'cursor-not-allowed border-border bg-surface/[0.02] text-muted-foreground',
               )}
             >
               <div
                 className={cn(
                   'flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all sm:h-8 sm:w-8',
                   isCurrent
-                    ? 'bg-green-400 text-green-950 shadow-md'
+                    ? 'bg-accent text-accent-foreground shadow-md'
                     : isCompleted
-                      ? 'bg-green-700 text-white'
-                      : 'bg-white/10 text-white/40',
+                      ? 'bg-accent text-accent-foreground'
+                      : 'bg-surface-subtle text-muted-foreground',
                 )}
               >
                 {isCompleted ? <Check className="h-4 w-4 stroke-[3]" /> : <Icon className="h-4 w-4" />}
@@ -343,7 +353,7 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
         })}
       </div>
 
-      <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-2xl sm:p-8">
+      <div className="rounded-3xl border border-border bg-surface-subtle p-5 shadow-2xl backdrop-blur-2xl sm:p-8">
         <form onSubmit={handleSubmit} noValidate>
           <AnimatePresence mode="wait">
             <motion.div
@@ -392,6 +402,8 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
                 district={district}
                 cropDate={cropDate}
                 description={description}
+                latitude={listingLatitude}
+                longitude={listingLongitude}
                 errors={errors}
                 isPrefilledFromProfile={isPrefilledFromProfile}
                 onChange={(fields) => {
@@ -400,6 +412,8 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
                   if (fields.district !== undefined) setDistrict(fields.district);
                   if (fields.cropDate !== undefined) setCropDate(fields.cropDate);
                   if (fields.description !== undefined) setDescription(fields.description);
+                  if (fields.latitude !== undefined) setListingLatitude(fields.latitude);
+                  if (fields.longitude !== undefined) setListingLongitude(fields.longitude);
                   setErrors((prev) => ({ ...prev, village: '', taluka: '', district: '', cropDate: '' }));
                 }}
               />
@@ -428,12 +442,12 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
           </motion.div>
         </AnimatePresence>
 
-        <div className="sticky bottom-3 z-10 mt-8 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-green-950/85 p-3 backdrop-blur-xl sm:static sm:rounded-none sm:border-0 sm:border-t sm:border-white/10 sm:bg-transparent sm:p-0 sm:pt-6 sm:backdrop-blur-none">
+        <div className="sticky bottom-3 z-10 mt-8 flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface p-3 shadow-lg sm:static sm:rounded-none sm:border-0 sm:border-t sm:border-border sm:bg-transparent sm:p-0 sm:pt-6 sm:shadow-none">
           {currentStep > 1 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex h-12 min-w-[44px] items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 text-sm font-semibold text-white transition-all hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400 active:scale-95"
+              className="inline-flex h-12 min-w-[44px] items-center gap-2 rounded-xl border border-border bg-surface-subtle px-5 text-sm font-semibold text-foreground transition-all hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus active:scale-95"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>{t('dashboard.createListing.actions.back')}</span>
@@ -442,7 +456,7 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
             <button
               type="button"
               onClick={() => router.push(`/${locale}/dashboard/my-listings`)}
-              className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/10 px-5 text-sm font-semibold text-white/60 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+              className="inline-flex h-12 items-center gap-2 rounded-xl border border-border px-5 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               <span>{t('dashboard.createListing.actions.cancel')}</span>
             </button>
@@ -452,11 +466,7 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex h-12 items-center gap-2 rounded-xl px-6 text-sm font-bold text-white shadow-lg transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:scale-95 sm:px-8"
-              style={{
-                background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                boxShadow: '0 4px 16px rgba(46,125,50,0.35)',
-              }}
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-6 text-sm font-bold text-accent-foreground shadow-sm transition-all duration-200 hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus active:scale-95 sm:px-8"
             >
               <span>{t('dashboard.createListing.actions.continue')}</span>
               <ArrowRight className="h-4 w-4" />
@@ -466,11 +476,7 @@ export function ListingForm({ mode = 'create', initialListing }: ListingFormProp
               type="button"
               onClick={() => handleSubmit()}
               disabled={isSubmitting}
-              className="inline-flex h-12 items-center gap-2 rounded-xl px-6 text-sm font-bold text-white shadow-xl transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 sm:px-8"
-              style={{
-                background: 'linear-gradient(135deg, #1B5E20, #2E7D32)',
-                boxShadow: '0 4px 20px rgba(46,125,50,0.5)',
-              }}
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-6 text-sm font-bold text-accent-foreground shadow-sm transition-all duration-200 hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 sm:px-8"
             >
               <Save className="h-4 w-4" />
               <span>

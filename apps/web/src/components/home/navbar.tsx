@@ -1,307 +1,491 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sprout, ArrowRight, User, LogOut, LayoutDashboard } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useEffect, useState, type MouseEvent } from 'react';
+import Image from 'next/image';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useRouter, useParams } from 'next/navigation';
-import { useLocale } from '@/i18n/locale-provider';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import {
+  ArrowRight,
+  ChevronDown,
+  ClipboardList,
+  LayoutDashboard,
+  List,
+  LogOut,
+  MapPin,
+  Menu,
+  Package,
+  Truck,
+  UserRound,
+  X,
+} from 'lucide-react';
 import { LanguageSwitcher } from '@/components/auth/language-switcher';
-import { hasUsableSession, clearStoredTokens } from '@/services/api/token';
-import { NAV_LINKS } from './data';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { useAuth } from '@/hooks/use-auth';
+import { hasUsableSession } from '@/services/api/token';
+import { clearStoredAdminTokens, getCachedAdminProfile, hasUsableAdminSession, type StoredAdminProfile } from '@/services/admin-api/admin-token';
+import { cn } from '@/utils/cn';
 
-interface NavbarProps {
-    onLogin: () => void;
-    onGetStarted: () => void;
+const NotificationPanel = dynamic(
+  () => import('@/components/dashboard/notification-panel').then((module) => module.NotificationPanel),
+  { loading: () => null },
+);
+
+type NavbarVariant = 'overlay' | 'solid';
+
+const NAV_ITEMS = [
+  { path: '/dashboard/marketplace', key: 'marketplace' },
+  { path: '/dashboard/buyer-requirements', key: 'buyerRequirements' },
+  { path: '/dashboard/market-prices', key: 'marketPrices' },
+  { path: '/dashboard/transport', key: 'transport' },
+] as const;
+
+const RESOURCE_ITEMS = [
+  { path: '/dashboard/crop-guide', key: 'cropGuide' },
+  { path: '/dashboard/government-schemes', key: 'schemes' },
+] as const;
+
+function isActive(pathname: string, locale: string, path: string) {
+  const target = `/${locale}${path}`;
+  return pathname === target || pathname.startsWith(`${target}/`);
 }
 
-export function Navbar({ onLogin, onGetStarted }: NavbarProps) {
-    const t = useTranslations();
-    const router = useRouter();
-    const params = useParams();
-    const locale = (params?.locale as string) || 'en';
-    const emoji = useLocale(); // keep locale reactive; used by switcher
-    void emoji;
+export function Navbar({
+  variant = 'overlay',
+  showNotifications = false,
+}: {
+  variant?: NavbarVariant;
+  showNotifications?: boolean;
+}) {
+  const t = useTranslations();
+  const nav = useTranslations('landingPage.nav');
+  const account = useTranslations('landingPage.account');
+  const pathname = usePathname();
+  const params = useParams();
+  const router = useRouter();
+  const locale = (params?.locale as string) || 'en';
+  const { user, isAuthenticated, logout: logoutUser } = useAuth();
+  const [showFloating, setShowFloating] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [adminProfile, setAdminProfile] = useState<StoredAdminProfile | null>(null);
 
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [profileOpen, setProfileOpen] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (variant !== 'solid') return;
 
-    // Initial auth state + react to login/logout changes.
-    useEffect(() => {
-        setIsLoggedIn(hasUsableSession());
+    const hero = document.getElementById('home');
+    if (!hero) {
+      setShowFloating(false);
+      return;
+    }
 
-        const onStorage = () => setIsLoggedIn(hasUsableSession());
-        window.addEventListener('storage', onStorage);
-        return () => window.removeEventListener('storage', onStorage);
-    }, []);
-
-    // Close profile menu when clicking outside.
-    useEffect(() => {
-        const onClick = (e: MouseEvent) => {
-            if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
-                setProfileOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', onClick);
-        return () => document.removeEventListener('mousedown', onClick);
-    }, []);
-
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 24);
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
-
-    const handleLogout = () => {
-        clearStoredTokens();
-        setIsLoggedIn(false);
-        setProfileOpen(false);
-        setMobileOpen(false);
-        router.push(`/${locale}`);
-        router.refresh();
+    let threshold = hero.getBoundingClientRect().top + window.scrollY + hero.offsetHeight / 2;
+    const updateVisibility = () => setShowFloating(window.scrollY >= threshold);
+    const updateThreshold = () => {
+      threshold = hero.getBoundingClientRect().top + window.scrollY + hero.offsetHeight / 2;
+      updateVisibility();
     };
 
-    const scrollTo = (id: string) => {
-        setMobileOpen(false);
-        if (id === 'home') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-        const el = document.getElementById(id);
-        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateVisibility();
+    window.addEventListener('scroll', updateVisibility, { passive: true });
+    window.addEventListener('resize', updateThreshold);
+    return () => {
+      window.removeEventListener('scroll', updateVisibility);
+      window.removeEventListener('resize', updateThreshold);
     };
+  }, [pathname, variant]);
 
-    return (
-        <motion.header
-            initial={{ y: -24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-            className={[
-                'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-                scrolled
-                    ? 'bg-white/85 backdrop-blur-xl shadow-lg shadow-black/[0.04] border-b border-white/40'
-                    : 'bg-transparent',
-            ].join(' ')}
+  useEffect(() => {
+    const updateAdminSession = () => {
+      setAdminProfile(hasUsableAdminSession() ? getCachedAdminProfile() : null);
+    };
+    updateAdminSession();
+    window.addEventListener('storage', updateAdminSession);
+    window.addEventListener('agri:admin-session-updated', updateAdminSession);
+    return () => {
+      window.removeEventListener('storage', updateAdminSession);
+      window.removeEventListener('agri:admin-session-updated', updateAdminSession);
+    };
+  }, []);
+
+  const closeMobileMenu = () => setMobileOpen(false);
+  const loginHref = `/${locale}/auth`;
+  const dashboardHref = `/${locale}/dashboard`;
+  const adminHref = `/${locale}/admin`;
+  const hasAdminAccess = adminProfile?.role === 'admin' && hasUsableAdminSession();
+  const isSignedIn = isAuthenticated || hasAdminAccess;
+  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    closeMobileMenu();
+    if (!hasUsableSession() && !hasUsableAdminSession()) return;
+
+    event.preventDefault();
+    router.push(dashboardHref);
+  };
+  const userName = user
+    ? [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+    : adminProfile?.username ?? '';
+
+  const logout = () => {
+    if (hasAdminAccess) clearStoredAdminTokens();
+    closeMobileMenu();
+    if (isAuthenticated) {
+      logoutUser();
+    } else {
+      router.replace(`/${locale}`);
+      router.refresh();
+    }
+  };
+
+  const headerTone = 'bg-canvas text-foreground';
+  const linkTone = 'text-foreground hover:text-accent-strong hover:font-bold';
+  const controlTone = '';
+  const languageTone = '';
+
+  return (
+    <header className={cn(
+      'top-0 z-50 border-b transition-colors duration-200 motion-reduce:transition-none',
+      variant === 'overlay' || showFloating ? 'fixed inset-x-0' : 'relative',
+      variant === 'solid' && showFloating && 'animate-navbar-drop-in',
+      variant === 'solid' ? (showFloating ? 'border-border' : 'border-transparent') : 'border-border',
+      headerTone,
+    )}>
+      <nav
+        aria-label={nav('mainNavigation')}
+        className="mx-auto flex h-[68px] max-w-screen-2xl items-center justify-between gap-3 px-4 sm:px-6 xl:h-[72px] xl:px-8"
+      >
+        <Link
+          href={`/${locale}`}
+          onClick={handleHomeClick}
+          aria-label="AgriConnect"
+          className="inline-flex shrink-0 items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
         >
-            <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                {/* Logo */}
+          <Image
+            src="/logo.png"
+            alt="AgriConnect"
+            width={450}
+            height={150}
+            priority
+            className="h-11 w-[132px] object-contain sm:h-12 sm:w-[156px] xl:h-[52px] xl:w-[170px]"
+          />
+        </Link>
+
+        <div className="hidden min-w-0 items-center gap-0.5 xl:flex">
+          <Link
+            href={`/${locale}`}
+            onClick={handleHomeClick}
+            aria-current={pathname === `/${locale}` ? 'page' : undefined}
+            className={cn('rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, pathname === `/${locale}` && 'font-bold text-accent-strong')}
+          >
+            {nav('home')}
+          </Link>
+
+          <div className="flex items-center">
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
                 <button
-                    onClick={() => scrollTo('home')}
-                    className="flex items-center gap-2.5"
-                    aria-label={t('common.appName')}
+                  type="button"
+                  aria-label={nav('marketplaceOptions')}
+                  aria-current={isActive(pathname, locale, '/dashboard/marketplace') ? 'page' : undefined}
+                  className={cn('inline-flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, isActive(pathname, locale, '/dashboard/marketplace') && 'font-bold text-accent-strong')}
                 >
-                    <div
-                        className="flex h-10 w-10 items-center justify-center rounded-xl"
-                        style={{
-                            background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                            boxShadow: '0 4px 12px rgba(46,125,50,0.35)',
-                        }}
-                    >
-                        <Sprout className="h-5 w-5 text-white" />
-                    </div>
-                    <span
-                        className={`text-xl font-black tracking-tight transition-colors duration-300 ${scrolled ? 'text-gray-900' : 'text-white'
-                            }`}
-                    >
-                        AgriConnect
-                    </span>
+                  {nav('marketplace')}
+                  <ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
                 </button>
-
-                {/* Center links — desktop */}
-                <div className="hidden items-center gap-1 lg:flex">
-                    {NAV_LINKS.map((link) => (
-                        <button
-                            key={link.id}
-                            onClick={() => scrollTo(link.id)}
-                            className={[
-                                'rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200',
-                                scrolled
-                                    ? 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                                    : 'text-white/80 hover:bg-white/10 hover:text-white',
-                            ].join(' ')}
-                        >
-                            {t(link.labelKey)}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Right actions */}
-                <div className="flex items-center gap-2 sm:gap-3">
-                    <LanguageSwitcher
-                        className={
-                            scrolled
-                                ? '[&_button]:text-gray-700 [&_button]:hover:bg-gray-100'
-                                : '[&_button]:text-gray-700 [&_button]:hover:bg-gray/100'
-                        }
-                    />
-
-                    {isLoggedIn ? (
-                        <div className="relative" ref={profileRef}>
-                            <button
-                                onClick={() => setProfileOpen((v) => !v)}
-                                aria-label={t('nav.profile')}
-                                aria-expanded={profileOpen}
-                                className={[
-                                    'inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200',
-                                    scrolled
-                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                        : 'bg-white/10 text-white hover:bg-white/20',
-                                ].join(' ')}
-                            >
-                                <User className="h-5 w-5" />
-                            </button>
-
-                            <AnimatePresence>
-                                {profileOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: -6, scale: 0.95 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{ opacity: 0, y: -6, scale: 0.95 }}
-                                        transition={{ duration: 0.12, ease: 'easeOut' }}
-                                        className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-2xl border border-white/15 bg-green-950/95 p-1 shadow-2xl shadow-black/40 backdrop-blur-2xl z-50"
-                                    >
-                                        <div className="px-3.5 py-3 border-b border-white/10">
-                                            <p className="text-sm font-semibold text-white">{t('nav.profile')}</p>
-                                            <p className="text-[11px] text-white/50 mt-0.5">{t('common.appName')}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                setProfileOpen(false);
-                                                router.push(`/${locale}/dashboard`);
-                                            }}
-                                            className="w-full flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-                                        >
-                                            <LayoutDashboard className="h-4 w-4 text-green-300" />
-                                            {t('nav.dashboard')}
-                                        </button>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm text-red-300 transition-colors hover:bg-red-500/10"
-                                        >
-                                            <LogOut className="h-4 w-4" />
-                                            {t('nav.logout')}
-                                        </button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    ) : (
-                        <>
-                            <button
-                                onClick={onLogin}
-                                className={[
-                                    'hidden rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 sm:inline-flex items-center',
-                                    scrolled
-                                        ? 'text-gray-700 hover:bg-gray-100'
-                                        : 'text-white hover:bg-white/10',
-                                ].join(' ')}
-                            >
-                                {t('nav.login')}
-                            </button>
-
-                            <button
-                                onClick={onGetStarted}
-                                className="hidden items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg sm:inline-flex"
-                                style={{
-                                    background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                                    boxShadow: '0 4px 14px rgba(46,125,50,0.3)',
-                                }}
-                            >
-                                {t('nav.getStarted')}
-                                <ArrowRight className="h-4 w-4" />
-                            </button>
-                        </>
-                    )}
-
-                    {/* Mobile hamburger */}
-                    <button
-                        onClick={() => setMobileOpen((v) => !v)}
-                        className={[
-                            'inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors lg:hidden',
-                            scrolled ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10',
-                        ].join(' ')}
-                        aria-label={mobileOpen ? t('nav.closeMenu') : t('nav.openMenu')}
-                        aria-expanded={mobileOpen}
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content align="start" sideOffset={8} className="z-50 min-w-48 rounded-xl border border-border bg-surface p-1.5 text-foreground shadow-lg shadow-black/10">
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href={`/${locale}/dashboard/marketplace`}
+                      aria-current={isActive(pathname, locale, '/dashboard/marketplace') ? 'page' : undefined}
+                      prefetch={false}
+                      className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle data-[highlighted]:bg-surface-subtle"
                     >
-                        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                      <List aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                      {nav('allListings')}
+                    </Link>
+                  </DropdownMenu.Item>
+                  {isAuthenticated ? (
+                    <DropdownMenu.Item asChild>
+                      <Link
+                        href={`/${locale}/dashboard/nearby-listings`}
+                        aria-current={isActive(pathname, locale, '/dashboard/nearby-listings') ? 'page' : undefined}
+                        prefetch={false}
+                        className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle data-[highlighted]:bg-surface-subtle"
+                      >
+                        <MapPin aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                        {nav('nearbyListings')}
+                      </Link>
+                    </DropdownMenu.Item>
+                  ) : null}
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          </div>
+
+          <Link
+            href={`/${locale}${NAV_ITEMS[1].path}`}
+            aria-current={isActive(pathname, locale, NAV_ITEMS[1].path) ? 'page' : undefined}
+            prefetch={false}
+            className={cn('rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, isActive(pathname, locale, NAV_ITEMS[1].path) && 'font-bold text-accent-strong')}
+          >
+            {nav('buyerRequirements')}
+          </Link>
+          <Link
+            href={`/${locale}${NAV_ITEMS[2].path}`}
+            aria-current={isActive(pathname, locale, NAV_ITEMS[2].path) ? 'page' : undefined}
+            prefetch={false}
+            className={cn('rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, isActive(pathname, locale, NAV_ITEMS[2].path) && 'font-bold text-accent-strong')}
+          >
+            {nav('marketPrices')}
+          </Link>
+
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                type="button"
+                className={cn('inline-flex h-10 items-center gap-1 rounded-lg px-2.5 text-sm font-semibold transition-colors hover:text-accent-strong hover:font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, RESOURCE_ITEMS.some(({ path }) => isActive(pathname, locale, path)) && 'font-bold text-accent-strong')}
+              >
+                {nav('farmerResources')}
+                <ChevronDown aria-hidden="true" className="h-4 w-4" />
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content align="start" sideOffset={8} className="z-50 min-w-56 rounded-xl border border-border bg-surface p-1.5 text-foreground shadow-xl shadow-black/10">
+                {RESOURCE_ITEMS.map(({ path, key }) => (
+                  <DropdownMenu.Item key={key} asChild>
+                    <Link href={`/${locale}${path}`} aria-current={isActive(pathname, locale, path) ? 'page' : undefined} prefetch={false} className="flex min-h-10 cursor-pointer items-center rounded-lg px-3 text-sm outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle">
+                      {nav(key)}
+                    </Link>
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
+
+          <Link
+            href={`/${locale}${NAV_ITEMS[3].path}`}
+            aria-current={isActive(pathname, locale, NAV_ITEMS[3].path) ? 'page' : undefined}
+            prefetch={false}
+            className={cn('rounded-lg px-2.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', linkTone, isActive(pathname, locale, NAV_ITEMS[3].path) && 'font-bold text-accent-strong')}
+          >
+            {nav('transport')}
+          </Link>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div className="hidden xl:block">
+            <LanguageSwitcher compact className={languageTone} />
+          </div>
+          <ThemeToggle className={controlTone} />
+          {showNotifications && isAuthenticated ? <NotificationPanel /> : null}
+
+          {isSignedIn ? (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  type="button"
+                  aria-label={account('menuLabel')}
+                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-transparent px-2 text-sm font-semibold text-foreground transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                >
+                  <UserRound aria-hidden="true" className="h-[18px] w-[18px]" />
+                  <span className="hidden max-w-28 truncate 2xl:inline">{userName || account('menuLabel')}</span>
+                  <ChevronDown aria-hidden="true" className="hidden h-4 w-4 2xl:inline" />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content align="end" sideOffset={8} className="z-50 min-w-60 rounded-xl border border-border bg-surface p-1.5 text-foreground shadow-xl shadow-black/10">
+                  {isAuthenticated ? (
+                    <>
+                      <AccountLink href={dashboardHref} icon={<LayoutDashboard className="h-4 w-4 text-accent" />} label={account('dashboard')} onSelect={closeMobileMenu} />
+                      <AccountLink href={`/${locale}/dashboard/my-listings`} icon={<Package className="h-4 w-4 text-accent" />} label={account('myListings')} onSelect={closeMobileMenu} />
+                      <AccountLink href={`/${locale}/dashboard/buyer-requirements?view=mine`} icon={<ClipboardList className="h-4 w-4 text-accent" />} label={account('myRequirements')} onSelect={closeMobileMenu} />
+                      <AccountLink href={`/${locale}/dashboard/transport?view=mine`} icon={<Truck className="h-4 w-4 text-accent" />} label={account('myTransport')} onSelect={closeMobileMenu} />
+                      <AccountLink href={`/${locale}/dashboard/profile`} icon={<UserRound className="h-4 w-4 text-accent" />} label={account('profile')} onSelect={closeMobileMenu} />
+                    </>
+                  ) : null}
+                  {hasAdminAccess ? (
+                    <AccountLink href={adminHref} icon={<LayoutDashboard className="h-4 w-4 text-accent" />} label={account('adminPanel')} onSelect={closeMobileMenu} />
+                  ) : null}
+                  <DropdownMenu.Separator className="my-1 h-px bg-border" />
+                  <DropdownMenu.Item asChild>
+                    <button type="button" onClick={logout} className="flex min-h-10 w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 text-left text-sm text-danger outline-none transition-colors hover:bg-danger-soft focus:bg-danger-soft">
+                      <LogOut aria-hidden="true" className="h-4 w-4" />
+                      {account('logout')}
                     </button>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          ) : (
+            <div className="hidden items-center gap-1.5 xl:flex">
+              <Link href={loginHref} prefetch={false} className="rounded-lg px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:font-bold hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                {nav('login')}
+              </Link>
+              <Link href={loginHref} prefetch={false} className="inline-flex min-h-10 items-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                {nav('getStarted')}
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
+          <button
+            type="button"
+            aria-label={mobileOpen ? nav('menuClose') : nav('menuOpen')}
+            aria-expanded={mobileOpen}
+            aria-controls="public-mobile-menu"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus xl:hidden"
+          >
+            {mobileOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
+          </button>
+        </div>
+      </nav>
+
+      {mobileOpen ? (
+        <div id="public-mobile-menu" className="absolute inset-x-0 top-full max-h-[calc(100dvh-4.25rem)] overflow-y-auto border-t border-border bg-surface px-4 py-3 text-foreground shadow-xl xl:hidden">
+          <div className="mx-auto max-w-screen-2xl">
+            <nav aria-label={nav('mainNavigation')} className="grid gap-1">
+              <MobileLink href={`/${locale}`} active={pathname === `/${locale}`} onClick={handleHomeClick}>{nav('home')}</MobileLink>
+              <div className="flex items-center">
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger asChild>
+                    <button
+                      type="button"
+                      aria-label={nav('marketplaceOptions')}
+                      aria-current={isActive(pathname, locale, '/dashboard/marketplace') ? 'page' : undefined}
+                      className={cn('inline-flex min-h-11 flex-1 items-center justify-between gap-2 rounded-lg px-3 text-left text-sm font-semibold transition-colors hover:font-bold hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus', isActive(pathname, locale, '/dashboard/marketplace') ? 'font-bold text-accent-strong' : 'text-foreground')}
+                    >
+                      {nav('marketplace')}
+                      <ChevronDown aria-hidden="true" className="h-4 w-4" />
+                    </button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.Content align="start" sideOffset={6} className="z-50 min-w-48 rounded-xl border border-border bg-surface p-1.5 text-foreground shadow-lg shadow-black/10">
+                      <DropdownMenu.Item asChild>
+                        <Link href={`/${locale}/dashboard/marketplace`} aria-current={isActive(pathname, locale, '/dashboard/marketplace') ? 'page' : undefined} prefetch={false} onClick={closeMobileMenu} className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle data-[highlighted]:bg-surface-subtle">
+                          <List aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                          {nav('allListings')}
+                        </Link>
+                      </DropdownMenu.Item>
+                      {isAuthenticated ? (
+                        <DropdownMenu.Item asChild>
+                          <Link href={`/${locale}/dashboard/nearby-listings`} aria-current={isActive(pathname, locale, '/dashboard/nearby-listings') ? 'page' : undefined} prefetch={false} onClick={closeMobileMenu} className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle data-[highlighted]:bg-surface-subtle">
+                            <MapPin aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
+                            {nav('nearbyListings')}
+                          </Link>
+                        </DropdownMenu.Item>
+                      ) : null}
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Root>
+              </div>
+              <MobileLink href={`/${locale}/dashboard/buyer-requirements`} active={isActive(pathname, locale, '/dashboard/buyer-requirements')} onClick={closeMobileMenu}>{nav('buyerRequirements')}</MobileLink>
+              <MobileLink href={`/${locale}/dashboard/market-prices`} active={isActive(pathname, locale, '/dashboard/market-prices')} onClick={closeMobileMenu}>{nav('marketPrices')}</MobileLink>
+              <details className="group rounded-lg">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-lg px-3 text-sm font-semibold text-foreground transition-colors hover:font-bold hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus [&::-webkit-details-marker]:hidden">
+                  {nav('farmerResources')}
+                  <ChevronDown aria-hidden="true" className="h-4 w-4 transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+                </summary>
+                <div className="ml-3 border-l border-border pl-2">
+                  {RESOURCE_ITEMS.map(({ path, key }) => (
+                    <MobileLink key={key} nested href={`/${locale}${path}`} active={isActive(pathname, locale, path)} onClick={closeMobileMenu}>{nav(key)}</MobileLink>
+                  ))}
                 </div>
+              </details>
+              <MobileLink href={`/${locale}/dashboard/transport`} active={isActive(pathname, locale, '/dashboard/transport')} onClick={closeMobileMenu}>{nav('transport')}</MobileLink>
             </nav>
 
-            {/* Mobile menu */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="overflow-hidden border-t border-white/60 bg-white/95 backdrop-blur-xl lg:hidden"
-                    >
-                        <div className="space-y-1 px-4 py-4">
-                            {NAV_LINKS.map((link) => (
-                                <button
-                                    key={link.id}
-                                    onClick={() => scrollTo(link.id)}
-                                    className="block w-full rounded-xl px-4 py-3 text-left text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50"
-                                >
-                                    {t(link.labelKey)}
-                                </button>
-                            ))}
-                            <div className="flex gap-3 pt-3">
-                                {isLoggedIn ? (
-                                    <>
-                                        <button
-                                            onClick={() => {
-                                                setMobileOpen(false);
-                                                router.push(`/${locale}/dashboard`);
-                                            }}
-                                            className="flex-1 rounded-xl border-2 border-gray-200 px-4 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
-                                        >
-                                            {t('nav.profile')}
-                                        </button>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="flex-1 rounded-xl border-2 border-red-200 px-4 py-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
-                                        >
-                                            {t('nav.logout')}
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={() => {
-                                                setMobileOpen(false);
-                                                onLogin();
-                                            }}
-                                            className="flex-1 rounded-xl border-2 border-gray-200 px-4 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50"
-                                        >
-                                            {t('nav.login')}
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setMobileOpen(false);
-                                                onGetStarted();
-                                            }}
-                                            className="flex-1 rounded-xl px-4 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
-                                            style={{
-                                                background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                                            }}
-                                        >
-                                            {t('nav.getStarted')}
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.header>
-    );
+            {isSignedIn ? (
+              <div className="mt-3 border-t border-border pt-3">
+                <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{userName || account('menuLabel')}</p>
+                <div className="grid gap-1">
+                  {isAuthenticated ? (
+                    <>
+                      <MobileLink href={dashboardHref} onClick={closeMobileMenu}>{account('dashboard')}</MobileLink>
+                      <MobileLink href={`/${locale}/dashboard/my-listings`} onClick={closeMobileMenu}>{account('myListings')}</MobileLink>
+                      <MobileLink href={`/${locale}/dashboard/buyer-requirements?view=mine`} onClick={closeMobileMenu}>{account('myRequirements')}</MobileLink>
+                      <MobileLink href={`/${locale}/dashboard/transport?view=mine`} onClick={closeMobileMenu}>{account('myTransport')}</MobileLink>
+                      <MobileLink href={`/${locale}/dashboard/profile`} onClick={closeMobileMenu}>{account('profile')}</MobileLink>
+                    </>
+                  ) : null}
+                  {hasAdminAccess ? <MobileLink href={adminHref} onClick={closeMobileMenu}>{account('adminPanel')}</MobileLink> : null}
+                  <button type="button" onClick={logout} className="flex min-h-11 items-center gap-2 rounded-lg px-3 text-left text-sm font-semibold text-danger hover:bg-danger-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                    <LogOut aria-hidden="true" className="h-4 w-4" />
+                    {account('logout')}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border pt-3 xl:hidden">
+                <Link href={loginHref} prefetch={false} onClick={closeMobileMenu} className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border px-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                  {nav('login')}
+                </Link>
+                <Link href={loginHref} prefetch={false} onClick={closeMobileMenu} className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg bg-accent px-3 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
+                  {nav('getStarted')}<ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+              </div>
+            )}
+
+            <div className="mt-3 flex items-center gap-2 border-t border-border pt-3 xl:hidden">
+              <LanguageSwitcher compact />
+              <span className="text-sm text-muted-foreground">{t('nav.selectLanguage')}</span>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </header>
+  );
 }
 
+function AccountLink({
+  href,
+  icon,
+  label,
+  onSelect,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  onSelect: () => void;
+}) {
+  return (
+    <DropdownMenu.Item asChild>
+      <Link href={href} prefetch={false} onClick={onSelect} className="flex min-h-10 cursor-pointer items-center gap-2.5 rounded-lg px-3 text-sm text-foreground outline-none transition-colors hover:bg-surface-subtle focus:bg-surface-subtle">
+        {icon}
+        {label}
+      </Link>
+    </DropdownMenu.Item>
+  );
+}
+
+function MobileLink({
+  href,
+  active = false,
+  nested = false,
+  onClick,
+  children,
+}: {
+  href: string;
+  active?: boolean;
+  nested?: boolean;
+  onClick: (event: MouseEvent<HTMLAnchorElement>) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      prefetch={false}
+      onClick={onClick}
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'flex min-h-11 items-center rounded-lg text-sm font-semibold transition-colors hover:font-bold hover:text-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus',
+        nested ? 'px-3 text-muted-foreground' : 'px-3 text-foreground',
+        active && 'font-bold text-accent-strong',
+      )}
+    >
+      {children}
+    </Link>
+  );
+}

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { StepProps } from '@/types/auth-steps.types';
 import { completeProfile } from '@/services/api/auth.api';
-import { storeTokens } from '@/services/api/token';
+import { storeTokens, syncSessionHintFromStorage } from '@/services/api/token';
 import { cacheUser } from '@/lib/auth/session';
 
 export function LocationStep({ onNext, authData }: StepProps) {
@@ -85,6 +85,7 @@ export function LocationStep({ onNext, authData }: StepProps) {
       if (res?.tokens?.refreshToken) {
         localStorage.setItem('refreshToken', res.tokens.refreshToken);
       }
+      syncSessionHintFromStorage();
       if (typeof window !== 'undefined') {
         localStorage.removeItem('registrationToken');
       }
@@ -118,7 +119,7 @@ export function LocationStep({ onNext, authData }: StepProps) {
   }, [authData, state, district, taluka, village, latitude, longitude, onNext, t]);
 
   const inputClass =
-    'w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 font-medium focus:outline-none focus:border-green-600 focus:ring-4 focus:ring-green-100 transition-all';
+    'w-full h-12 px-4 rounded-xl border-2 border-gray-200 bg-surface text-gray-900 font-medium focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus transition-all';
 
   return (
     <motion.div
@@ -128,7 +129,7 @@ export function LocationStep({ onNext, authData }: StepProps) {
     >
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-50 border border-green-200 mb-6">
         <span className="w-2 h-2 rounded-full bg-green-700"></span>
-        <span className="text-xs font-semibold text-green-800">
+        <span className="text-xs font-semibold text-accent">
           {t('location.step', { current: 2, total: 2 })}
         </span>
       </div>
@@ -144,15 +145,15 @@ export function LocationStep({ onNext, authData }: StepProps) {
         {isLocating ? (
           <div className="flex items-center justify-center gap-3">
             <div className="animate-spin rounded-full border-2 border-green-300 border-t-green-700 h-6 w-6"></div>
-            <span className="text-sm font-medium text-green-700">{t('location.detecting')}</span>
+            <span className="text-sm font-medium text-accent">{t('location.detecting')}</span>
           </div>
         ) : (
           <div className="flex items-center justify-center gap-3">
             <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <Navigation className="w-5 h-5 text-green-700" />
+              <Navigation className="w-5 h-5 text-accent" />
             </div>
             <div className="text-left">
-              <span className="block text-base font-semibold text-green-800">{t('location.useCurrent')}</span>
+              <span className="block text-base font-semibold text-accent">{t('location.useCurrent')}</span>
               <span className="block text-xs text-gray-500">{t('location.autoFill')}</span>
             </div>
           </div>
@@ -224,7 +225,7 @@ export function LocationStep({ onNext, authData }: StepProps) {
 
         {latitude && longitude && (
           <div className="p-3 rounded-lg bg-green-50 border border-green-100">
-            <p className="text-xs text-green-700">
+            <p className="text-xs text-accent">
               📍 {latitude.toFixed(4)}, {longitude.toFixed(4)}
             </p>
           </div>
@@ -237,7 +238,7 @@ export function LocationStep({ onNext, authData }: StepProps) {
         >
           {isSubmitting ? (
             <>
-              <div className="animate-spin rounded-full border-2 border-white/30 border-t-white h-5 w-5"></div>
+              <div className="animate-spin rounded-full border-2 border-border border-t-white h-5 w-5"></div>
               {t('location.completing')}
             </>
           ) : (

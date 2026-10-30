@@ -2,12 +2,26 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../../prisma/prisma.service';
 import type { QueryListingsDto } from './dto/query-listings.dto';
 import type { ListingResponseDto, PaginatedListingsDto } from './dto/listing-response.dto';
+import type { RecentListingResponseDto } from './dto/recent-listing-response.dto';
 import type { CreateListingDto } from './dto/create-listing.dto';
 import type { UpdateListingDto } from './dto/update-listing.dto';
-import type { Listing } from '@prisma/client';
+import type { Listing, Prisma } from '@prisma/client';
 import type { NearbyListingsQueryDto } from './dto/nearby-listings.dto';
+import type { QueryMyListingsManagementDto } from './dto/query-my-listings-management.dto';
+import type { MyListingsManagementResponseDto } from './dto/my-listings-management-response.dto';
 import { NotificationsService, NOTIFICATION_TYPES } from '../notifications/notifications.service';
 import { getDomainSearchAliases } from '@agri/domain-data';
+import {
+  compareDistanceRows,
+  filterDistanceRows,
+  hasValidCoordinates as hasValidGeoCoordinates,
+} from './geo-distance';
+import {
+  LocationGeographyService,
+  type ListingGeographicContext,
+} from './location-geography.service';
+
+type ListingWithOwnerLocation = ListingGeographicContext;
 
 /**
  * Convert the seller's price unit into kilograms.
@@ -99,19 +113,54 @@ function calculateMarketPrice(price: number, primaryUnit: string): number {
  *
  * Result is returned in kilometres.
  */
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const earthRadiusKm = 6371;
+function normalizeLocationName(value: string | null | undefined): string {
+  return value?.trim().toLocaleLowerCase() ?? '';
+}
 
-  const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+function hasValidCoordinates(
+  latitude: number | null,
+  longitude: number | null,
+): boolean {
+  return hasValidGeoCoordinates({ latitude, longitude });
+}
 
-  const dLat = toRadians(lat2 - lat1);
-  const dLng = toRadians(lng2 - lng1);
+function searchWhere(search: string | undefined): Prisma.ListingWhereInput {
+  const trimmed = search?.trim();
+  if (!trimmed) return {};
 
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLng / 2) ** 2;
+  const terms = [...new Set([trimmed, ...getDomainSearchAliases(trimmed)])];
+  return {
+    OR: terms.flatMap((term) => [
+      { farmerName: { contains: term, mode: 'insensitive' as const } },
+      { farmerNameShort: { contains: term, mode: 'insensitive' as const } },
+      { village: { contains: term, mode: 'insensitive' as const } },
+      { taluka: { contains: term, mode: 'insensitive' as const } },
+      { district: { contains: term, mode: 'insensitive' as const } },
+      { variety: { contains: term, mode: 'insensitive' as const } },
+      { customCropName: { contains: term, mode: 'insensitive' as const } },
+      { cropKey: { contains: term, mode: 'insensitive' as const } },
+    ]),
+  };
+}
 
-  return 2 * earthRadiusKm * Math.asin(Math.sqrt(a));
+function quantityInQuintals(listing: Pick<Listing, 'quantity' | 'unit'>): number {
+  if (listing.unit === 'ton') return listing.quantity * 10;
+  if (listing.unit === 'kg') return listing.quantity / 100;
+  return listing.quantity;
+}
+
+function matchesNumericFilters(
+  listing: Listing,
+  query: QueryListingsDto,
+): boolean {
+  const quantity = quantityInQuintals(listing);
+  return (
+    (query.verified !== true || listing.verified) &&
+    (query.priceMin === undefined || listing.price >= query.priceMin) &&
+    (query.priceMax === undefined || listing.price < query.priceMax) &&
+    (query.quantityMin === undefined || quantity >= query.quantityMin) &&
+    (query.quantityMax === undefined || quantity < query.quantityMax)
+  );
 }
 
 @Injectable()
@@ -119,6 +168,7 @@ export class ListingsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
+    private readonly locationGeography: LocationGeographyService,
   ) {}
 
   /**
@@ -154,6 +204,7 @@ export class ListingsService {
       readyToSell: listing.readyToSell,
       lat: listing.lat,
       lng: listing.lng,
+      coordinatesVerified: listing.hasExplicitCoordinates,
       description: listing.description ?? undefined,
       variety: listing.variety ?? undefined,
       customCropName: listing.customCropName ?? undefined,
@@ -176,42 +227,118 @@ export class ListingsService {
 
   async findAll(
     query: QueryListingsDto,
-    includePrivateFields = false,
+    userId: string | null = null,
   ): Promise<PaginatedListingsDto> {
+    const includePrivateFields = Boolean(userId);
     const page = query.page ?? 1;
     const limit = query.limit ?? 50;
-    const skip = (page - 1) * limit;
-
-    const where = {
+    const where: Prisma.ListingWhereInput = {
       ...(query.cropKey && query.cropKey !== 'all' ? { cropKey: query.cropKey } : {}),
       ...(query.district && query.district !== 'all' ? { district: query.district } : {}),
+      ...(query.village && query.village !== 'all' ? { village: query.village } : {}),
       ...(includePrivateFields
         ? query.status
           ? { status: query.status }
           : { NOT: { status: 'inactive' } }
         : { status: 'active' }),
+      ...searchWhere(query.search),
     };
+
+    if (query.sort === 'nearest') {
+      const [rows, user] = await Promise.all([
+        this.prisma.listing.findMany({
+          where,
+          orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+          include: this.locationGeography.canonicalLocationInclude(),
+        }),
+        userId
+          ? this.prisma.user.findUnique({
+              where: { id: userId },
+              select: this.locationGeography.userLocationSelect(),
+            })
+          : Promise.resolve(null),
+      ]);
+
+      const filteredRows = rows.filter((row) => matchesNumericFilters(row, query));
+      const reference = this.locationGeography.resolveUserCoordinates(user);
+      const locationAvailable = Boolean(reference);
+
+      if (!locationAvailable) {
+        const total = filteredRows.length;
+        const pageRows = filteredRows.slice((page - 1) * limit, page * limit);
+        return {
+          listings: pageRows.map((row) => this.toBrowseDto(row, includePrivateFields, null)),
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+          locationAvailable: false,
+          unlocatedCount: total,
+        };
+      }
+
+      const ranked = filteredRows.map((listing) => {
+        const point = this.resolveListingCoordinates(listing as ListingWithOwnerLocation);
+        return {
+          item: listing,
+          distanceKm: point ? this.locationGeography.distanceKm(reference!, point) : null,
+        };
+      }).sort(compareDistanceRows);
+      const unlocatedCount = ranked.filter(({ distanceKm }) => distanceKm === null).length;
+      const total = ranked.length;
+      const pageRows = ranked.slice((page - 1) * limit, page * limit);
+
+      return {
+        listings: pageRows.map(({ item, distanceKm }) =>
+          this.toBrowseDto(item, includePrivateFields, distanceKm),
+        ),
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        locationAvailable: true,
+        unlocatedCount,
+      };
+    }
 
     const [total, rows] = await Promise.all([
       this.prisma.listing.count({ where }),
       this.prisma.listing.findMany({
         where,
         orderBy: { createdAt: 'desc' },
-        skip,
+        skip: (page - 1) * limit,
         take: limit,
       }),
     ]);
 
     return {
-      listings: rows.map((row) => {
-        const dto = this.toDto(row);
-        return includePrivateFields ? dto : this.toPublicDto(dto);
-      }),
+      listings: rows.map((row) => this.toBrowseDto(row, includePrivateFields, null)),
       total,
       page,
       limit,
       totalPages: Math.ceil(total / limit),
     };
+  }
+
+  private toBrowseDto(
+    listing: Listing,
+    includePrivateFields: boolean,
+    distanceKm: number | null,
+  ): ListingResponseDto {
+    const dto = includePrivateFields ? this.toDto(listing) : this.toPublicDto(this.toDto(listing));
+    delete dto.lat;
+    delete dto.lng;
+    return {
+      ...dto,
+      distanceKm: distanceKm === null ? 0 : Math.round(distanceKm * 10) / 10,
+      locationDistanceVerified: distanceKm !== null,
+    };
+  }
+
+  private resolveListingCoordinates(
+    listing: ListingWithOwnerLocation,
+  ): { latitude: number; longitude: number } | null {
+    return this.locationGeography.resolveListingCoordinates(listing);
   }
 
   /**
@@ -235,13 +362,8 @@ export class ListingsService {
      * Get the user's saved profile location.
      */
     const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        latitude: true,
-        longitude: true,
-      },
+      where: { id: userId },
+      select: this.locationGeography.userLocationSelect(),
     });
 
     if (!user) {
@@ -251,18 +373,9 @@ export class ListingsService {
     /*
      * Nearby requires actual coordinates.
      */
-    const hasValidUserLocation =
-      typeof user.latitude === 'number' &&
-      typeof user.longitude === 'number' &&
-      Number.isFinite(user.latitude) &&
-      Number.isFinite(user.longitude) &&
-      user.latitude >= -90 &&
-      user.latitude <= 90 &&
-      user.longitude >= -180 &&
-      user.longitude <= 180 &&
-      !(user.latitude === 0 && user.longitude === 0);
+    const reference = this.locationGeography.resolveUserCoordinates(user);
 
-    if (!hasValidUserLocation) {
+    if (!reference) {
       throw new BadRequestException('Profile location is required to find nearby listings');
     }
 
@@ -272,9 +385,7 @@ export class ListingsService {
      * We fetch only active listings.
      */
     const search = query.search?.trim();
-    const searchTerms = search ? [search, ...getDomainSearchAliases(search)] : [];
-
-    const where = {
+    const where: Prisma.ListingWhereInput = {
       status: 'active',
 
       ...(query.cropKey
@@ -283,20 +394,8 @@ export class ListingsService {
           }
         : {}),
 
-      ...(search
-        ? {
-            OR: searchTerms.flatMap((term) => [
-              { farmerName: { contains: term, mode: 'insensitive' as const } },
-              { farmerNameShort: { contains: term, mode: 'insensitive' as const } },
-              { village: { contains: term, mode: 'insensitive' as const } },
-              { taluka: { contains: term, mode: 'insensitive' as const } },
-              { district: { contains: term, mode: 'insensitive' as const } },
-              { variety: { contains: term, mode: 'insensitive' as const } },
-              { customCropName: { contains: term, mode: 'insensitive' as const } },
-              { cropKey: { contains: term, mode: 'insensitive' as const } },
-            ]),
-          }
-        : {}),
+      availability: 'available',
+      ...searchWhere(search),
     };
 
     /*
@@ -310,23 +409,23 @@ export class ListingsService {
       orderBy: {
         createdAt: 'desc',
       },
+      include: this.locationGeography.canonicalLocationInclude(),
     });
 
     /*
      * Calculate the real distance from the user's saved location.
      */
-    const nearbyRows = rows
-      .map((listing) => ({
-        listing,
-        distanceKm: haversineKm(
-          user.latitude as number,
-          user.longitude as number,
-          listing.lat,
-          listing.lng,
-        ),
-      }))
-      .filter(({ distanceKm }) => Number.isFinite(distanceKm) && distanceKm <= radius)
-      .sort((a, b) => a.distanceKm - b.distanceKm);
+    const distanceRows = rows.map((listing) => {
+      const point = this.resolveListingCoordinates(listing as ListingWithOwnerLocation);
+      return {
+        item: listing,
+        distanceKm: point
+          ? this.locationGeography.distanceKm(reference, point)
+          : null,
+      };
+    });
+    const unlocatedCount = distanceRows.filter(({ distanceKm }) => distanceKm === null).length;
+    const nearbyRows = filterDistanceRows(distanceRows, radius).sort(compareDistanceRows);
 
     /*
      * Pagination happens AFTER the distance filter.
@@ -360,35 +459,35 @@ export class ListingsService {
     const paginatedRows = nearbyRows.slice(skip, skip + limit);
 
     return {
-      listings: paginatedRows.map(({ listing, distanceKm }) => ({
-        ...this.toDto(listing),
-
-        /*
-         * Override the database's stored distance with
-         * the actual distance from the current user.
-         */
-        distanceKm: Math.round(distanceKm * 10) / 10,
-      })),
+      listings: paginatedRows.map(({ item, distanceKm }) =>
+        this.toBrowseDto(item, true, distanceKm),
+      ),
 
       total,
       page,
       limit,
-
       totalPages: Math.ceil(total / limit),
+      locationAvailable: true,
+      unlocatedCount,
     };
   }
 
   async create(userId: string, dto: CreateListingDto): Promise<ListingResponseDto> {
+    const hasAnySubmittedCoordinate = dto.latitude != null || dto.longitude != null;
+    const hasSubmittedCoordinates = hasValidCoordinates(dto.latitude ?? null, dto.longitude ?? null);
+    if (hasAnySubmittedCoordinate && !hasSubmittedCoordinates) {
+      throw new BadRequestException('Both valid listing coordinates are required');
+    }
+
     const [user, existingListingCount] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id: userId },
         select: {
+          ...this.locationGeography.userLocationSelect(),
           firstName: true,
           lastName: true,
           mobileNumber: true,
           isVerified: true,
-          latitude: true,
-          longitude: true,
           createdAt: true,
         },
       }),
@@ -413,6 +512,12 @@ export class ListingsService {
     const primaryUnit = dto.primaryUnit.trim();
 
     const marketPrice = calculateMarketPrice(price, primaryUnit);
+    const locationVillageId = await this.locationGeography.findCanonicalVillageId({
+      state: dto.state?.trim() || 'Gujarat',
+      district: dto.district,
+      taluka: dto.taluka,
+      village: dto.village,
+    });
 
     const listing = await this.prisma.listing.create({
       data: {
@@ -440,8 +545,14 @@ export class ListingsService {
         mobileNumber: user.mobileNumber,
         phoneLabel: farmerNameShort,
         readyToSell: true,
-        lat: user.latitude ?? 22.03,
-        lng: user.longitude ?? 71.2,
+        lat: hasSubmittedCoordinates
+          ? dto.latitude!
+          : 0,
+        lng: hasSubmittedCoordinates
+          ? dto.longitude!
+          : 0,
+        hasExplicitCoordinates: hasSubmittedCoordinates,
+        locationVillageId,
         description: dto.description?.trim() || null,
         variety: dto.variety?.trim() || null,
         customCropName: dto.customCropName?.trim() || null,
@@ -482,6 +593,94 @@ export class ListingsService {
     return listings.map((listing) => this.toDto(listing));
   }
 
+  async findRecentMine(userId: string): Promise<RecentListingResponseDto[]> {
+    const listings = await this.prisma.listing.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      select: {
+        id: true,
+        cropKey: true,
+        image: true,
+        imageAlt: true,
+        customCropName: true,
+        price: true,
+        quantity: true,
+        unit: true,
+        village: true,
+        district: true,
+        createdAt: true,
+      },
+    });
+
+    return listings.map((listing) => ({
+      ...listing,
+      image: listing.image.startsWith('blob:')
+        ? `/crops/${listing.cropKey === 'other' ? 'other' : listing.cropKey}.svg`
+        : listing.image,
+    }));
+  }
+
+  async findMineManagement(
+    userId: string,
+    query: QueryMyListingsManagementDto,
+  ): Promise<MyListingsManagementResponseDto> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 12;
+    const search = query.search?.trim();
+    const searchTerms = search ? [...new Set([search, ...getDomainSearchAliases(search)])] : [];
+    const where: Prisma.ListingWhereInput = {
+      userId,
+      ...(query.status ? { status: query.status } : {}),
+      ...(searchTerms.length > 0
+        ? {
+            OR: searchTerms.flatMap((term) => [
+              { cropKey: { contains: term, mode: 'insensitive' as const } },
+              { customCropName: { contains: term, mode: 'insensitive' as const } },
+              { variety: { contains: term, mode: 'insensitive' as const } },
+              { village: { contains: term, mode: 'insensitive' as const } },
+              { district: { contains: term, mode: 'insensitive' as const } },
+            ]),
+          }
+        : {}),
+    };
+
+    const [listings, statusCounts, searchedTotal] = await Promise.all([
+      this.prisma.listing.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.listing.groupBy({
+        by: ['status'],
+        where: { userId },
+        _count: { _all: true },
+      }),
+      searchTerms.length > 0
+        ? this.prisma.listing.count({ where })
+        : Promise.resolve<number | null>(null),
+    ]);
+
+    const counts = new Map(statusCounts.map(({ status, _count }) => [status, _count._all]));
+    const stats = {
+      total: statusCounts.reduce((sum, item) => sum + item._count._all, 0),
+      active: counts.get('active') ?? 0,
+      sold: counts.get('sold') ?? 0,
+      inactive: counts.get('inactive') ?? 0,
+    };
+    const total = searchedTotal ?? (query.status ? stats[query.status] : stats.total);
+
+    return {
+      listings: listings.map((listing) => this.toDto(listing)),
+      stats,
+      total,
+      page,
+      limit,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+    };
+  }
+
   async findMineById(userId: string, id: string): Promise<ListingResponseDto> {
     return this.toDto(await this.findOwnedListing(userId, id));
   }
@@ -494,6 +693,37 @@ export class ListingsService {
 
   async update(userId: string, id: string, dto: UpdateListingDto): Promise<ListingResponseDto> {
     const existingListing = await this.findOwnedListing(userId, id);
+
+    const hasCoordinateInput = dto.latitude !== undefined || dto.longitude !== undefined;
+    const hasSubmittedCoordinates = hasValidCoordinates(dto.latitude ?? null, dto.longitude ?? null);
+    if (hasCoordinateInput && !hasSubmittedCoordinates && !(dto.latitude == null && dto.longitude == null)) {
+      throw new BadRequestException('Both valid listing coordinates are required');
+    }
+
+    const nextLocation = {
+      district: dto.district ?? existingListing.district,
+      taluka: dto.taluka ?? existingListing.taluka,
+      village: dto.village ?? existingListing.village,
+      state: dto.state ?? existingListing.state,
+    };
+    const locationChanged =
+      normalizeLocationName(nextLocation.state) !== normalizeLocationName(existingListing.state) ||
+      normalizeLocationName(nextLocation.district) !== normalizeLocationName(existingListing.district) ||
+      normalizeLocationName(nextLocation.taluka) !== normalizeLocationName(existingListing.taluka) ||
+      normalizeLocationName(nextLocation.village) !== normalizeLocationName(existingListing.village);
+    let coordinateUpdate: Prisma.ListingUpdateInput = {};
+
+    if (hasCoordinateInput) {
+      coordinateUpdate = hasSubmittedCoordinates
+        ? { lat: dto.latitude!, lng: dto.longitude!, hasExplicitCoordinates: true }
+        : { lat: 0, lng: 0, hasExplicitCoordinates: false };
+    } else if (locationChanged) {
+      coordinateUpdate = { lat: 0, lng: 0, hasExplicitCoordinates: false };
+    }
+
+    const locationVillageId = locationChanged
+      ? await this.locationGeography.findCanonicalVillageId(nextLocation)
+      : undefined;
 
     const price = dto.price === undefined ? existingListing.price : Number(dto.price);
 
@@ -516,6 +746,12 @@ export class ListingsService {
     const listing = await this.prisma.listing.update({
       where: { id },
       data: {
+        ...coordinateUpdate,
+        ...(locationChanged
+          ? locationVillageId
+            ? { locationVillage: { connect: { id: locationVillageId } } }
+            : { locationVillage: { disconnect: true } }
+          : {}),
         ...(dto.cropKey !== undefined ? { cropKey: dto.cropKey } : {}),
         ...(dto.quantity !== undefined ? { quantity: Number(dto.quantity) } : {}),
         ...(dto.unit !== undefined ? { unit: dto.unit } : {}),

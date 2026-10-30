@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsIn, IsInt, Min, Max } from 'class-validator';
+import { IsOptional, IsString, IsIn, IsInt, Min, Max, IsNumber, IsBoolean, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -12,6 +12,56 @@ export class QueryListingsDto {
   @IsOptional()
   @IsString()
   district?: string;
+
+  @ApiPropertyOptional({ description: 'Search crop, farmer, variety or location text' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  search?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by village name' })
+  @IsOptional()
+  @IsString()
+  village?: string;
+
+  @ApiPropertyOptional({ enum: ['newest', 'nearest', 'lowestPrice', 'highestPrice', 'mostQty'] })
+  @IsOptional()
+  @IsIn(['newest', 'nearest', 'lowestPrice', 'highestPrice', 'mostQty'])
+  sort?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true' || value === '1')
+  @IsBoolean()
+  verified?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value as string))
+  @IsNumber()
+  @Min(0)
+  priceMin?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value as string))
+  @IsNumber()
+  @Min(0)
+  priceMax?: number;
+
+  @ApiPropertyOptional({ description: 'Quantity bound in quintals' })
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value as string))
+  @IsNumber()
+  @Min(0)
+  quantityMin?: number;
+
+  @ApiPropertyOptional({ description: 'Quantity bound in quintals' })
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value as string))
+  @IsNumber()
+  @Min(0)
+  quantityMax?: number;
 
   @ApiPropertyOptional({
     description: 'Filter by status',

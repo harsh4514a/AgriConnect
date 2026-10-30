@@ -17,32 +17,32 @@ export function QuickActions() {
       label: t('dashboard.quickAccess.transport'),
       href: '/dashboard/transport',
       icon: Truck,
-      accent: 'text-sky-300',
+      accent: 'text-accent',
     },
     {
       label: t('dashboard.quickAccess.schemes'),
       href: '/dashboard/government-schemes',
       icon: Landmark,
-      accent: 'text-emerald-300',
+      accent: 'text-accent',
     },
     {
       label: t('dashboard.quickAccess.cropGuide'),
       href: '/dashboard/crop-guide',
       icon: Leaf,
-      accent: 'text-green-300',
+      accent: 'text-accent',
     },
   ];
 
   return (
     <section
       aria-label={t('dashboard.quickAccess.label')}
-      className="space-y-4"
+      className="space-y-3"
     >
-      <h2 className="text-base font-semibold text-white sm:text-lg">
+      <h2 className="text-sm font-semibold text-foreground">
         {t('dashboard.quickAccess.title')}
       </h2>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="flex flex-wrap gap-2">
         {actions.map((action, index) => {
           const Icon = action.icon;
 
@@ -60,29 +60,10 @@ export function QuickActions() {
               }}
               whileHover={{ y: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="
-                flex min-h-[82px]
-                items-center justify-center gap-3
-                rounded-2xl
-                border border-white/10
-                bg-white/5
-                px-4 py-4
-                text-center
-                backdrop-blur-xl
-                transition-all
-                hover:border-green-400/30
-                hover:bg-white/10
-                hover:shadow-lg
-                hover:shadow-black/20
-              "
+              className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-surface px-3.5 py-2 text-sm font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                <Icon className={`h-5 w-5 ${action.accent}`} />
-              </div>
-
-              <span className="text-sm font-semibold text-white">
-                {action.label}
-              </span>
+              <Icon className={`h-4 w-4 ${action.accent}`} aria-hidden="true" />
+              <span>{action.label}</span>
             </motion.button>
           );
         })}

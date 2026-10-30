@@ -39,7 +39,7 @@ function UserSkeleton() {
       {Array.from({ length: 7 }).map((_, index) => (
         <div
           key={index}
-          className="h-16 animate-pulse rounded-xl border border-slate-100 bg-slate-50"
+          className="h-16 animate-pulse rounded-xl border border-border bg-surface-subtle"
         />
       ))}
     </div>
@@ -77,7 +77,7 @@ function LocationText({
 
   return (
     <span className="inline-flex min-w-0 items-center gap-1.5">
-      <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+      <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
       <span className="truncate">{parts.join(', ') || noLocation}</span>
     </span>
   );
@@ -266,22 +266,22 @@ export function AdminUsers() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[#d7ddd6] bg-[#f6f7f3] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6">
+      <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface-subtle)] p-5 shadow-[0_10px_30px_rgba(15,23,42,0.035)] sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-accent">
               {t('users.eyebrow')}
             </p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               {t('users.title')}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
               {t('users.subtitle')}
             </p>
           </div>
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-2.5">
-            <p className="text-xs font-medium text-emerald-700">{t('users.user')}</p>
-            <p className="mt-0.5 text-lg font-bold text-emerald-950">
+          <div className="rounded-xl border border-emerald-100 bg-accent-soft/60 px-4 py-2.5">
+            <p className="text-xs font-medium text-accent">{t('users.user')}</p>
+            <p className="mt-0.5 text-lg font-bold text-accent">
               {pagination.total.toLocaleString()}
             </p>
           </div>
@@ -294,7 +294,7 @@ export function AdminUsers() {
             </label>
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
               />
               <input
@@ -302,7 +302,7 @@ export function AdminUsers() {
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
                 placeholder={t('users.searchPlaceholder')}
-                className="min-h-11 w-full rounded-xl border border-slate-200 bg-[#f2f4f0] pl-10 pr-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-50"
+                className="min-h-11 w-full rounded-xl border border-border bg-[var(--surface-subtle)] pl-10 pr-3.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-focus focus:bg-surface focus:ring-4 focus:ring-focus"
               />
             </div>
           </div>
@@ -317,7 +317,7 @@ export function AdminUsers() {
               onChange={(event) => {
                 setStatus(event.target.value as typeof status);
               }}
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+              className="min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm font-medium text-foreground outline-none focus:border-focus focus:ring-4 focus:ring-focus"
             >
               <option value="all">{t('users.allStatuses')}</option>
               <option value="active">{t('users.activeStatus')}</option>
@@ -334,7 +334,7 @@ export function AdminUsers() {
               value={districtId}
               onChange={(event) => setDistrictId(event.target.value)}
               disabled={filtersError}
-              className="min-h-11 w-full rounded-xl border border-slate-700/20 bg-white px-3 text-sm font-medium text-slate-700 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm font-medium text-foreground outline-none focus:border-focus focus:ring-4 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-60"
             >
               <option value="">{t('users.allDistricts')}</option>
               {districts.map((district) => (
@@ -353,7 +353,7 @@ export function AdminUsers() {
               id="admin-user-sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as typeof sort)}
-              className="min-h-11 w-full rounded-xl border border-slate-700/20 bg-white px-3 text-sm font-medium text-slate-700 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100"
+              className="min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm font-medium text-foreground outline-none focus:border-focus focus:ring-4 focus:ring-focus"
             >
               <option value="newest">{t('users.newest')}</option>
               <option value="oldest">{t('users.oldest')}</option>
@@ -370,7 +370,7 @@ export function AdminUsers() {
               value={registeredFrom}
               onChange={(event) => setRegisteredFrom(event.target.value)}
               aria-label={t('users.fromDate')}
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+              className="min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm text-foreground outline-none focus:border-focus focus:ring-4 focus:ring-focus"
             />
           </div>
 
@@ -384,7 +384,7 @@ export function AdminUsers() {
               value={registeredTo}
               onChange={(event) => setRegisteredTo(event.target.value)}
               aria-label={t('users.toDate')}
-              className="min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+              className="min-h-11 w-full rounded-xl border border-border bg-surface px-3 text-sm text-foreground outline-none focus:border-focus focus:ring-4 focus:ring-focus"
             />
           </div>
 
@@ -399,7 +399,7 @@ export function AdminUsers() {
               setRegisteredFrom('');
               setRegisteredTo('');
             }}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-800"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-muted-foreground transition hover:border-accent/30 hover:bg-accent-soft hover:text-accent"
           >
             <Filter className="h-4 w-4" aria-hidden="true" />
             {t('users.clearFilters')}
@@ -412,8 +412,8 @@ export function AdminUsers() {
           role="status"
           className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium ${
             statusMessage === 'success'
-              ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-              : 'border-red-200 bg-red-50 text-red-800'
+              ? 'border-accent/30 bg-accent-soft text-accent'
+              : 'border-danger/30 bg-danger-soft text-danger'
           }`}
         >
           {statusMessage === 'success' ? (
@@ -427,11 +427,11 @@ export function AdminUsers() {
         </div>
       ) : null}
 
-      <section className="overflow-hidden rounded-2xl border border-[#d7ddd6] bg-[#fbfcfa] shadow-[0_12px_32px_rgba(20,45,31,0.07)]">
-        <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_rgba(20,45,31,0.07)]">
+        <div className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
-            <h2 className="text-sm font-semibold text-slate-900">{t('users.title')}</h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <h2 className="text-sm font-semibold text-foreground">{t('users.title')}</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
               {t('users.showing', {
                 from: showingFrom,
                 to: showingTo,
@@ -440,7 +440,7 @@ export function AdminUsers() {
             </p>
           </div>
           {isLoading ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
               {t('users.loading')}
             </span>
@@ -449,12 +449,12 @@ export function AdminUsers() {
 
         {error ? (
           <div className="p-8 text-center">
-            <AlertCircle className="mx-auto h-8 w-8 text-red-500" aria-hidden="true" />
-            <p className="mt-3 text-sm font-semibold text-slate-900">{t('users.loadError')}</p>
+            <AlertCircle className="mx-auto h-8 w-8 text-danger" aria-hidden="true" />
+            <p className="mt-3 text-sm font-semibold text-foreground">{t('users.loadError')}</p>
             <button
               type="button"
               onClick={() => void loadUsers(pagination.page)}
-              className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+              className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-foreground hover:border-emerald-300 hover:text-accent"
             >
               <RefreshCw className="h-4 w-4" aria-hidden="true" />
               {t('users.retry')}
@@ -466,18 +466,18 @@ export function AdminUsers() {
           </div>
         ) : users.length === 0 ? (
           <div className="px-6 py-14 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-subtle text-muted-foreground">
               <CircleUserRound className="h-6 w-6" aria-hidden="true" />
             </div>
-            <p className="mt-4 text-sm font-semibold text-slate-900">{t('users.noUsers')}</p>
-            <p className="mt-1 text-sm text-slate-500">{t('users.noUsersHint')}</p>
+            <p className="mt-4 text-sm font-semibold text-foreground">{t('users.noUsers')}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t('users.noUsersHint')}</p>
           </div>
         ) : (
           <>
             <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[900px] border-collapse text-left">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-[#f5f8f5]">
+                  <tr className="border-b border-border bg-[var(--surface-subtle)]">
                     {[
                       'user',
                       'mobile',
@@ -490,7 +490,7 @@ export function AdminUsers() {
                       <th
                         key={key}
                         scope="col"
-                        className="px-5 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500"
+                        className="px-5 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground"
                       >
                         {t(`users.${key}`)}
                       </th>
@@ -501,56 +501,53 @@ export function AdminUsers() {
                   {users.map((user) => (
                     <tr
                       key={user.id}
-                      className="border-b border-slate-100 last:border-b-0 hover:bg-emerald-50/40"
+                      className="border-b border-border last:border-b-0 hover:bg-accent-soft/40"
                     >
                       <td className="px-5 py-4">
                         <div className="flex min-w-[180px] items-center gap-3">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
                             <CircleUserRound className="h-4 w-4" aria-hidden="true" />
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-slate-900">
+                            <p className="truncate text-sm font-semibold text-foreground">
                               {getUserName(user, t('users.noName'))}
                             </p>
-                            <p className="mt-0.5 text-xs text-slate-400">
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                               {user.isVerified ? t('users.verified') : t('users.unverified')}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-sm text-slate-600">{user.mobileNumber}</td>
-                      <td className="max-w-[220px] px-5 py-4 text-sm text-slate-600">
+                      <td className="px-5 py-4 text-sm text-muted-foreground">{user.mobileNumber}</td>
+                      <td className="max-w-[220px] px-5 py-4 text-sm text-muted-foreground">
                         <LocationText user={user} noLocation={t('users.noLocation')} locale={locale} />
                       </td>
                       <td className="px-5 py-4">
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
                             user.isActive
-                              ? 'bg-emerald-50 text-emerald-800'
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              user.isActive ? 'bg-emerald-600' : 'bg-slate-400'
+                              ? 'bg-accent-soft text-accent'
+                              : 'bg-surface-subtle text-muted-foreground'
+                          }`} > <span className={`h-1.5 w-1.5 rounded-full ${
+                              user.isActive ? 'bg-accent' : 'bg-slate-400'
                             }`}
                           />
                           {user.isActive ? statusLabel.active : statusLabel.inactive}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-muted-foreground">
                         {formatDate(user.createdAt, locale)}
                       </td>
-                      <td className="px-5 py-4 text-xs text-slate-500">
+                      <td className="px-5 py-4 text-xs text-muted-foreground">
                         <span>{user.activity.listings} {t('users.listings')}</span>
-                        <span className="mx-1 text-slate-300">·</span>
+                        <span className="mx-1 text-muted-foreground">·</span>
                         <span>{user.activity.buyerRequirements} {t('users.buyerRequirements')}</span>
                       </td>
                       <td className="px-5 py-4">
                         <button
                           type="button"
                           onClick={() => void openDetails(user.id)}
-                          className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-50"
+                          className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-xs font-semibold text-foreground hover:border-emerald-300 hover:text-accent focus:outline-none focus:ring-4 focus:ring-focus"
                         >
                           <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                           {t('users.viewDetails')}
@@ -567,29 +564,29 @@ export function AdminUsers() {
                 <article key={user.id} className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
                         <CircleUserRound className="h-5 w-5" aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="truncate text-sm font-semibold text-slate-900">
+                        <h3 className="truncate text-sm font-semibold text-foreground">
                           {getUserName(user, t('users.noName'))}
                         </h3>
-                        <p className="mt-0.5 text-xs text-slate-500">{user.mobileNumber}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">{user.mobileNumber}</p>
                       </div>
                     </div>
-                    <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
+                    <span className="shrink-0 rounded-full bg-surface-subtle px-2.5 py-1 text-xs font-semibold text-muted-foreground">
                       {user.isActive ? statusLabel.active : statusLabel.inactive}
                     </span>
                   </div>
 
-                  <div className="mt-4 space-y-2 text-xs text-slate-500">
+                  <div className="mt-4 space-y-2 text-xs text-muted-foreground">
                     <LocationText user={user} noLocation={t('users.noLocation')} locale={locale} />
                     <span className="inline-flex items-center gap-1.5">
-                      <CalendarDays className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
+                      <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                       {formatDate(user.createdAt, locale)}
                     </span>
                     <span className="inline-flex items-center gap-1.5">
-                      <ShieldCheck className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
+                      <ShieldCheck className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                       {user.activity.listings} {t('users.listings')} · {user.activity.buyerRequirements}{' '}
                       {t('users.buyerRequirements')} · {user.activity.transportListings}{' '}
                       {t('users.transport')}
@@ -599,7 +596,7 @@ export function AdminUsers() {
                   <button
                     type="button"
                     onClick={() => void openDetails(user.id)}
-                    className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 hover:border-emerald-300 hover:text-emerald-700"
+                    className="mt-4 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 text-sm font-semibold text-foreground hover:border-emerald-300 hover:text-accent"
                   >
                     <Eye className="h-4 w-4" aria-hidden="true" />
                     {t('users.viewDetails')}
@@ -611,8 +608,8 @@ export function AdminUsers() {
         )}
 
         {!error && !isLoading && pagination.totalPages > 1 ? (
-          <div className="flex flex-col gap-3 border-t border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <span className="text-xs font-medium text-slate-500">
+          <div className="flex flex-col gap-3 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <span className="text-xs font-medium text-muted-foreground">
               {t('users.page', {
                 page: pagination.page,
                 totalPages: pagination.totalPages,
@@ -623,7 +620,7 @@ export function AdminUsers() {
                 type="button"
                 disabled={pagination.page <= 1}
                 onClick={() => void loadUsers(pagination.page - 1)}
-                className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 disabled:cursor-not-allowed disabled:opacity-40 hover:border-emerald-300 hover:text-emerald-700"
+                className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-xs font-semibold text-muted-foreground disabled:cursor-not-allowed disabled:opacity-40 hover:border-emerald-300 hover:text-accent"
               >
                 <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                 {t('users.previous')}
@@ -632,7 +629,7 @@ export function AdminUsers() {
                 type="button"
                 disabled={pagination.page >= pagination.totalPages}
                 onClick={() => void loadUsers(pagination.page + 1)}
-                className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 disabled:cursor-not-allowed disabled:opacity-40 hover:border-emerald-300 hover:text-emerald-700"
+                className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-xs font-semibold text-muted-foreground disabled:cursor-not-allowed disabled:opacity-40 hover:border-emerald-300 hover:text-accent"
               >
                 {t('users.next')}
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -649,9 +646,9 @@ export function AdminUsers() {
           aria-modal="true"
           aria-labelledby="admin-user-details-title"
         >
-          <div className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-slate-200 bg-white shadow-2xl sm:max-w-2xl sm:rounded-3xl">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-[#fbfcfa]/95 px-5 py-4 backdrop-blur sm:px-6">
-              <h2 id="admin-user-details-title" className="text-base font-bold text-slate-950">
+          <div className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-border bg-surface shadow-2xl sm:max-w-2xl sm:rounded-3xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-[var(--surface)]/95 px-5 py-4 backdrop-blur sm:px-6">
+              <h2 id="admin-user-details-title" className="text-base font-bold text-foreground">
                 {t('users.detailsTitle')}
               </h2>
               <button
@@ -662,7 +659,7 @@ export function AdminUsers() {
                   setDetailsError(false);
                   setPendingStatus(null);
                 }}
-                className="flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-surface-subtle hover:text-foreground"
                 aria-label={t('users.closeDetails')}
               >
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -671,18 +668,18 @@ export function AdminUsers() {
 
             {isDetailsLoading ? (
               <div className="flex min-h-80 items-center justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-emerald-600" aria-label={t('users.loading')} />
+                <Loader2 className="h-6 w-6 animate-spin text-accent" aria-label={t('users.loading')} />
               </div>
             ) : detailsError ? (
               <div className="p-8 text-center">
-                <AlertCircle className="mx-auto h-8 w-8 text-red-500" aria-hidden="true" />
-                <p className="mt-3 text-sm font-semibold text-slate-900">{t('users.loadError')}</p>
+                <AlertCircle className="mx-auto h-8 w-8 text-danger" aria-hidden="true" />
+                <p className="mt-3 text-sm font-semibold text-foreground">{t('users.loadError')}</p>
                 <button
                   type="button"
                   onClick={() => {
                     if (selectedUserId) void openDetails(selectedUserId);
                   }}
-                  className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700"
+                  className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-xl border border-border px-4 text-sm font-semibold text-foreground"
                 >
                   <RefreshCw className="h-4 w-4" aria-hidden="true" />
                   {t('users.retry')}
@@ -691,14 +688,14 @@ export function AdminUsers() {
             ) : selectedUser ? (
               <div className="space-y-6 p-5 sm:p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent">
                     <CircleUserRound className="h-7 w-7" aria-hidden="true" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-xl font-bold tracking-tight text-slate-950">
+                    <h3 className="text-xl font-bold tracking-tight text-foreground">
                       {getUserName(selectedUser, t('users.noName'))}
                     </h3>
-                    <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-slate-500">
+                    <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                       <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                       {selectedUser.mobileNumber}
                     </p>
@@ -706,8 +703,8 @@ export function AdminUsers() {
                   <span
                     className={`ml-auto shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
                       selectedUser.isActive
-                        ? 'bg-emerald-50 text-emerald-800'
-                        : 'bg-slate-100 text-slate-600'
+                        ? 'bg-accent-soft text-accent'
+                        : 'bg-surface-subtle text-muted-foreground'
                     }`}
                   >
                     {selectedUser.isActive ? t('users.active') : t('users.inactive')}
@@ -721,15 +718,15 @@ export function AdminUsers() {
                     [t('users.registrationDate'), formatDate(selectedUser.createdAt, locale)],
                     [t('users.updatedDate'), formatDate(selectedUser.updatedAt, locale)],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-xl border border-slate-100 bg-[#f2f4f0] p-3.5">
-                      <p className="text-xs font-medium text-slate-400">{label}</p>
-                      <p className="mt-1 text-sm font-semibold text-slate-800">{value}</p>
+                    <div key={label} className="rounded-xl border border-border bg-[var(--surface-subtle)] p-3.5">
+                      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+                      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
                     </div>
                   ))}
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-semibold text-slate-900">{t('users.location')}</h4>
+                  <h4 className="text-sm font-semibold text-foreground">{t('users.location')}</h4>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     {[
                       [t('users.state'), getLocalizedDomainName(selectedUser.location.state, locale, 'state')],
@@ -737,9 +734,9 @@ export function AdminUsers() {
                       [t('users.taluka'), getLocalizedDomainName(selectedUser.location.taluka, locale, 'taluka')],
                       [t('users.village'), getLocalizedDomainName(selectedUser.location.village, locale, 'village')],
                     ].map(([label, value]) => (
-                      <div key={label} className="rounded-xl border border-slate-100 p-3.5">
-                        <p className="text-xs font-medium text-slate-400">{label}</p>
-                        <p className="mt-1 text-sm font-semibold text-slate-800">
+                      <div key={label} className="rounded-xl border border-border p-3.5">
+                        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+                        <p className="mt-1 text-sm font-semibold text-foreground">
                           {value || t('users.noLocation')}
                         </p>
                       </div>
@@ -748,29 +745,29 @@ export function AdminUsers() {
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-semibold text-slate-900">{t('users.activitySummary')}</h4>
+                  <h4 className="text-sm font-semibold text-foreground">{t('users.activitySummary')}</h4>
                   <div className="mt-3 grid grid-cols-3 gap-3">
                     {[
                       [t('users.listings'), selectedUser.activity.listings],
                       [t('users.buyerRequirements'), selectedUser.activity.buyerRequirements],
                       [t('users.transport'), selectedUser.activity.transportListings],
                     ].map(([label, value]) => (
-                      <div key={label} className="rounded-xl border border-slate-100 bg-white p-3 text-center shadow-sm">
-                        <p className="text-xl font-bold text-slate-950">{value}</p>
-                        <p className="mt-1 text-[11px] font-medium text-slate-500">{label}</p>
+                      <div key={label} className="rounded-xl border border-border bg-surface p-3 text-center shadow-sm">
+                        <p className="text-xl font-bold text-foreground">{value}</p>
+                        <p className="mt-1 text-[11px] font-medium text-muted-foreground">{label}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="border-t border-slate-100 pt-5">
+                <div className="border-t border-border pt-5">
                   <button
                     type="button"
                     onClick={() => setPendingStatus(!selectedUser.isActive)}
                     className={`inline-flex min-h-10 items-center gap-2 rounded-xl px-4 text-sm font-semibold ${
                       selectedUser.isActive
-                        ? 'border border-red-200 bg-white text-red-700 hover:bg-red-50'
-                        : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                        ? 'border border-danger/30 bg-surface text-danger hover:bg-danger-soft'
+                        : 'bg-accent text-accent-foreground hover:bg-accent-strong'
                     }`}
                   >
                     {selectedUser.isActive ? (
@@ -794,14 +791,14 @@ export function AdminUsers() {
           aria-modal="true"
           aria-labelledby="admin-user-status-title"
         >
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:p-6">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-5 shadow-2xl sm:p-6">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-surface-subtle text-foreground">
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
             </div>
-            <h2 id="admin-user-status-title" className="mt-4 text-lg font-bold text-slate-950">
+            <h2 id="admin-user-status-title" className="mt-4 text-lg font-bold text-foreground">
               {pendingStatus ? t('users.enableTitle') : t('users.disableTitle')}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {pendingStatus ? t('users.enableDescription') : t('users.disableDescription')}
             </p>
             <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
@@ -809,7 +806,7 @@ export function AdminUsers() {
                 type="button"
                 disabled={isUpdatingStatus}
                 onClick={() => setPendingStatus(null)}
-                className="min-h-10 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                className="min-h-10 rounded-xl border border-border px-4 text-sm font-semibold text-muted-foreground hover:bg-surface-subtle"
               >
                 {t('users.cancel')}
               </button>
@@ -817,10 +814,10 @@ export function AdminUsers() {
                 type="button"
                 disabled={isUpdatingStatus}
                 onClick={() => void confirmStatusChange()}
-                className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold text-white disabled:opacity-60 ${
+                className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold disabled:opacity-60 ${
                   pendingStatus
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-red-600 hover:bg-red-700'
+                    ? 'bg-accent text-accent-foreground hover:bg-accent-strong'
+                    : 'bg-danger text-danger-foreground hover:opacity-90'
                 }`}
               >
                 {isUpdatingStatus ? (

@@ -12,6 +12,21 @@ type LocaleContextValue = {
     setLocale: (locale: Locale) => void;
 };
 
+const THEME_STORAGE_KEY = 'agriconnect_theme';
+
+function preserveActiveTheme(): void {
+    if (typeof window === 'undefined') return;
+
+    const activeTheme = document.documentElement.dataset.theme;
+    if (activeTheme !== 'light' && activeTheme !== 'dark') return;
+
+    try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, activeTheme);
+    } catch {
+        // Keep the in-memory theme if storage is unavailable.
+    }
+}
+
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({
@@ -40,6 +55,7 @@ export function LocaleProvider({
 
     const setLocale = useCallback((nextLocale: Locale) => {
         storeLocale(nextLocale);
+        preserveActiveTheme();
 
         const firstSegment = pathname.split('/').filter(Boolean)[0];
         const currentPathLocale = isLocale(firstSegment) ? firstSegment : null;

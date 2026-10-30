@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import type { DashboardNavItem, DashboardSectionKey } from '@/types/dashboard.types';
 
-/** Ordered sidebar navigation. `dashboard` is the only functional route. */
+/** Ordered farmer navigation. Routes here are shared by desktop and mobile menus. */
 export const DASHBOARD_NAV: DashboardNavItem[] = [
   {
     key: 'dashboard',
@@ -102,7 +102,7 @@ export const DASHBOARD_NAV: DashboardNavItem[] = [
   },
 ];
 
-/** Ordered sidebar groups with their header translation keys. */
+/** Navigation groups used by the compact mobile More menu. */
 export const DASHBOARD_NAV_GROUPS: {
   key: 'marketplace' | 'information' | 'services' | 'account';
   labelKey: string;

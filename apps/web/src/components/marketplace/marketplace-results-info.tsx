@@ -33,20 +33,15 @@ export function MarketplaceResultsInfo({
   const parts: string[] = [];
 
   if (nearMe) {
-    parts.push(`${countLabel} ${t('dashboard.marketplaceBrowse.ux.resultFound')}`);
-    parts.push(
-      `${t('dashboard.marketplaceBrowse.ux.nearShort')} ${district ?? t('dashboard.marketplaceBrowse.ux.nearMe')}`,
-    );
-  } else {
-    parts.push(`${countLabel} ${t('dashboard.marketplaceBrowse.ux.resultFound')}`);
+    parts.push(`${countLabel} ${t('dashboard.marketplaceBrowse.ux.resultFound')}`); parts.push(`${t('dashboard.marketplaceBrowse.ux.nearShort')} ${district ?? t('dashboard.marketplaceBrowse.ux.nearMe')}`, ); } else { parts.push(`${countLabel} ${t('dashboard.marketplaceBrowse.ux.resultFound')}`);
     parts.push(sortLabel);
   }
 
   return (
-    <div className="flex items-center gap-1.5 px-1 text-xs text-white/60">
+    <div className="flex items-center gap-1.5 px-1 text-xs text-muted-foreground">
       {parts.map((part, i) => (
         <span key={i} className="flex items-center gap-1.5">
-          {i > 0 && <span className="text-white/20">•</span>}
+          {i > 0 && <span className="text-foreground/20">•</span>}
           <span>{part}</span>
         </span>
       ))}

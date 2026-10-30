@@ -1,5 +1,8 @@
 import type { Config } from 'tailwindcss';
 
+const palette = (name: string, shades: number[] = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]) =>
+  Object.fromEntries(shades.map((shade) => [shade, `rgb(var(--p-${name}-${shade}) / <alpha-value>)`]));
+
 export default {
   content: [
     './src/**/*.{ts,tsx}',
@@ -9,20 +12,39 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary agricultural greens
-        brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-          950: '#052e16',
-        },
+        gray: palette('gray'),
+        slate: palette('gray'),
+        green: palette('green'),
+        emerald: palette('green'),
+        amber: palette('amber'),
+        red: palette('red'),
+        blue: palette('blue'),
+        sky: palette('sky'),
+        violet: palette('violet', [50, 100, 200, 700]),
+        indigo: palette('indigo', [50, 200, 700]),
+        teal: palette('teal', [50, 100, 200, 700, 800]),
+        lime: palette('lime', [50, 100, 300, 700]),
+        yellow: palette('yellow', [400]),
+        canvas: 'var(--canvas)',
+        surface: 'var(--surface)',
+        'surface-subtle': 'var(--surface-subtle)',
+        'surface-raised': 'var(--surface-raised)',
+        foreground: 'var(--foreground)',
+        'muted-foreground': 'var(--muted-foreground)',
+        border: 'var(--border)',
+        'border-strong': 'var(--border-strong)',
+        accent: 'var(--accent)',
+        'accent-strong': 'var(--accent-strong)',
+        'accent-soft': 'var(--accent-soft)',
+        'accent-foreground': 'var(--accent-foreground)',
+        focus: 'var(--focus)',
+        warning: 'var(--warning)',
+        'warning-foreground': 'var(--warning-foreground)',
+        danger: 'var(--danger)',
+        'danger-soft': 'var(--danger-soft)',
+        'danger-foreground': 'var(--danger-foreground)',
+        // Theme-aware agricultural greens
+        brand: palette('green'),
         // Earth tones
         earth: {
           50: '#fefce8',

@@ -19,6 +19,7 @@ import {
 
 import { CurrentUser } from '../authentication/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../authentication/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../authentication/guards/optional-jwt-auth.guard';
 import { UpdateTransportAvailabilityDto } from './dto/availability.dto';
 import { CreateTransportDto } from './dto/create-transport.dto';
 import { QueryTransportDto } from './dto/query-transport.dto';
@@ -27,20 +28,24 @@ import { UpdateTransportDto } from './dto/update-transport.dto';
 import { TransportService } from './transport.service';
 
 @ApiTags('Transport')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('transport')
 export class TransportController {
   constructor(private readonly service: TransportService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Find active agricultural transport services' })
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiOperation({ summary: 'Publicly browse active agricultural transport services' })
   @ApiResponse({ status: HttpStatus.OK, type: TransportListResponseDto })
-  findAll(@Query() query: QueryTransportDto): Promise<TransportListResponseDto> {
-    return this.service.findAll(query);
+  findAll(
+    @CurrentUser('id') userId: string | null,
+    @Query() query: QueryTransportDto,
+  ): Promise<TransportListResponseDto> {
+    return this.service.findAll(query, Boolean(userId));
   }
 
   @Get('mine')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'List the authenticated user transport services' })
   @ApiResponse({ status: HttpStatus.OK, type: TransportListResponseDto })
   findMine(
@@ -51,13 +56,19 @@ export class TransportController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get an active agricultural transport service' })
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiOperation({ summary: 'Get an active transport service; contact details require sign-in' })
   @ApiResponse({ status: HttpStatus.OK, type: TransportProviderResponseDto })
-  findOne(@Param('id') id: string): Promise<TransportProviderResponseDto> {
-    return this.service.findOne(id);
+  findOne(
+    @CurrentUser('id') userId: string | null,
+    @Param('id') id: string,
+  ): Promise<TransportProviderResponseDto> {
+    return this.service.findOne(id, Boolean(userId));
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a transport service for the authenticated user' })
   @ApiResponse({ status: HttpStatus.CREATED, type: TransportProviderResponseDto })
   create(
@@ -68,6 +79,8 @@ export class TransportController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update the authenticated user transport service' })
   @ApiResponse({ status: HttpStatus.OK, type: TransportProviderResponseDto })
   update(
@@ -79,6 +92,8 @@ export class TransportController {
   }
 
   @Patch(':id/availability')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update availability of the authenticated user transport service' })
   @ApiResponse({ status: HttpStatus.OK, type: TransportProviderResponseDto })
   updateAvailability(
@@ -90,6 +105,8 @@ export class TransportController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete the authenticated user transport service' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Transport service deleted' })
   remove(

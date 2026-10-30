@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Package, ClipboardList, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { DashboardUser } from '@/types/dashboard.types';
@@ -28,7 +27,7 @@ function StatValue({
     return (
       <span
         aria-hidden="true"
-        className="inline-block h-8 w-14 animate-pulse rounded-lg bg-white/10"
+        className="inline-block h-7 w-14 animate-pulse rounded-md bg-surface-subtle"
       />
     );
   }
@@ -57,8 +56,8 @@ export function StatisticsCards({
       value: String(activeListingsCount.data),
       loading: activeListingsCount.isLoading,
       error: Boolean(activeListingsCount.error),
-      accent: 'text-green-300',
-      bg: 'bg-green-400/15',
+      accent: 'text-accent',
+      bg: 'bg-accent-soft',
     },
     {
       icon: ClipboardList,
@@ -66,8 +65,8 @@ export function StatisticsCards({
       value: String(buyerRequirements.total ?? 0),
       loading: buyerRequirements.isLoading,
       error: Boolean(buyerRequirements.error),
-      accent: 'text-amber-300',
-      bg: 'bg-amber-400/15',
+      accent: 'text-warning',
+      bg: 'bg-surface-subtle',
     },
     {
       icon: Globe,
@@ -75,47 +74,41 @@ export function StatisticsCards({
       value: languageLabel,
       loading: false,
       error: !user,
-      accent: 'text-sky-300',
-      bg: 'bg-sky-400/15',
+      accent: 'text-accent',
+      bg: 'bg-accent-soft',
     },
   ];
 
   return (
     <section
-      className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+      className="grid grid-cols-3 divide-x divide-border rounded-2xl border border-border bg-surface"
       aria-label={t('dashboard.stats.label')}
     >
-      {stats.map((stat, idx) => {
+      {stats.map((stat) => {
         const Icon = stat.icon;
 
         return (
-          <motion.div
+          <div
             key={stat.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: idx * 0.06,
-              duration: 0.4,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl"
+            className="flex min-w-0 flex-col items-start gap-1.5 px-2.5 py-3 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-4 lg:px-5"
           >
             <div
-              className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.bg}`}
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg sm:h-10 sm:w-10 sm:rounded-xl ${stat.bg}`}
             >
-              <Icon className={`h-5 w-5 ${stat.accent}`} />
+              <Icon className={`h-4 w-4 sm:h-5 sm:w-5 ${stat.accent}`} aria-hidden="true" />
             </div>
 
-            <div className="mt-4 text-2xl font-bold text-white">
-              <StatValue
-                loading={stat.loading}
-                error={stat.error}
-                value={stat.value}
-              />
+            <div className="min-w-0">
+              <div className="break-words text-base font-semibold leading-tight text-foreground sm:text-xl">
+                <StatValue
+                  loading={stat.loading}
+                  error={stat.error}
+                  value={stat.value}
+                />
+              </div>
+              <p className="mt-0.5 break-words text-[10px] leading-tight text-muted-foreground sm:text-xs">{stat.label}</p>
             </div>
-
-            <p className="mt-1 text-sm text-white/50">{stat.label}</p>
-          </motion.div>
+          </div>
         );
       })}
     </section>

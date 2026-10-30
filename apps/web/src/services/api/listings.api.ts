@@ -1,6 +1,6 @@
 import { api } from './axios';
 import { emitNotificationsChanged } from './notifications.api';
-import type { CropKey, CropListing, UnitKey } from '@/data/marketplace-listings';
+import type { CropKey, CropListing, ListingStatus, UnitKey } from '@/data/marketplace-listings';
 
 export interface ListingsResponse {
   listings: CropListing[];
@@ -8,6 +8,40 @@ export interface ListingsResponse {
   page: number;
   limit: number;
   totalPages: number;
+  locationAvailable?: boolean;
+  unlocatedCount?: number;
+}
+
+export interface RecentListingPreview {
+  id: string;
+  cropKey: CropKey;
+  image: string;
+  imageAlt: string;
+  customCropName?: string | null;
+  price: number;
+  quantity: number;
+  unit: UnitKey;
+  village: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  district: string;
+  createdAt: string;
+}
+
+export interface MyListingsPageResponse {
+  listings: CropListing[];
+  stats: { total: number; active: number; sold: number; inactive: number };
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface MyListingsPageQuery {
+  page: number;
+  limit: number;
+  status?: ListingStatus;
+  search?: string;
 }
 
 export interface CreateListingRequest {
@@ -34,16 +68,36 @@ export interface CreateListingRequest {
 export interface ListingsQuery {
   cropKey?: CropKey;
   district?: string;
+  village?: string;
+  search?: string;
+  sort?: 'newest' | 'nearest' | 'lowestPrice' | 'highestPrice' | 'mostQty';
+  verified?: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  quantityMin?: number;
+  quantityMax?: number;
   status?: 'active' | 'sold' | 'inactive';
   page?: number;
   limit?: number;
 }
 
-export async function getListings(query: ListingsQuery = {}): Promise<ListingsResponse> {
+export async function getListings(
+  query: ListingsQuery = {},
+  signal?: AbortSignal,
+): Promise<ListingsResponse> {
   const response = await api.get<ListingsResponse>('/listings', {
+    signal,
     params: {
       ...(query.cropKey ? { cropKey: query.cropKey } : {}),
       ...(query.district ? { district: query.district } : {}),
+      ...(query.village ? { village: query.village } : {}),
+      ...(query.search?.trim() ? { search: query.search.trim() } : {}),
+      ...(query.sort ? { sort: query.sort } : {}),
+      ...(query.verified ? { verified: true } : {}),
+      ...(query.priceMin !== undefined ? { priceMin: query.priceMin } : {}),
+      ...(query.priceMax !== undefined ? { priceMax: query.priceMax } : {}),
+      ...(query.quantityMin !== undefined ? { quantityMin: query.quantityMin } : {}),
+      ...(query.quantityMax !== undefined ? { quantityMax: query.quantityMax } : {}),
       ...(query.status ? { status: query.status } : {}),
       page: query.page ?? 1,
       limit: query.limit ?? 20,
@@ -72,6 +126,29 @@ export async function getRelatedListings(id: string): Promise<CropListing[]> {
 /** Load only the current authenticated farmer's database listings. */
 export async function getMyListings(): Promise<CropListing[]> {
   const response = await api.get<CropListing[]>('/listings/mine');
+  return response.data;
+}
+
+/** Load only the three listing previews rendered by the dashboard widget. */
+export async function getMyRecentListings(signal?: AbortSignal): Promise<RecentListingPreview[]> {
+  const response = await api.get<RecentListingPreview[]>('/listings/mine/recent', { signal });
+  return response.data;
+}
+
+/** Load one bounded page of owned listings and their aggregate status counts. */
+export async function getMyListingsPage(
+  query: MyListingsPageQuery,
+  signal?: AbortSignal,
+): Promise<MyListingsPageResponse> {
+  const response = await api.get<MyListingsPageResponse>('/listings/mine/management', {
+    signal,
+    params: {
+      page: query.page,
+      limit: query.limit,
+      ...(query.status ? { status: query.status } : {}),
+      ...(query.search?.trim() ? { search: query.search.trim() } : {}),
+    },
+  });
   return response.data;
 }
 
@@ -140,8 +217,10 @@ export interface NearbyListingsParams {
  */
 export async function getNearbyListings(
   params: NearbyListingsParams = {},
+  signal?: AbortSignal,
 ): Promise<ListingsResponse> {
   const response = await api.get<ListingsResponse>('/listings/nearby', {
+    signal,
     params: {
       radius: params.radius ?? 10,
 

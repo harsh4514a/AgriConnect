@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { AdaptiveLink as Link } from '@/components/performance/adaptive-link';
 import { useParams } from 'next/navigation';
 import { ArrowRight, MapPin, Package, ShieldCheck } from 'lucide-react';
 import type { BuyerRequirement } from '@/services/api/buyer-requirements.api';
@@ -60,14 +60,14 @@ export function BuyerRequirementCard({
   const location = formatLocation(requirement, locale);
 
   return (
-    <article className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <article className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-base font-bold text-slate-900">
+          <h2 className="text-base font-bold text-foreground">
             {cropLabel(requirement, cropLabels, locale)}
           </h2>
 
-          <div className="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
+          <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
             <Package className="h-4 w-4 shrink-0" />
             <span>
               {formatQuantity(requirement.quantity)} {getLocalizedDomainName(requirement.unit, locale, 'unit')}
@@ -75,14 +75,14 @@ export function BuyerRequirementCard({
           </div>
 
           {requirement.variety ? (
-            <p className="mt-1 text-xs font-medium text-slate-500">
+            <p className="mt-1 text-xs font-medium text-muted-foreground">
               {labels.variety}: {getLocalizedDomainName(requirement.variety, locale, 'variety')}
             </p>
           ) : null}
         </div>
 
         {requirement.postedBy?.isVerified ? (
-          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700">
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent-soft px-2 py-1 text-[11px] font-semibold text-accent">
             <ShieldCheck className="h-3.5 w-3.5" />
             {labels.verifiedBuyer}
           </span>
@@ -90,13 +90,13 @@ export function BuyerRequirementCard({
       </div>
 
       <div className="mt-4 space-y-3">
-        <p className="flex items-start gap-1.5 text-sm text-slate-600">
+        <p className="flex items-start gap-1.5 text-sm text-muted-foreground">
           <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{location}</span>
         </p>
 
         {requirement.additionalRequirements ? (
-          <p className="line-clamp-2 text-sm leading-5 text-slate-600">
+          <p className="line-clamp-2 text-sm leading-5 text-muted-foreground">
             {requirement.additionalRequirements}
           </p>
         ) : null}
@@ -104,14 +104,15 @@ export function BuyerRequirementCard({
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-5">
         <div className="min-w-0">
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate text-xs text-muted-foreground">
             {labels.buyer}: {buyerName}
           </p>
         </div>
 
         <Link
           href={`/${locale}/dashboard/buyer-requirements/${requirement.id}`}
-          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700"
+          prefetch={false}
+          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-accent px-3.5 py-2 text-xs font-semibold text-accent-foreground transition hover:bg-accent-strong"
         >
           {labels.view}
           <ArrowRight className="h-3.5 w-3.5" />

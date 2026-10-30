@@ -48,12 +48,12 @@ function OptionRow({
       className={cn(
         'flex min-h-12 w-full items-center justify-between gap-2 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all active:scale-[0.99]',
         active
-          ? 'border-green-400/60 bg-green-500/15 text-green-200'
-          : 'border-white/10 bg-white/5 text-white/80 hover:bg-white/10',
+          ? 'border-accent/40 bg-accent-soft text-accent'
+          : 'border-border bg-surface-subtle text-foreground hover:bg-surface-subtle',
       )}
     >
       <span>{children}</span>
-      {active && <Check className="h-4 w-4 shrink-0 text-green-300" />}
+      {active && <Check className="h-4 w-4 shrink-0 text-accent" />}
     </button>
   );
 }
@@ -76,7 +76,7 @@ function SheetSelect({
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className="text-[11px] font-semibold uppercase tracking-wide text-white/40"
+        className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
       >
         {label}
       </label>
@@ -84,7 +84,7 @@ function SheetSelect({
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-12 w-full rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-white outline-none transition-colors focus:border-green-400/50"
+        className="h-12 w-full rounded-xl border border-border bg-surface-subtle px-3 text-sm text-foreground outline-none transition-colors focus:border-focus/50"
       >
         {children}
       </select>
@@ -158,11 +158,11 @@ export function MarketplaceFilterSheet({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-50 max-h-[85vh] w-full overflow-y-auto rounded-t-3xl border border-white/10 bg-[#0b2414] p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-3xl"
+            className="relative z-50 max-h-[85vh] w-full overflow-y-auto rounded-t-3xl border border-border bg-surface p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-3xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">
+              <h2 className="text-lg font-bold text-foreground">
                 {mode === 'filters'
                   ? t('dashboard.marketplaceBrowse.ux.filter')
                   : t('dashboard.marketplaceBrowse.ux.sort')}
@@ -171,7 +171,7 @@ export function MarketplaceFilterSheet({
                 type="button"
                 onClick={onClose}
                 aria-label={t('dashboard.marketplaceBrowse.ux.closeFilters')}
-                className="flex h-11 w-11 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-surface-subtle hover:text-foreground"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -284,8 +284,8 @@ export function MarketplaceFilterSheet({
                   className={cn(
                     'flex min-h-12 w-full items-center justify-between gap-2 rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all active:scale-[0.99]',
                     filters.verifiedOnly
-                      ? 'border-green-400/60 bg-green-500/15 text-green-200'
-                      : 'border-white/10 bg-white/5 text-white/80 hover:bg-white/10',
+                      ? 'border-accent/40 bg-accent-soft text-accent'
+                      : 'border-border bg-surface-subtle text-foreground hover:bg-surface-subtle',
                   )}
                 >
                   <span>{t('dashboard.marketplaceBrowse.ux.verifiedFarmersOnly')}</span>
@@ -294,10 +294,10 @@ export function MarketplaceFilterSheet({
                       'flex h-6 w-11 items-center rounded-full p-0.5 transition-colors',
                       filters.verifiedOnly
                         ? 'bg-green-500/40 justify-end'
-                        : 'bg-white/15 justify-start',
+                        : 'bg-surface-subtle justify-start',
                     )}
                   >
-                    <span className="h-5 w-5 rounded-full bg-white" />
+                    <span className="h-5 w-5 rounded-full bg-surface" />
                   </span>
                 </button>
 
@@ -306,18 +306,14 @@ export function MarketplaceFilterSheet({
                   <button
                     type="button"
                     onClick={() => onChange(DEFAULT_FILTERS)}
-                    className="inline-flex h-12 flex-1 items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm font-semibold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                    className="inline-flex h-12 flex-1 items-center justify-center rounded-full border border-border bg-surface-subtle text-sm font-semibold text-foreground transition-colors hover:bg-surface-subtle hover:text-foreground"
                   >
                     {t('dashboard.marketplaceBrowse.ux.clearFilters')}
                   </button>
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex h-12 flex-1 items-center justify-center rounded-full text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
-                    style={{
-                      background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                      boxShadow: '0 4px 14px rgba(46,125,50,0.3)',
-                    }}
+                    className="inline-flex h-12 flex-1 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-strong"
                   >
                     {t('dashboard.marketplaceBrowse.ux.applyFilters')}
                   </button>

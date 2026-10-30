@@ -231,10 +231,10 @@
 //           );
 //         }
 //       }}
-//       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.045] shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/20 hover:bg-white/[0.065] hover:shadow-[0_18px_45px_rgba(0,0,0,0.14)] focus-visible:outline-2 focus-visible:outline-green-400"
+//       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-surface/[0.045] shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/20 hover:bg-surface/[0.065] hover:shadow-[0_18px_45px_rgba(0,0,0,0.14)] focus-visible:outline-2 focus-visible:outline-focus"
 //     >
 //       {/* IMAGE */}
-//       <div className="relative aspect-[16/9] overflow-hidden bg-white/[0.04]">
+//       <div className="relative aspect-[16/9] overflow-hidden bg-surface/[0.04]">
 //         {/* eslint-disable-next-line @next/next/no-img-element */}
 //         <img
 //           src={listing.image}
@@ -248,7 +248,7 @@
 //         {/* VERIFIED */}
 //         {listing.verified && (
 //           <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-green-950/75 px-2.5 py-1 text-[10px] font-semibold text-green-100 backdrop-blur-md">
-//             <BadgeCheck className="h-3 w-3 text-green-300" />
+//             <BadgeCheck className="h-3 w-3 text-accent" />
 
 //             {t(
 //               'dashboard.marketplaceBrowse.ux.verifiedFarmer',
@@ -258,7 +258,7 @@
 
 //         {/* DISTANCE */}
 //         <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/35 px-2.5 py-1 text-[10px] font-bold text-white backdrop-blur-md">
-//           <Navigation className="h-3 w-3 text-emerald-300" />
+//           <Navigation className="h-3 w-3 text-accent" />
 
 //           {distanceKm < 1
 //             ? '<1'
@@ -292,7 +292,7 @@
 
 //           {listing.availability ===
 //             'available' && (
-//             <span className="shrink-0 rounded-full bg-emerald-400/10 px-2 py-1 text-[10px] font-semibold text-emerald-300">
+//             <span className="shrink-0 rounded-full bg-accent-soft px-2 py-1 text-[10px] font-semibold text-accent">
 //               {t(
 //                 'dashboard.marketplaceBrowse.ux.available',
 //               )}
@@ -302,7 +302,7 @@
 
 //         {/* PRICE */}
 //         <div className="mt-3 flex items-end gap-1.5">
-//           <span className="text-2xl font-extrabold leading-none text-emerald-300">
+//           <span className="text-2xl font-extrabold leading-none text-accent">
 //             ₹
 //             {formatNumber(
 //               listing.price,
@@ -328,7 +328,7 @@
 
 //         {/* SMALL STATS */}
 //         <div className="mt-4 grid grid-cols-2 gap-2">
-//           <div className="rounded-xl bg-white/[0.025] p-3">
+//           <div className="rounded-xl bg-surface/[0.025] p-3">
 //             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-white/35">
 //               <Package className="h-3 w-3" />
 
@@ -347,7 +347,7 @@
 //             </p>
 //           </div>
 
-//           <div className="rounded-xl bg-white/[0.025] p-3">
+//           <div className="rounded-xl bg-surface/[0.025] p-3">
 //             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-white/35">
 //               <Clock3 className="h-3 w-3" />
 
@@ -368,7 +368,7 @@
 //         {/* LOCATION + FARMER */}
 //         <div className="mt-3 space-y-1.5 text-xs text-white/55">
 //           <p className="flex min-w-0 items-center gap-2">
-//             <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-300" />
+//             <MapPin className="h-3.5 w-3.5 shrink-0 text-accent" />
 
 //             <span className="truncate">
 //               {location}
@@ -376,7 +376,7 @@
 //           </p>
 
 //           <p className="flex min-w-0 items-center gap-2">
-//             <UserRound className="h-3.5 w-3.5 shrink-0 text-emerald-300" />
+//             <UserRound className="h-3.5 w-3.5 shrink-0 text-accent" />
 
 //             <span className="truncate">
 //               {listing.farmerName}
@@ -396,7 +396,7 @@
 //               listing,
 //             );
 //           }}
-//           className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white shadow-[0_5px_16px_rgba(46,125,50,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(46,125,50,0.32)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+//           className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white shadow-[0_5px_16px_rgba(46,125,50,0.24)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(46,125,50,0.32)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
 //         >
 //           {t(
 //             'dashboard.marketplaceBrowse.ux.viewDetails',
@@ -419,8 +419,10 @@ import {
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { CropListing } from '@/data/marketplace-listings';
+import { formatListingCreatedAt } from '@/utils/listing-date';
 import { cn } from '@/utils/cn';
 import { getLocalizedDomainName } from '@agri/domain-data';
+import { OptimizedListingImage } from './optimized-listing-image';
 
 interface NearbyListingCardProps {
     listing: CropListing;
@@ -441,31 +443,6 @@ function formatDistance(distanceKm: number): string {
     if (distanceKm < 1) return '<1 km';
     if (distanceKm < 10) return `${distanceKm.toFixed(1)} km`;
     return `${Math.round(distanceKm)} km`;
-}
-
-function formatPosted(
-    hoursAgo: number,
-    t: (key: string) => string,
-): string {
-    if (hoursAgo < 1) {
-        return t('dashboard.marketplaceBrowse.ux.postedToday');
-    }
-
-    if (hoursAgo < 24) {
-        return `${hoursAgo} ${t(
-            'dashboard.marketplaceBrowse.ux.postedHours',
-        )}`;
-    }
-
-    const days = Math.floor(hoursAgo / 24);
-
-    if (days === 1) {
-        return t('dashboard.marketplaceBrowse.ux.postedYesterday');
-    }
-
-    return `${days} ${t(
-        'dashboard.marketplaceBrowse.ux.postedDays',
-    )}`;
 }
 
 function toQuintals(listing: CropListing): number {
@@ -516,6 +493,8 @@ export function NearbyListingCard({
 }: NearbyListingCardProps) {
     const t = useTranslations();
     const locale = useLocale();
+    const farmerName = listing.farmerName?.trim() || listing.farmerNameShort?.trim();
+    const postedAt = formatListingCreatedAt(listing.createdAt, locale);
 
     const cropSource = listing.customCropName || listing.cropKey;
     const cropLabel = listing.cropKey === 'other' && !listing.customCropName
@@ -539,22 +518,23 @@ export function NearbyListingCard({
                 delay: Math.min(index, 8) * 0.035,
                 duration: 0.25,
             }}
-            className="group flex w-full max-w-[320px] min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#123d24]/75 shadow-[0_8px_28px_rgba(0,0,0,0.10)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/20 hover:bg-[#16482a] hover:shadow-[0_12px_32px_rgba(0,0,0,0.16)]"
+            className="group flex w-full max-w-[320px] min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface-raised hover:shadow-md"
         >
             {/* IMAGE */}
             <button
                 type="button"
                 onClick={() => onViewDetails(listing)}
-                className="relative block aspect-[16/9] w-full overflow-hidden bg-[#e9d98a] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-inset"
+                className="relative block aspect-[16/9] w-full overflow-hidden bg-amber-100 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-inset"
                 aria-label={`${cropLabel} - ${t(
                     'dashboard.marketplaceBrowse.ux.viewDetails',
                 )}`}
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <OptimizedListingImage
                     src={listing.image}
                     alt={listing.imageAlt}
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 320px"
+                    priority={index === 0}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                 />
 
@@ -562,7 +542,7 @@ export function NearbyListingCard({
 
                 {/* VERIFIED */}
                 {listing.verified && (
-                    <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/10 bg-[#1c542f]/90 px-2 py-1 text-[10px] font-semibold text-emerald-100 shadow-sm backdrop-blur-md">
+                    <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/15 bg-green-900/90 px-2 py-1 text-[10px] font-semibold text-white shadow-sm backdrop-blur-md">
                         <BadgeCheck
                             className="h-3 w-3"
                             aria-hidden="true"
@@ -574,7 +554,7 @@ export function NearbyListingCard({
                 )}
 
                 {/* DISTANCE */}
-                <span className="absolute right-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-white/10 bg-black/35 px-2 py-1 text-[10px] font-semibold text-white shadow-sm backdrop-blur-md">
+                <span className="absolute right-2.5 top-2.5 inline-flex items-center gap-1 rounded-full border border-border bg-black/35 px-2 py-1 text-[10px] font-semibold text-foreground shadow-sm backdrop-blur-md">
                     <Navigation
                         className="h-3 w-3"
                         aria-hidden="true"
@@ -587,19 +567,19 @@ export function NearbyListingCard({
             <div className="flex flex-1 flex-col p-3.5">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                        <h2 className="truncate text-[17px] font-bold leading-tight text-white">
+                        <h2 className="truncate text-[17px] font-bold leading-tight text-foreground">
                             {cropLabel}
                         </h2>
 
                         {listing.variety && (
-                            <p className="mt-0.5 truncate text-[11px] text-white/45">
+                            <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                                 {getLocalizedDomainName(listing.variety, locale, 'variety')}
                             </p>
                         )}
                     </div>
 
                     {listing.availability === 'available' && (
-                        <span className="shrink-0 rounded-full bg-emerald-400/10 px-2 py-1 text-[9px] font-semibold text-emerald-300">
+                        <span className="shrink-0 rounded-full bg-accent-soft px-2 py-1 text-[9px] font-semibold text-accent">
                             {t(
                                 'dashboard.marketplaceBrowse.ux.available',
                             )}
@@ -609,17 +589,17 @@ export function NearbyListingCard({
 
                 {/* SELLER PRICE */}
                 <div className="mt-2 flex items-baseline gap-1.5">
-                    <span className="text-[23px] font-extrabold leading-none tracking-tight text-emerald-300">
+                    <span className="text-[23px] font-extrabold leading-none tracking-tight text-accent">
                         {formatPrice(listing.price)}
                     </span>
 
-                    <span className="text-[11px] font-medium text-white/45">
+                    <span className="text-[11px] font-medium text-muted-foreground">
                         /{getLocalizedDomainName(listing.primaryUnit, locale, 'unit')}
                     </span>
                 </div>
 
                 {/* MARKET PRICE - SAME UNIT */}
-                <div className="mt-1 flex items-center gap-1.5 text-[11px] text-white/45">
+                <div className="mt-1 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                     <span>
                         {t(
                             'dashboard.marketplaceBrowse.ux.marketPrice',
@@ -630,8 +610,8 @@ export function NearbyListingCard({
                     <span
                         className={cn(
                             isBestPrice
-                                ? 'text-emerald-300/80'
-                                : 'text-white/60',
+                                ? 'text-accent/80'
+                                : 'text-muted-foreground',
                         )}
                     >
                         {formatPrice(marketPrice)} /{' '}
@@ -640,8 +620,8 @@ export function NearbyListingCard({
                 </div>
 
                 {/* QUANTITY + LOCATION */}
-                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-white/60">
-                    <span className="font-semibold text-white/80">
+                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground">
+                    <span className="font-semibold text-foreground">
                         {quintals}{' '}
                         {t(
                             'dashboard.marketplaceBrowse.ux.quintals',
@@ -650,47 +630,44 @@ export function NearbyListingCard({
 
                     <span className="inline-flex min-w-0 items-center gap-1">
                         <MapPin
-                            className="h-3 w-3 shrink-0 text-emerald-300/80"
+                            className="h-3 w-3 shrink-0 text-accent/80"
                             aria-hidden="true"
                         />
 
                         <span className="truncate">
-                            {getLocalizedDomainName(listing.village, locale, 'village')}, {districtLabel}
+                            {[listing.village ? getLocalizedDomainName(listing.village, locale, 'village') : '', districtLabel].filter(Boolean).join(', ')}
                         </span>
                     </span>
                 </div>
 
                 {/* FARMER + POSTED */}
-                <div className="mt-1.5 flex items-center gap-3 text-[10px] text-white/40">
-                    <span className="inline-flex min-w-0 items-center gap-1 truncate">
+                <div className="mt-1.5 space-y-1 text-[10px] text-accent-foreground">
+                    {farmerName ? <span className="inline-flex min-w-0 items-start gap-1">
                         <UserRound
                             className="h-3 w-3 shrink-0"
                             aria-hidden="true"
                         />
 
-                        <span className="truncate">
-                            {listing.farmerNameShort}
+                        <span className="min-w-0 break-words">
+                            {farmerName}
                         </span>
-                    </span>
+                    </span> : null}
 
-                    <span className="inline-flex shrink-0 items-center gap-1">
+                    {postedAt ? <time dateTime={postedAt.iso} className="inline-flex items-center gap-1 text-muted-foreground">
                         <Clock3
                             className="h-3 w-3"
                             aria-hidden="true"
                         />
 
-                        {formatPosted(
-                            listing.postedHoursAgo,
-                            t,
-                        )}
-                    </span>
+                        {t('dashboard.marketplaceBrowse.ux.postedAt', { date: postedAt.label })}
+                    </time> : null}
                 </div>
 
                 {/* DETAILS */}
                 <button
                     type="button"
                     onClick={() => onViewDetails(listing)}
-                    className="mt-3 h-9 w-full rounded-xl bg-emerald-500/90 px-3 text-xs font-bold text-white transition-colors hover:bg-emerald-500 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#123d24]"
+                    className="mt-auto flex h-9 w-full items-center justify-center rounded-xl bg-accent px-3 text-xs font-bold text-accent-foreground transition-colors hover:bg-accent-strong active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                 >
                     {t(
                         'dashboard.marketplaceBrowse.ux.viewDetails',

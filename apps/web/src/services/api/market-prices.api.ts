@@ -126,18 +126,19 @@ export interface MarketPriceBrowseQuery {
 
 export async function getMarketPrices(
   query: MarketPriceQuery = {},
+  signal?: AbortSignal,
 ): Promise<MarketPriceListResponse> {
-  const { data } = await api.get<MarketPriceListResponse>('/market-prices', { params: query });
+  const { data } = await api.get<MarketPriceListResponse>('/market-prices', { params: query, signal });
   return data;
 }
 
-export async function getMarketPriceFilters(): Promise<MarketPriceFiltersResponse> {
-  const { data } = await api.get<MarketPriceFiltersResponse>('/market-prices/filters');
+export async function getMarketPriceFilters(signal?: AbortSignal): Promise<MarketPriceFiltersResponse> {
+  const { data } = await api.get<MarketPriceFiltersResponse>('/market-prices/filters', { signal });
   return data;
 }
 
-export async function getMarketPriceRegions(): Promise<MarketPriceRegion[]> {
-  const { data } = await api.get<MarketPriceRegion[]>('/market-prices/regions');
+export async function getMarketPriceRegions(signal?: AbortSignal): Promise<MarketPriceRegion[]> {
+  const { data } = await api.get<MarketPriceRegion[]>('/market-prices/regions', { signal });
   return data;
 }
 
@@ -148,6 +149,7 @@ export async function getMarketYardsByRegion(
     limit?: number;
     search?: string;
   } = {},
+  signal?: AbortSignal,
 ): Promise<MarketPriceMarketListResponse> {
   const params = new URLSearchParams();
 
@@ -163,6 +165,7 @@ export async function getMarketYardsByRegion(
   return api
     .get<MarketPriceMarketListResponse>(
       `/market-prices/regions/${encodedRegion}/markets?${params.toString()}`,
+      { signal },
     )
     .then((response) => response.data);
 }
@@ -170,17 +173,22 @@ export async function getMarketYardsByRegion(
 export async function getMarketYardPrices(
   market: string,
   query: MarketPriceBrowseQuery = {},
+  signal?: AbortSignal,
 ): Promise<MarketPriceMarketCropListResponse> {
   const { data } = await api.get<MarketPriceMarketCropListResponse>(
     `/market-prices/markets/${encodeURIComponent(market)}/prices`,
-    { params: query },
+    { params: query, signal },
   );
   return data;
 }
 
-export async function getMarketPriceCrops(search?: string): Promise<MarketPriceCropListResponse> {
+export async function getMarketPriceCrops(
+  search?: string,
+  signal?: AbortSignal,
+): Promise<MarketPriceCropListResponse> {
   const { data } = await api.get<MarketPriceCropListResponse>('/market-prices/crops', {
     params: search ? { search } : undefined,
+    signal,
   });
   return data;
 }
@@ -188,10 +196,11 @@ export async function getMarketPriceCrops(search?: string): Promise<MarketPriceC
 export async function getCropMarketComparison(
   commodity: string,
   query: MarketPriceBrowseQuery = {},
+  signal?: AbortSignal,
 ): Promise<MarketPriceCropMarketComparisonResponse> {
   const { data } = await api.get<MarketPriceCropMarketComparisonResponse>(
     `/market-prices/crops/${encodeURIComponent(commodity)}/compare`,
-    { params: query },
+    { params: query, signal },
   );
 
   return data;

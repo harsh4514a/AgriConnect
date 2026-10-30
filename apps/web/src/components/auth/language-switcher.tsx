@@ -1,15 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import { Globe, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useLocale, useSetLocale } from '@/i18n/locale-provider';
 import { type Locale } from '@/i18n/config';
-import { api } from '@/services/api/axios';
 import { hasUsableSession } from '@/services/api/token';
-import { updateCachedUserLanguage } from '@/lib/auth/session';
 
 interface LanguageOption {
   code: Locale;
@@ -23,12 +20,11 @@ const LANGUAGES: LanguageOption[] = [
   { code: 'hi', label: 'Hindi', native: 'हिन्दी' },
 ];
 
-export function LanguageSwitcher({ className }: { className?: string }) {
+export function LanguageSwitcher({ className, compact = false }: { className?: string; compact?: boolean }) {
   const locale = useLocale();
   const setLocale = useSetLocale();
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = async (lang: LanguageOption) => {
     const previousLocale = locale;
@@ -41,18 +37,21 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     if (!hasUsableSession()) return;
 
     try {
+      const [{ api }, { updateCachedUserLanguage }] = await Promise.all([
+        import('@/services/api/axios'),
+        import('@/lib/auth/session'),
+      ]);
       await api.patch('/auth/profile/language', { preferredLanguage: lang.code });
       // Keep the cached user snapshot in sync so the dashboard reflects
       // the new language immediately (not just on next login).
       updateCachedUserLanguage(lang.code);
       toast.success(t('settings.languageUpdated'));
     } catch (error) {
-      // 401/403 = no valid session — the user simply isn't logged in.
-      // This is NOT an error in the language switch; just skip silently.
+      // A missing session is expected when a login has expired.
       const status = (error as { status?: number }).status;
       if (status === 401 || status === 403) return;
 
-      // Any other failure: roll back so the UI stays synced with the server.
+      // Keep the selected locale in sync if the server update fails.
       setLocale(previousLocale);
       toast.error(t('settings.failedToUpdate'));
     }
@@ -61,27 +60,25 @@ export function LanguageSwitcher({ className }: { className?: string }) {
   const current = LANGUAGES.find((l) => l.code === locale) || LANGUAGES[0];
 
   return (
-    <div className={`relative ${className ?? ''}`} ref={menuRef}>
+    <div className={`relative ${className ?? ''}`}>
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 backdrop-blur-sm"
+        className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-surface px-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
         aria-label={t('nav.selectLanguage')}
         aria-expanded={isOpen}
+        aria-haspopup="menu"
       >
-        <Globe className="h-4 w-4 text-black" />
-        <span className="text-black">{current.native}</span>
+        <Globe className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+        <span>{compact ? current.code.toUpperCase() : current.native}</span>
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
+      {isOpen && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, y: -6, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.95 }}
-              transition={{ duration: 0.12, ease: 'easeOut' }}
-              className="absolute right-0 top-full mt-2 w-44 rounded-2xl bg-white/90 backdrop-blur-2xl shadow-xl shadow-black/10 border border-white/20 overflow-hidden z-50"
+            <div
+              className="animate-navbar-drop-in motion-reduce:animate-none absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-xl border border-border bg-surface shadow-xl shadow-black/10"
+              role="menu"
             >
               {LANGUAGES.map((lang) => {
                 const isActive = current.code === lang.code;
@@ -89,25 +86,27 @@ export function LanguageSwitcher({ className }: { className?: string }) {
                   <button
                     key={lang.code}
                     onClick={() => handleSelect(lang)}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={isActive}
                     className={
-                      'w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ' +
+                      'flex min-h-11 w-full items-center justify-between px-3.5 text-sm transition-colors' +
                       (isActive
-                        ? 'text-emerald-700 font-medium bg-emerald-50/50'
-                        : 'text-gray-600 hover:bg-white/80')
+                        ? 'bg-accent-soft font-medium text-accent-strong'
+                        : 'text-foreground hover:bg-surface-subtle')
                     }
                   >
                     <span>{lang.native}</span>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] text-gray-400">{lang.label}</span>
-                      {isActive && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                      <span className="text-[11px] text-muted-foreground">{lang.label}</span>
+                      {isActive && <Check className="h-3.5 w-3.5 text-accent" aria-hidden="true" />}
                     </div>
                   </button>
                 );
               })}
-            </motion.div>
+            </div>
           </>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   );
 }

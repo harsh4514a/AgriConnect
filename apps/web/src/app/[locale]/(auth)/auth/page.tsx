@@ -1,21 +1,32 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Shield, TrendingUp, Users } from 'lucide-react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { LanguageSwitcher } from '@/components/auth/language-switcher';
+import { Navbar } from '@/components/home/navbar';
+import { Footer } from '@/components/home/footer';
 import { MobileNumberForm } from '@/components/auth/mobile-number-form';
-import { OtpVerificationForm } from '@/components/auth/otp-verification-form';
-import { NameStep } from '@/components/auth/steps/name-step';
-import { ManualLocationStep } from '@/components/auth/steps/manual-location-step';
-import { AuthStepRenderer } from '@/components/auth/auth-step-renderer';
 import { useLocale } from '@/i18n/locale-provider';
 import { cacheUser, getCachedUser } from '@/lib/auth/session';
 import { AuthStep, AuthData, INITIAL_AUTH_DATA } from '@/types/auth-steps.types';
 import type { AuthUser } from '@/types/auth.types';
+
+const OtpVerificationForm = dynamic(
+  () => import('@/components/auth/otp-verification-form').then((module) => module.OtpVerificationForm),
+  { loading: () => <div className="min-h-64" aria-busy="true" /> },
+);
+const AuthStepRenderer = dynamic(
+  () => import('@/components/auth/auth-step-renderer').then((module) => module.AuthStepRenderer),
+  { loading: () => <div className="min-h-64" aria-busy="true" /> },
+);
+const NameStep = dynamic(
+  () => import('@/components/auth/steps/name-step').then((module) => module.NameStep),
+);
+const ManualLocationStep = dynamic(
+  () => import('@/components/auth/steps/manual-location-step').then((module) => module.ManualLocationStep),
+);
 
 export default function AuthLoginPage() {
   const t = useTranslations();
@@ -107,65 +118,39 @@ export default function AuthLoginPage() {
     });
   }, []);
 
-  const features = [
-    { icon: Shield, title: t('auth.secureSafe'), desc: t('auth.secureSafeDesc'), bg: 'bg-emerald-400/20', color: 'text-emerald-300' },
-    { icon: TrendingUp, title: t('auth.fairTransparent'), desc: t('auth.fairTransparentDesc'), bg: 'bg-amber-400/20', color: 'text-amber-300' },
-    { icon: Users, title: t('auth.strongerTogether'), desc: t('auth.strongerTogetherDesc'), bg: 'bg-green-400/20', color: 'text-green-300' },
-  ];
-
   const onboardingSteps = [
     { key: 'name' as AuthStep, component: NameStep },
     { key: 'location' as AuthStep, component: ManualLocationStep },
   ];
-
-  const isOnboarding = ['name', 'location'].includes(step);
+  const sectionLabel = step === 'location'
+    ? t('manual.title')
+    : step === 'name'
+      ? t('name.title')
+      : step === 'otp'
+        ? t('otp.verifyTitle')
+        : t('auth.loginTitle');
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: 'url(/Background_Image.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        {/* Same green-tinted overlays as the home page hero */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-950/50 via-green-900/25 to-green-800/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-green-950/20 via-transparent to-green-950/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-green-950/10 via-transparent to-green-950/20" />
-      </div>
-      <div className="relative z-10 min-h-screen flex flex-col">
-        <header className="flex h-16 items-center">
-          <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-            <Link
-              href={`/${locale}`}
-              className="flex items-center gap-2.5"
-              aria-label="AgriConnect — Go to home page"
-            >
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{
-                  background: 'linear-gradient(135deg, #2E7D32, #1B5E20)',
-                  boxShadow: '0 4px 12px rgba(46,125,50,0.35)',
-                }}
-              >
-                <Sprout className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-black tracking-tight text-white">AgriConnect</span>
-            </Link>
-            <LanguageSwitcher className="[&_button]:text-gray-700 [&_button]:hover:bg-gray-100 [&_button]:hover:text-gray-900" />
-          </div>
-        </header>
+    <div className="flex min-h-screen flex-col bg-canvas text-foreground">
+        <Navbar variant="solid" />
 
-        {isOnboarding ? (
-          <div className="flex-1 flex items-center px-8 pl-8 sm:pl-16 lg:pl-24 xl:pl-32">
-            <div className="w-full max-w-[520px] py-12">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
-                <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse"></span>
-                <span className="text-xs font-semibold text-white/90">{t('auth.completeProfile')}</span>
-              </div>
+        <main className="flex flex-1 items-center justify-center px-4 py-6 sm:px-6 sm:py-8">
+          <section
+            className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-[0_18px_50px_rgba(20,55,38,0.10)] sm:p-8"
+            aria-label={sectionLabel}
+          >
+            <div className="mb-6 flex justify-center">
+              <Image
+                src="/logo.png"
+                alt="AgriConnect"
+                width={510}
+                height={170}
+                priority
+                className="h-12 w-[144px] object-contain sm:h-14 sm:w-[168px]"
+              />
+            </div>
+
+            {['name', 'location'].includes(step) ? (
               <AuthStepRenderer
                 currentStep={step}
                 steps={onboardingSteps}
@@ -174,79 +159,34 @@ export default function AuthLoginPage() {
                 onBack={handleStepBack}
                 onComplete={handleAuthComplete}
               />
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 flex items-center px-8 pl-8 sm:pl-16 lg:pl-24 xl:pl-32">
-            <div className="w-full max-w-[520px] py-12">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
-                <span className="w-2 h-2 rounded-full bg-green-300"></span>
-                <span className="text-xs font-semibold text-white/90">{t('auth.empowering')}</span>
-              </div>
-              <AnimatePresence mode="wait">
-                {step === 'mobile' ? (
-                  <motion.div
-                    key="mobile"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <h1 className="text-5xl font-extrabold leading-tight text-white tracking-tighter drop-shadow-sm">
-                      {t('auth.welcomeTo')} <span className="text-green-300">AgriConnect</span>
+            ) : (
+              step === 'mobile' ? (
+                  <div key="mobile">
+                    <h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
+                      {t('auth.loginTitle')}
                     </h1>
-                    <p className="mt-4 text-lg text-white/80 font-medium leading-relaxed">
-                      {t('auth.subtitle1')}
-                      <br />
-                      {t('auth.subtitle2')}
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground sm:text-base">
+                      {t('auth.loginDescription')}
                     </p>
-                    <div className="mt-8 max-w-[460px]">
-                      <MobileNumberForm hideLabel onSuccess={handleMobileSuccess} />
-                    </div>
-                    <div className="mt-10 grid grid-cols-3 gap-3">
-                      {features.map((f) => {
-                        const Icon = f.icon;
-                        return (
-                          <motion.div
-                            whileHover={{ y: -3 }}
-                            key={f.title}
-                            className="flex flex-col gap-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:bg-white/15 transition-all"
-                          >
-                            <div className={`w-10 h-10 rounded-xl ${f.bg} flex items-center justify-center`}>
-                              <Icon className={`h-5 w-5 ${f.color}`} />
-                            </div>
-                            <div>
-                              <p className="text-[12px] font-bold text-white leading-tight">{f.title}</p>
-                              <p className="text-[11px] text-white/70 mt-0.5 leading-snug">{f.desc}</p>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  </motion.div>
+                    <MobileNumberForm onSuccess={handleMobileSuccess} className="mt-6" />
+                    <p className="mt-4 text-center text-xs leading-5 text-muted-foreground">
+                      {t('auth.otpPrivacyNote')}
+                    </p>
+                  </div>
                 ) : (
-                  <motion.div
-                    key="otp"
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                  >
+                  <div key="otp">
                     <OtpVerificationForm
                       mobileNumber={authData.mobileNumber || ''}
                       onBack={handleBackToMobile}
                       onSuccess={handleOtpSuccess}
                     />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        )}
+                  </div>
+                )
+            )}
+          </section>
+        </main>
 
-        <div className="px-8 pb-8">
-          <p className="text-sm text-white/50 text-center font-medium">
-            &copy; 2026 AgriConnect. {t('common.allRightsReserved')}
-          </p>
-        </div>
-      </div>
+        <Footer compact />
     </div>
   );
 }

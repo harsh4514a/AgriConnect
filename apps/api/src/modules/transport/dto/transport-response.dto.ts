@@ -18,8 +18,8 @@ export class TransportProviderResponseDto {
   @ApiPropertyOptional()
   contactName?: string;
 
-  @ApiProperty()
-  phoneNumber!: string;
+  @ApiPropertyOptional({ description: 'Returned to signed-in users only.' })
+  phoneNumber?: string;
 
   @ApiProperty()
   vehicleType!: string;
@@ -33,16 +33,16 @@ export class TransportProviderResponseDto {
   @ApiProperty()
   district!: TransportLocationDto;
 
-  @ApiProperty()
-  taluka!: TransportLocationDto | null;
+  @ApiPropertyOptional({ description: 'Returned to signed-in users only.' })
+  taluka?: TransportLocationDto | null;
 
-  @ApiProperty()
-  village!: TransportLocationDto | null;
+  @ApiPropertyOptional({ description: 'Returned to signed-in users only.' })
+  village?: TransportLocationDto | null;
 
-  @ApiPropertyOptional({ nullable: true })
+  @ApiPropertyOptional({ nullable: true, description: 'Returned to signed-in users only.' })
   latitude?: number | null;
 
-  @ApiPropertyOptional({ nullable: true })
+  @ApiPropertyOptional({ nullable: true, description: 'Returned to signed-in users only.' })
   longitude?: number | null;
 
   @ApiProperty()

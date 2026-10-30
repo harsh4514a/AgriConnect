@@ -69,7 +69,7 @@
 //   return [village, taluka, district]
 //     .map((value) => value?.trim())
 //     .filter(Boolean)
-//     .join(', ');
+//     .join(',');
 // }
 
 // export function BuyerRequirementForm({
@@ -338,7 +338,7 @@
 //   };
 
 //   const inputClass = (key?: string) =>
-//     `mt-1 h-11 w-full rounded-xl border bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${
+//     `mt-1 h-11 w-full rounded-xl border bg-surface px-3 text-sm text-slate-900 outline-none transition focus:border-focus focus:ring-2 focus:ring-focus ${
 //       key && errors[key] ? 'border-red-400' : 'border-slate-200'
 //     }`;
 
@@ -356,9 +356,9 @@
 //           {t('form.back')}
 //         </button>
 
-//         <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+//         <div className="rounded-3xl border border-slate-200 bg-surface p-4 shadow-sm sm:p-6">
 //           <div className="flex items-start gap-3">
-//             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+//             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-accent">
 //               <Check className="h-5 w-5" />
 //             </div>
 
@@ -432,7 +432,7 @@
 //           <button
 //             disabled={submitting}
 //             onClick={() => void publish()}
-//             className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+//             className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
 //           >
 //             {submitting ? (
 //               <>
@@ -458,7 +458,7 @@
 //         {t('form.back')}
 //       </button>
 
-//       <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+//       <div className="rounded-3xl border border-slate-200 bg-surface p-4 shadow-sm sm:p-6">
 //         <h1 className="text-2xl font-bold text-slate-900">
 //           {t(mode === 'edit' ? 'form.editTitle' : 'form.title')}
 //         </h1>
@@ -566,7 +566,7 @@
 //             {!editingLocation && locationText ? (
 //               <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3">
 //                 <div className="flex items-start gap-3">
-//                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm">
+//                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-accent shadow-sm">
 //                     <MapPin className="h-5 w-5" />
 //                   </div>
 
@@ -582,7 +582,7 @@
 //                   <button
 //                     type="button"
 //                     onClick={() => setEditingLocation(true)}
-//                     className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+//                     className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-surface px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50"
 //                   >
 //                     <Edit3 className="h-3.5 w-3.5" />
 //                     {t('form.edit')}
@@ -680,7 +680,7 @@
 //                           setEditingLocation(false);
 //                         }
 //                       }}
-//                       className="min-h-10 rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-white"
+//                       className="min-h-10 rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-surface"
 //                     >
 //                       {t('form.done')}
 //                     </button>
@@ -696,7 +696,7 @@
 //                 {!editingContact && contactNumber ? (
 //                   <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3">
 //                     <div className="flex items-start gap-3">
-//                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-700 shadow-sm">
+//                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface text-accent shadow-sm">
 //                         <Phone className="h-4 w-4" />
 //                       </div>
 
@@ -712,7 +712,7 @@
 //                       <button
 //                         type="button"
 //                         onClick={() => setEditingContact(true)}
-//                         className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+//                         className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg border border-slate-200 bg-surface px-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
 //                       >
 //                         <Edit3 className="h-3.5 w-3.5" />
 //                         {t('form.edit')}
@@ -760,7 +760,7 @@
 //                             }));
 //                           }
 //                         }}
-//                         className="min-h-9 rounded-lg px-3 text-sm font-semibold text-emerald-700 hover:bg-white"
+//                         className="min-h-9 rounded-lg px-3 text-sm font-semibold text-accent hover:bg-surface"
 //                       >
 //                         {t('form.done')}
 //                       </button>
@@ -779,7 +779,7 @@
 //                       <button
 //                         type="button"
 //                         onClick={() => setShowNote(true)}
-//                         className="mt-1 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+//                         className="mt-1 text-sm font-semibold text-accent hover:text-accent"
 //                       >
 //                         + {t('form.addNote')}
 //                       </button>
@@ -797,7 +797,7 @@
 //                         maxLength={1000}
 //                         rows={3}
 //                         placeholder={t('form.notePlaceholder')}
-//                         className="mt-1 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-normal text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+//                         className="mt-1 w-full rounded-xl border border-slate-200 bg-surface p-3 text-sm font-normal text-slate-900 outline-none focus:border-focus focus:ring-2 focus:ring-focus"
 //                       />
 //                     </label>
 //                     <div className="mt-1 flex items-center justify-between">
@@ -825,7 +825,7 @@
 //           onClick={() => {
 //             if (validate()) setPreview(true);
 //           }}
-//           className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+//           className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent-strong"
 //         >
 //           {t('form.preview')}
 //         </button>
@@ -846,7 +846,7 @@
 //   return (
 //     <section className="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
 //       <div className="mb-3 flex items-center gap-3">
-//         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-700">
+//         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-accent">
 //           {number}
 //         </span>
 //         <h2 className="text-base font-bold text-slate-900">
@@ -868,7 +868,7 @@
 //   value: string;
 // }) {
 //   return (
-//     <div className="rounded-xl bg-white p-3 shadow-sm">
+//     <div className="rounded-xl bg-surface p-3 shadow-sm">
 //       <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
 //         {icon}
 //         {label}
@@ -882,7 +882,7 @@
 
 // function ErrorText({ text }: { text: string }) {
 //   return (
-//     <p className="mt-1 text-xs font-medium text-red-600">{text}</p>
+//     <p className="mt-1 text-xs font-medium text-danger">{text}</p>
 //   );
 // }
 
@@ -1288,8 +1288,8 @@ export function BuyerRequirementForm({
   };
 
   const inputClass = (key?: string) =>
-    `mt-1 h-11 w-full rounded-xl border bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 ${
-      key && errors[key] ? 'border-red-400' : 'border-slate-200'
+    `mt-1 h-11 w-full rounded-xl border bg-surface px-3 text-sm text-foreground outline-none transition focus:border-focus focus:ring-2 focus:ring-focus ${
+      key && errors[key] ? 'border-danger' : 'border-border'
     }`;
 
   const locationText = formatLocation(district, taluka, village);
@@ -1300,27 +1300,27 @@ export function BuyerRequirementForm({
       <div className="mx-auto w-full max-w-3xl px-4 py-5 sm:px-6">
         <button
           onClick={() => setPreview(false)}
-          className="mb-3 inline-flex min-h-9 items-center gap-2 text-sm font-semibold text-slate-600"
+          className="mb-3 inline-flex min-h-9 items-center gap-2 text-sm font-semibold text-muted-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('form.back')}
         </button>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="rounded-3xl border border-border bg-surface p-4 shadow-sm sm:p-6">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
               <Check className="h-5 w-5" />
             </div>
 
             <div>
-              <h1 className="text-xl font-bold text-slate-900">
+              <h1 className="text-xl font-bold text-foreground">
                 {t(
                   mode === 'edit'
                     ? 'form.editPreviewTitle'
                     : 'form.previewTitle',
                 )}
               </h1>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {t(
                   mode === 'edit'
                     ? 'form.editPreviewDescription'
@@ -1330,18 +1330,18 @@ export function BuyerRequirementForm({
             </div>
           </div>
 
-          <div className="mt-6 space-y-4 rounded-2xl bg-slate-50 p-5">
+          <div className="mt-6 space-y-4 rounded-2xl bg-surface-subtle p-5">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 {t('form.crop')}
               </p>
-              <p className="mt-1 text-lg font-bold text-slate-900">
+              <p className="mt-1 text-lg font-bold text-foreground">
                 {cropKey === 'other'
                   ? customCropName
                   : cropLabels[cropKey]}
               </p>
               {variety.trim() ? (
-                <p className="mt-1 text-sm font-medium text-slate-500">
+                <p className="mt-1 text-sm font-medium text-muted-foreground">
                   {t('form.variety')}: {variety.trim()}
                 </p>
               ) : null}
@@ -1368,11 +1368,11 @@ export function BuyerRequirementForm({
             </div>
 
             {additionalRequirements.trim() ? (
-              <div className="border-t border-slate-200 pt-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+              <div className="border-t border-border pt-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   {t('form.note')}
                 </p>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-foreground">
                   {additionalRequirements.trim()}
                 </p>
               </div>
@@ -1382,7 +1382,7 @@ export function BuyerRequirementForm({
           <button
             disabled={submitting}
             onClick={() => void publish()}
-            className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
               <>
@@ -1402,17 +1402,17 @@ export function BuyerRequirementForm({
     <div className="mx-auto w-full max-w-4xl px-3 py-3 sm:px-5">
       <button
         onClick={() => router.back()}
-        className="mb-3 inline-flex min-h-9 items-center gap-2 text-sm font-semibold text-slate-600"
+        className="mb-3 inline-flex min-h-9 items-center gap-2 text-sm font-semibold text-muted-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         {t('form.back')}
       </button>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
-        <h1 className="text-2xl font-bold text-slate-900">
+      <div className="rounded-3xl border border-border bg-surface p-4 shadow-sm sm:p-6">
+        <h1 className="text-2xl font-bold text-foreground">
           {t(mode === 'edit' ? 'form.editTitle' : 'form.title')}
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           {t(
             mode === 'edit'
               ? 'form.editDescription'
@@ -1423,7 +1423,7 @@ export function BuyerRequirementForm({
         <div className="mt-5 space-y-5">
           <FormSection number="1" title={t('form.need')}>
             <div className="grid gap-4 sm:grid-cols-[1.35fr_1fr]">
-              <label className="text-sm font-semibold text-slate-700">
+              <label className="text-sm font-semibold text-foreground">
                 {t('form.crop')}
                 <select
                   value={cropKey}
@@ -1442,7 +1442,7 @@ export function BuyerRequirementForm({
                 </select>
               </label>
 
-              <label className="text-sm font-semibold text-slate-700">
+              <label className="text-sm font-semibold text-foreground">
                 {t('form.variety')}
                 <input
                   value={variety}
@@ -1458,7 +1458,7 @@ export function BuyerRequirementForm({
             </div>
 
             {cropKey === 'other' ? (
-              <label className="mt-3 block text-sm font-semibold text-slate-700">
+              <label className="mt-3 block text-sm font-semibold text-foreground">
                 {t('form.customCrop')}
                 <input
                   value={customCropName}
@@ -1477,7 +1477,7 @@ export function BuyerRequirementForm({
 
           <FormSection number="2" title={t('form.amount')}>
             <div className="grid gap-4 sm:grid-cols-[1fr_180px]">
-              <label className="text-sm font-semibold text-slate-700">
+              <label className="text-sm font-semibold text-foreground">
                 {t('form.quantity')}
                 <input
                   type="number"
@@ -1495,7 +1495,7 @@ export function BuyerRequirementForm({
                 ) : null}
               </label>
 
-              <label className="text-sm font-semibold text-slate-700">
+              <label className="text-sm font-semibold text-foreground">
                 {t('form.unit')}
                 <select
                   value={unit}
@@ -1514,17 +1514,17 @@ export function BuyerRequirementForm({
 
           <FormSection number="3" title={t('form.location')}>
             {!editingLocation && locationText ? (
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3">
+              <div className="rounded-2xl border border-emerald-100 bg-accent-soft/60 p-3">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-accent shadow-sm">
                     <MapPin className="h-5 w-5" />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-foreground">
                       {locationText}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {t('form.profileLocationHint')}
                     </p>
                   </div>
@@ -1532,7 +1532,7 @@ export function BuyerRequirementForm({
                   <button
                     type="button"
                     onClick={() => setEditingLocation(true)}
-                    className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                    className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-xs font-semibold text-foreground hover:bg-surface-subtle"
                   >
                     <Edit3 className="h-3.5 w-3.5" />
                     {t('form.edit')}
@@ -1540,8 +1540,8 @@ export function BuyerRequirementForm({
                 </div>
               </div>
             ) : (
-              <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                <label className="block text-sm font-semibold text-slate-700">
+              <div className="space-y-3 rounded-2xl border border-border bg-surface-subtle p-3">
+                <label className="block text-sm font-semibold text-foreground">
                   {t('form.district')}
                   <select
                     value={findOption(districts, district)?.id ?? ''}
@@ -1565,7 +1565,7 @@ export function BuyerRequirementForm({
                 </label>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-foreground">
                     {t('form.taluka')}
                     <select
                       value={findOption(talukas, taluka)?.id ?? ''}
@@ -1589,7 +1589,7 @@ export function BuyerRequirementForm({
                     ) : null}
                   </label>
 
-                  <label className="text-sm font-semibold text-slate-700">
+                  <label className="text-sm font-semibold text-foreground">
                     {t('form.village')}
                     <select
                       value={findOption(villages, village)?.id ?? ''}
@@ -1624,7 +1624,7 @@ export function BuyerRequirementForm({
                           setEditingLocation(false);
                         }
                       }}
-                      className="min-h-10 rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-white"
+                      className="min-h-10 rounded-lg px-3 text-sm font-semibold text-muted-foreground hover:bg-surface"
                     >
                       {t('form.done')}
                     </button>
@@ -1638,17 +1638,17 @@ export function BuyerRequirementForm({
             <div className="grid gap-4 lg:grid-cols-[1fr_1.35fr]">
               <div>
                 {!editingContact && contactNumber ? (
-                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-3">
+                  <div className="rounded-2xl border border-emerald-100 bg-accent-soft/60 p-3">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-emerald-700 shadow-sm">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface text-accent shadow-sm">
                         <Phone className="h-4 w-4" />
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-slate-900">
+                        <p className="text-sm font-semibold text-foreground">
                           {contactNumber}
                         </p>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-muted-foreground">
                           {t('form.profileContactHint')}
                         </p>
                       </div>
@@ -1656,7 +1656,7 @@ export function BuyerRequirementForm({
                       <button
                         type="button"
                         onClick={() => setEditingContact(true)}
-                        className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-surface px-2.5 text-xs font-semibold text-foreground hover:bg-surface-subtle"
                       >
                         <Edit3 className="h-3.5 w-3.5" />
                         {t('form.edit')}
@@ -1664,8 +1664,8 @@ export function BuyerRequirementForm({
                     </div>
                   </div>
                 ) : (
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                    <label className="block text-sm font-semibold text-slate-700">
+                  <div className="rounded-2xl border border-border bg-surface-subtle p-3">
+                    <label className="block text-sm font-semibold text-foreground">
                       {t('form.contactNumber')}
                       <input
                         type="tel"
@@ -1704,7 +1704,7 @@ export function BuyerRequirementForm({
                             }));
                           }
                         }}
-                        className="min-h-9 rounded-lg px-3 text-sm font-semibold text-emerald-700 hover:bg-white"
+                        className="min-h-9 rounded-lg px-3 text-sm font-semibold text-accent hover:bg-surface"
                       >
                         {t('form.done')}
                       </button>
@@ -1715,15 +1715,15 @@ export function BuyerRequirementForm({
 
               <div>
                 {!showNote && !additionalRequirements ? (
-                  <div className="flex min-h-[92px] items-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-4">
+                  <div className="flex min-h-[92px] items-center rounded-2xl border border-dashed border-border bg-surface-subtle px-4">
                     <div>
-                      <p className="text-sm font-semibold text-slate-700">
-                        {t('form.note')} <span className="font-normal text-slate-400">({t('form.optional')})</span>
+                      <p className="text-sm font-semibold text-foreground">
+                        {t('form.note')} <span className="font-normal text-muted-foreground">({t('form.optional')})</span>
                       </p>
                       <button
                         type="button"
                         onClick={() => setShowNote(true)}
-                        className="mt-1 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                        className="mt-1 text-sm font-semibold text-accent hover:text-accent"
                       >
                         + {t('form.addNote')}
                       </button>
@@ -1731,8 +1731,8 @@ export function BuyerRequirementForm({
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700">
-                      {t('form.note')} <span className="font-normal text-slate-400">({t('form.optional')})</span>
+                    <label className="block text-sm font-semibold text-foreground">
+                      {t('form.note')} <span className="font-normal text-muted-foreground">({t('form.optional')})</span>
                       <textarea
                         value={additionalRequirements}
                         onChange={(event) =>
@@ -1741,18 +1741,18 @@ export function BuyerRequirementForm({
                         maxLength={1000}
                         rows={3}
                         placeholder={t('form.notePlaceholder')}
-                        className="mt-1 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm font-normal text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                        className="mt-1 w-full rounded-xl border border-border bg-surface p-3 text-sm font-normal text-foreground outline-none focus:border-focus focus:ring-2 focus:ring-focus"
                       />
                     </label>
                     <div className="mt-1 flex items-center justify-between">
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-muted-foreground">
                         {additionalRequirements.length}/1000
                       </span>
                       {additionalRequirements ? (
                         <button
                           type="button"
                           onClick={() => setAdditionalRequirements('')}
-                          className="text-xs font-semibold text-slate-500 hover:text-slate-700"
+                          className="text-xs font-semibold text-muted-foreground hover:text-foreground"
                         >
                           {t('form.clearNote')}
                         </button>
@@ -1769,7 +1769,7 @@ export function BuyerRequirementForm({
           onClick={() => {
             if (validate()) setPreview(true);
           }}
-          className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+          className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-accent-foreground shadow-sm hover:bg-accent-strong"
         >
           {t('form.preview')}
         </button>
@@ -1788,12 +1788,12 @@ function FormSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-b border-slate-100 pb-5 last:border-0 last:pb-0">
+    <section className="border-b border-border pb-5 last:border-0 last:pb-0">
       <div className="mb-3 flex items-center gap-3">
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-50 text-xs font-bold text-emerald-700">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-accent">
           {number}
         </span>
-        <h2 className="text-base font-bold text-slate-900">
+        <h2 className="text-base font-bold text-foreground">
           {title}
         </h2>
       </div>
@@ -1812,12 +1812,12 @@ function PreviewItem({
   value: string;
 }) {
   return (
-    <div className="rounded-xl bg-white p-3 shadow-sm">
-      <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+    <div className="rounded-xl bg-surface p-3 shadow-sm">
+      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
         {icon}
         {label}
       </div>
-      <p className="mt-1 text-sm font-semibold text-slate-800">
+      <p className="mt-1 text-sm font-semibold text-foreground">
         {value}
       </p>
     </div>
@@ -1826,6 +1826,6 @@ function PreviewItem({
 
 function ErrorText({ text }: { text: string }) {
   return (
-    <p className="mt-1 text-xs font-medium text-red-600">{text}</p>
+    <p className="mt-1 text-xs font-medium text-danger">{text}</p>
   );
 }

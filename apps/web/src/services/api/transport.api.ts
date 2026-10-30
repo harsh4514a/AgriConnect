@@ -21,7 +21,8 @@ export interface TransportProvider {
 
   contactName?: string | null;
 
-  phoneNumber: string;
+  /** Present only in signed-in responses. */
+  phoneNumber?: string;
 
   vehicleType: TransportVehicleType | string;
 
@@ -31,9 +32,9 @@ export interface TransportProvider {
 
   district: TransportLocation;
 
-  taluka: TransportLocation;
+  taluka?: TransportLocation | null;
 
-  village: TransportLocation;
+  village?: TransportLocation | null;
 
   latitude?: number | null;
 

@@ -520,10 +520,10 @@ export function TransportForm({
         onClick={() => !saving && onClose()}
       />
 
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-green-950 shadow-2xl sm:rounded-3xl">
-        <header className="flex items-center justify-between border-b border-white/10 px-5 py-4 sm:px-6">
+      <div className="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border border-border bg-surface shadow-2xl sm:rounded-3xl">
+        <header className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300/80">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               {step === 1
                 ? t('form.detailsStep')
                 : t('form.reviewStep')}
@@ -531,7 +531,7 @@ export function TransportForm({
 
             <h2
               id="transport-form-title"
-              className="mt-0.5 text-lg font-bold text-white"
+              className="mt-0.5 text-lg font-bold text-foreground"
             >
               {initial
                 ? t('form.editTitle')
@@ -543,7 +543,7 @@ export function TransportForm({
             type="button"
             onClick={onClose}
             disabled={saving}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white/60 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 disabled:opacity-40"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-surface-subtle text-muted-foreground hover:bg-surface-subtle hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus disabled:opacity-40"
             aria-label={t('form.close')}
           >
             <X
@@ -556,9 +556,9 @@ export function TransportForm({
         <div className="overflow-y-auto px-5 py-5 sm:px-6">
           {step === 1 ? (
             <div className="space-y-5">
-              <div className="rounded-2xl border border-emerald-300/10 bg-emerald-300/[0.04] p-4">
+              <div className="rounded-2xl border border-border bg-surface-subtle p-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-300">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
                     <Truck
                       className="h-5 w-5"
                       aria-hidden="true"
@@ -566,12 +566,12 @@ export function TransportForm({
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white">
+                    <p className="text-sm font-semibold text-foreground">
                       {providerName ||
                         t('form.profileName')}
                     </p>
 
-                    <p className="mt-1 text-xs leading-5 text-white/50">
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
                       {t(
                         'form.profilePrefillHint',
                       )}
@@ -630,7 +630,7 @@ export function TransportForm({
                       <option
                         key={type}
                         value={type}
-                        className="bg-green-950"
+                        className="bg-surface"
                       >
                         {t(
                           `vehicleTypes.${type}`,
@@ -702,7 +702,7 @@ export function TransportForm({
               >
                 <div className="relative">
                   <Phone
-                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35"
+                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                     aria-hidden="true"
                   />
 
@@ -720,16 +720,14 @@ export function TransportForm({
                         event.target.value,
                       );
                     }}
-                    className={`${inputClass(
-                      Boolean(errors.phoneNumber),
-                    )} pl-10`}
+                    className={`${inputClass( Boolean(errors.phoneNumber), )} pl-10`}
                     placeholder={t(
                       'form.contactPlaceholder',
                     )}
                   />
                 </div>
 
-                <p className="mt-1.5 text-xs text-white/40">
+                <p className="mt-1.5 text-xs text-muted-foreground">
                   {t('form.contactHint')}
                 </p>
               </Field>
@@ -737,7 +735,7 @@ export function TransportForm({
               <div>
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <label
-                    className="text-sm font-semibold text-white"
+                    className="text-sm font-semibold text-foreground"
                     htmlFor="transport-district"
                   >
                     {t('form.location')}
@@ -745,7 +743,7 @@ export function TransportForm({
 
                   {loadingProfile ||
                   locationLoading ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs text-white/40">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Loader2
                         className="h-3.5 w-3.5 animate-spin"
                         aria-hidden="true"
@@ -773,7 +771,7 @@ export function TransportForm({
                   >
                     <option
                       value=""
-                      className="bg-green-950"
+                      className="bg-surface"
                     >
                       {t(
                         'filters.allDistricts',
@@ -784,7 +782,7 @@ export function TransportForm({
                       <option
                         key={option.id}
                         value={option.id}
-                        className="bg-green-950"
+                        className="bg-surface"
                       >
                         {getLocalizedDomainName(option.name, locale, 'district')}
                       </option>
@@ -808,7 +806,7 @@ export function TransportForm({
                   >
                     <option
                       value=""
-                      className="bg-green-950"
+                      className="bg-surface"
                     >
                       {t(
                         'filters.allTalukas',
@@ -819,7 +817,7 @@ export function TransportForm({
                       <option
                         key={option.id}
                         value={option.id}
-                        className="bg-green-950"
+                        className="bg-surface"
                       >
                         {getLocalizedDomainName(option.name, locale, 'taluka')}
                       </option>
@@ -856,7 +854,7 @@ export function TransportForm({
                   >
                     <option
                       value=""
-                      className="bg-green-950"
+                      className="bg-surface"
                     >
                       {t(
                         'filters.allVillages',
@@ -867,7 +865,7 @@ export function TransportForm({
                       <option
                         key={option.id}
                         value={option.id}
-                        className="bg-green-950"
+                        className="bg-surface"
                       >
                         {getLocalizedDomainName(option.name, locale, 'village')}
                       </option>
@@ -878,7 +876,7 @@ export function TransportForm({
                 {errors.districtId ||
                 errors.talukaId ||
                 errors.villageId ? (
-                  <p className="mt-1.5 text-xs text-red-300">
+                  <p className="mt-1.5 text-xs text-danger">
                     {errors.districtId ||
                       errors.talukaId ||
                       errors.villageId}
@@ -886,7 +884,7 @@ export function TransportForm({
                 ) : null}
 
                 {locationLabel ? (
-                  <p className="mt-2 flex items-center gap-1.5 text-xs text-white/45">
+                  <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
                     <MapPin
                       className="h-3.5 w-3.5"
                       aria-hidden="true"
@@ -916,22 +914,22 @@ export function TransportForm({
                     )
                   }
                   rows={3}
-                  className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.045] px-3.5 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/15"
+                  className="w-full resize-none rounded-xl border border-border bg-surface px-3.5 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-focus focus:ring-2 focus:ring-focus"
                   placeholder={t(
                     'form.additionalDetailsPlaceholder',
                   )}
                 />
               </Field>
 
-              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-surface p-3.5">
                 <span>
-                  <span className="block text-sm font-semibold text-white">
+                  <span className="block text-sm font-semibold text-foreground">
                     {t(
                       'form.availableNow',
                     )}
                   </span>
 
-                  <span className="mt-0.5 block text-xs text-white/40">
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
                     {t(
                       'form.availableHint',
                     )}
@@ -946,13 +944,13 @@ export function TransportForm({
                       event.target.checked,
                     )
                   }
-                  className="h-5 w-5 accent-emerald-500"
+                  className="h-5 w-5 accent-accent"
                 />
               </label>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+              <div className="rounded-2xl border border-border bg-surface p-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <ReviewItem
                     label={t(
@@ -998,7 +996,7 @@ export function TransportForm({
                 </div>
 
                 {additionalDetails.trim() ? (
-                  <div className="mt-4 border-t border-white/10 pt-4">
+                  <div className="mt-4 border-t border-border pt-4">
                     <ReviewItem
                       label={t(
                         'form.additionalDetails',
@@ -1009,20 +1007,20 @@ export function TransportForm({
                 ) : null}
               </div>
 
-              <div className="rounded-xl bg-emerald-400/[0.06] p-3 text-xs leading-5 text-white/55">
+              <div className="rounded-xl bg-accent-soft p-3 text-xs leading-5 text-muted-foreground">
                 {t('form.reviewHint')}
               </div>
             </div>
           )}
         </div>
 
-        <footer className="flex gap-2 border-t border-white/10 bg-green-950/95 px-5 py-4 sm:px-6">
+        <footer className="flex gap-2 border-t border-border bg-surface/95 px-5 py-4 sm:px-6">
           {step === 2 ? (
             <button
               type="button"
               onClick={() => setStep(1)}
               disabled={saving}
-              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-semibold text-white/80 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 disabled:opacity-40"
+              className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-surface-subtle px-4 text-sm font-semibold text-foreground hover:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus disabled:opacity-40"
             >
               <Pencil
                 className="h-4 w-4"
@@ -1041,7 +1039,7 @@ export function TransportForm({
                 : handleSubmit
             }
             disabled={saving}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-green-600 to-green-800 px-4 text-sm font-bold text-white shadow-lg shadow-green-900/20 hover:from-green-500 hover:to-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 text-sm font-bold text-accent-foreground shadow-sm hover:bg-accent-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? (
               <Loader2
@@ -1089,12 +1087,12 @@ function Field({
     <div>
       <label
         htmlFor={htmlFor}
-        className="mb-1.5 block text-sm font-semibold text-white"
+        className="mb-1.5 block text-sm font-semibold text-foreground"
       >
         {label}
 
         {optionalLabel ? (
-          <span className="ml-1.5 font-normal text-white/35">
+          <span className="ml-1.5 font-normal text-muted-foreground">
             ({optionalLabel})
           </span>
         ) : null}
@@ -1103,7 +1101,7 @@ function Field({
       {children}
 
       {error ? (
-        <p className="mt-1.5 text-xs text-red-300">
+        <p className="mt-1.5 text-xs text-danger">
           {error}
         </p>
       ) : null}
@@ -1119,13 +1117,13 @@ function Select({
     <div className="relative">
       <select
         {...props}
-        className="h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.045] px-3 pr-9 text-sm text-white outline-none transition-colors focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/15 disabled:cursor-not-allowed disabled:opacity-40"
+        className="h-11 w-full appearance-none rounded-xl border border-border bg-surface px-3 pr-9 text-sm text-foreground outline-none transition-colors focus:border-focus focus:ring-2 focus:ring-focus disabled:cursor-not-allowed disabled:opacity-40"
       >
         {children}
       </select>
 
       <ChevronDown
-        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
         aria-hidden="true"
       />
     </div>
@@ -1136,8 +1134,8 @@ function inputClass(error: boolean) {
   return `h-11 w-full rounded-xl border ${
     error
       ? 'border-red-400/60'
-      : 'border-white/10'
-  } bg-white/[0.045] px-3 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/15`;
+      : 'border-border'
+  } bg-surface px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-focus focus:ring-2 focus:ring-focus`;
 }
 
 function ReviewItem({
@@ -1149,11 +1147,11 @@ function ReviewItem({
 }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
         {label}
       </p>
 
-      <p className="mt-1 text-sm font-semibold leading-5 text-white">
+      <p className="mt-1 text-sm font-semibold leading-5 text-foreground">
         {value}
       </p>
     </div>

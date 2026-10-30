@@ -3,7 +3,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
@@ -11,8 +10,7 @@ import { sendOtp, verifyFirebase } from '@/services/api/auth.api';
 import { createMobileNumberSchema, type MobileNumberFormData } from '@/schemas/auth.schema';
 import { MOBILE_CONFIG } from '@/constants/auth.constants';
 import { useLocale } from '@/i18n/locale-provider';
-import { isFirebaseEnabled } from '@/lib/firebase/client';
-import { sendOtpWithFirebase, setPendingVerificationId, clearPendingVerificationId } from '@/lib/firebase/phone-auth';
+import { isFirebaseEnabled } from '@/lib/firebase/config';
 import { getFirebaseErrorKey } from '@/lib/firebase/errors';
 
 interface MobileNumberFormProps {
@@ -26,7 +24,7 @@ function LoadingSpinner({ className }: { className?: string }) {
     return (
         <div
             className={
-                'animate-spin rounded-full border-2 border-white/30 border-t-white h-5 w-5 ' +
+                'animate-spin rounded-full border-2 border-border border-t-accent h-5 w-5' +
                 (className ?? '')
             }
             role="status"
@@ -71,7 +69,7 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
             rawDigits = allDigits;
         }
     }
-    const hasDigits = rawDigits.length > 0;
+    const isMobileNumberValid = MOBILE_CONFIG.REGEX.test(rawDigits);
 
     const onSubmit = async (data: MobileNumberFormData) => {
         if (isSending) return;
@@ -84,6 +82,12 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
             let verificationId: string | null = null;
 
             if (firebaseEnabled) {
+                const {
+                    sendOtpWithFirebase,
+                    setPendingVerificationId,
+                    clearPendingVerificationId,
+                } = await import('@/lib/firebase/phone-auth');
+
                 // Firebase Phone Auth: Firebase sends the OTP via SMS. The
                 // verificationId is cached for the OTP form to exchange the
                 // code for an ID Token (which the backend verifies).
@@ -122,10 +126,10 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit, handleInvalidSubmit)} noValidate className={`space-y-5 ${className ?? ''}`}>
+        <form onSubmit={handleSubmit(onSubmit, handleInvalidSubmit)} noValidate className={`space-y-4 ${className ?? ''}`}>
             <div className="space-y-1.5">
                 {!hideLabel && (
-                    <label htmlFor="mobileNumber" className="block text-sm font-medium text-white/80">
+                    <label htmlFor="mobileNumber" className="block text-sm font-medium text-foreground">
                         {t('mobile.label')}
                     </label>
                 )}
@@ -155,9 +159,9 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none z-10">
                                     <span className="flex items-center gap-1.5">
                                         <span className="leading-none text-2xl mr-0.5">🇮🇳</span>
-                                        <span className="text-lg font-bold text-white">+91</span>
+                                        <span className="text-lg font-bold text-foreground">+91</span>
                                     </span>
-                                    <div className="ml-3 h-6 w-px bg-white/30" />
+                                    <div className="ml-3 h-6 w-px bg-border" />
                                 </div>
 
                                 <input
@@ -178,12 +182,12 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
                                     aria-invalid={errors.mobileNumber ? 'true' : 'false'}
                                     aria-describedby={errors.mobileNumber ? 'mobile-error' : undefined}
                                     className={`
-                                        flex h-14 w-full rounded-full bg-white/10 backdrop-blur-md border border-white/25
+                                        flex h-14 w-full rounded-xl border border-border bg-surface
                                         pl-[115px] pr-5 py-3
-                                        text-white text-lg tracking-[0.15em] font-semibold
-                                        placeholder:text-white/40 placeholder:tracking-normal placeholder:font-medium
-                                        focus:outline-none focus:border-green-300 focus:ring-4 focus:ring-green-400/20 focus:shadow-lg focus:shadow-green-900/20
-                                        hover:border-white/40 shadow-lg shadow-black/10
+                                        text-foreground text-lg tracking-[0.15em] font-semibold
+                                        placeholder:text-muted-foreground placeholder:tracking-normal placeholder:font-medium
+                                        focus:outline-none focus:border-focus focus:ring-4 focus:ring-focus focus:shadow-lg focus:shadow-green-900/20
+                                        hover:border-border shadow-sm
                                         disabled:opacity-40 disabled:cursor-not-allowed
                                         transition-all duration-200
                                         ${errors.mobileNumber ? 'border-red-400/60 focus:border-red-300 focus:ring-red-400/20' : ''}
@@ -193,49 +197,29 @@ export function MobileNumberForm({ hideLabel, hideIcon, className, onSuccess }: 
                         );
                     }}
                 />
-
-                <div className="flex items-center justify-between px-1">
-                    <p className="text-xs text-white/40 font-light" />
-                </div>
-
-                <motion.button
-                    type="submit"
-                    disabled={isSending || !hasDigits}
-                    whileHover={!isSending && hasDigits ? { scale: 1.01 } : {}}
-                    whileTap={!isSending && hasDigits ? { scale: 0.98 } : {}}
-                    className="relative w-full h-14 rounded-full font-semibold text-base overflow-hidden transition-all duration-300 ease-out flex items-center justify-center gap-2.5"
-                    style={
-                        isSending || !hasDigits
-                            ? { backgroundColor: '#f3f4f6', color: '#9ca3af', cursor: 'not-allowed' }
-                            : {
-                                backgroundColor: '#2E7D32',
-                                color: '#ffffff',
-                                boxShadow: '0 4px 14px rgba(46, 125, 50, 0.3)',
-                            }
-                    }
-                >
-                    {!isSending && hasDigits && (
-                        <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent"
-                            initial={{ x: '-100%' }}
-                            whileHover={{ x: '100%' }}
-                            transition={{ duration: 0.8, ease: 'easeInOut' }}
-                        />
-                    )}
-
-                    {isSending ? (
-                        <>
-                            <LoadingSpinner />
-                            <span>{t('mobile.sendingOtp')}</span>
-                        </>
-                    ) : (
-                        <>
-                            <span>{t('mobile.continue')}</span>
-                            <ArrowRight className="h-4 w-4" />
-                        </>
-                    )}
-                </motion.button>
             </div>
+
+            <button
+                type="submit"
+                disabled={isSending || !isMobileNumberValid}
+                className={`relative flex h-14 w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl text-base font-semibold transition-all duration-200 hover:scale-[1.01] active:scale-[0.98] motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
+                    isSending || !isMobileNumberValid
+                        ? 'cursor-not-allowed bg-surface-subtle text-muted-foreground'
+                        : 'bg-accent text-accent-foreground shadow-sm hover:bg-accent-strong'
+                }`}
+            >
+                {isSending ? (
+                    <>
+                        <LoadingSpinner />
+                        <span>{t('mobile.sendingOtp')}</span>
+                    </>
+                ) : (
+                    <>
+                        <span>{t('mobile.continue')}</span>
+                        <ArrowRight className="h-4 w-4" />
+                    </>
+                )}
+            </button>
 
             {/* Invisible reCAPTCHA container for Firebase Phone Auth.
                 Only used when NEXT_PUBLIC_FIREBASE_* is configured.

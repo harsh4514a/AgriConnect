@@ -41,11 +41,11 @@ model User {
   taluka   Taluka?   @relation(fields: [talukaId], references: [id])
   village  Village?  @relation(fields: [villageId], references: [id])
 
-  refreshTokens     RefreshToken[]
-  listings          Listing[]
-  buyerRequirements BuyerRequirement[]
+  refreshTokens      RefreshToken[]
+  listings           Listing[]
+  buyerRequirements  BuyerRequirement[]
   transportProviders TransportProvider[]
-  notifications     Notification[]
+  notifications      Notification[]
 
   @@index([mobileNumber])
   @@map("users")
@@ -107,10 +107,22 @@ model District {
   stateId String @db.Uuid
   name    String @db.VarChar(100)
 
+  // LGD provides stable administrative identifiers. Coordinates are a
+  // reference point, usually the district headquarters, not the district's
+  // geographic boundary or centroid.
+  lgdCode                 Int?      @unique
+  census2011Code          String?   @db.VarChar(20)
+  latitude                Float?
+  longitude               Float?
+  coordinateSource        String?   @db.VarChar(120)
+  coordinateSourceId      String?   @db.VarChar(180)
+  coordinateReferenceType String?   @db.VarChar(40)
+  coordinatesImportedAt   DateTime?
+
   // Relationships
-  state   State    @relation(fields: [stateId], references: [id], onDelete: Cascade)
-  talukas Taluka[]
-  users   User[]
+  state              State               @relation(fields: [stateId], references: [id], onDelete: Cascade)
+  talukas            Taluka[]
+  users              User[]
   transportProviders TransportProvider[]
 
   @@unique([stateId, name])
@@ -124,10 +136,20 @@ model Taluka {
   districtId String @db.Uuid
   name       String @db.VarChar(100)
 
+  // Coordinates identify the subdistrict headquarters/reference point.
+  lgdCode                 Int?      @unique
+  census2011Code          String?   @db.VarChar(20)
+  latitude                Float?
+  longitude               Float?
+  coordinateSource        String?   @db.VarChar(120)
+  coordinateSourceId      String?   @db.VarChar(180)
+  coordinateReferenceType String?   @db.VarChar(40)
+  coordinatesImportedAt   DateTime?
+
   // Relationships
-  district District  @relation(fields: [districtId], references: [id], onDelete: Cascade)
-  villages Village[]
-  users    User[]
+  district           District            @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  villages           Village[]
+  users              User[]
   transportProviders TransportProvider[]
 
   @@unique([districtId, name])
@@ -141,10 +163,22 @@ model Village {
   talukaId String @db.Uuid
   name     String @db.VarChar(100)
 
+  // This tier stores rural villages and urban localities represented by the
+  // existing location selector. Reference type distinguishes point meaning.
+  lgdCode                 Int?      @unique
+  census2011Code          String?   @db.VarChar(20)
+  latitude                Float?
+  longitude               Float?
+  coordinateSource        String?   @db.VarChar(120)
+  coordinateSourceId      String?   @db.VarChar(180)
+  coordinateReferenceType String?   @db.VarChar(40)
+  coordinatesImportedAt   DateTime?
+
   // Relationships
-  taluka Taluka @relation(fields: [talukaId], references: [id], onDelete: Cascade)
-  users  User[]
+  taluka             Taluka              @relation(fields: [talukaId], references: [id], onDelete: Cascade)
+  users              User[]
   transportProviders TransportProvider[]
+  listings           Listing[]
 
   @@unique([talukaId, name])
   @@index([talukaId])
@@ -154,45 +188,48 @@ model Village {
 // Marketplace crop listings posted by farmers.
 // Fields mirror the CropListing TypeScript interface in the web app.
 model Listing {
-  id                 String  @id @default(uuid()) @db.Uuid
-  cropKey            String  @db.VarChar(30)
-  image              String  @db.VarChar(300)
-  imageAlt           String  @db.VarChar(200)
-  farmerName         String  @db.VarChar(100)
-  farmerNameShort    String  @db.VarChar(60)
-  district           String  @db.VarChar(100)
-  village            String  @db.VarChar(100)
-  taluka             String  @db.VarChar(100)
-  state              String  @default("Gujarat") @db.VarChar(100)
-  quantity           Float
-  unit               String  @db.VarChar(20)
-  price              Float
-  primaryUnit        String  @db.VarChar(40)
-  secondaryUnit      String  @db.VarChar(40)
-  marketPrice        Float
-  distanceKm         Float   @default(0)
-  postedHoursAgo     Float   @default(0)
-  availability       String  @default("available") @db.VarChar(20)
-  verified           Boolean @default(false)
-  mobileNumber       String  @db.VarChar(15)
-  phoneLabel         String  @db.VarChar(60)
-  readyToSell        Boolean @default(true)
-  lat                Float   @default(22.03)
-  lng                Float   @default(71.2)
-  description        String? @db.Text
-  variety            String? @db.VarChar(100)
-  customCropName     String? @db.VarChar(100)
-  qualityGrade       String? @db.VarChar(50)
-  cropDate           String? @db.VarChar(20)
-  farmerMemberSince  Int?
-  farmerListingCount Int?
-  additionalImages   Json?
-  status             String  @default("active") @db.VarChar(20)
-  isUserCreated      Boolean @default(false)
+  id                     String  @id @default(uuid()) @db.Uuid
+  cropKey                String  @db.VarChar(30)
+  image                  String  @db.VarChar(300)
+  imageAlt               String  @db.VarChar(200)
+  farmerName             String  @db.VarChar(100)
+  farmerNameShort        String  @db.VarChar(60)
+  district               String  @db.VarChar(100)
+  village                String  @db.VarChar(100)
+  taluka                 String  @db.VarChar(100)
+  state                  String  @default("Gujarat") @db.VarChar(100)
+  quantity               Float
+  unit                   String  @db.VarChar(20)
+  price                  Float
+  primaryUnit            String  @db.VarChar(40)
+  secondaryUnit          String  @db.VarChar(40)
+  marketPrice            Float
+  distanceKm             Float   @default(0)
+  postedHoursAgo         Float   @default(0)
+  availability           String  @default("available") @db.VarChar(20)
+  verified               Boolean @default(false)
+  mobileNumber           String  @db.VarChar(15)
+  phoneLabel             String  @db.VarChar(60)
+  readyToSell            Boolean @default(true)
+  lat                    Float   @default(22.03)
+  lng                    Float   @default(71.2)
+  hasExplicitCoordinates Boolean @default(false)
+  locationVillageId      String? @db.Uuid
+  description            String? @db.Text
+  variety                String? @db.VarChar(100)
+  customCropName         String? @db.VarChar(100)
+  qualityGrade           String? @db.VarChar(50)
+  cropDate               String? @db.VarChar(20)
+  farmerMemberSince      Int?
+  farmerListingCount     Int?
+  additionalImages       Json?
+  status                 String  @default("active") @db.VarChar(20)
+  isUserCreated          Boolean @default(false)
 
   // Optional link to the User who created this listing
-  userId String? @db.Uuid
-  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId          String?  @db.Uuid
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  locationVillage Village? @relation(fields: [locationVillageId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,6 +238,7 @@ model Listing {
   @@index([district])
   @@index([status])
   @@index([userId])
+  @@index([locationVillageId])
   @@map("listings")
 }
 
@@ -247,29 +285,29 @@ model GujaratMarketRegion {
 // Buyer requests for crops/commodities.
 // Kept separate from farmer marketplace listings.
 model BuyerRequirement {
-  id                     String   @id @default(uuid()) @db.Uuid
-  buyerId                String   @db.Uuid
+  id      String @id @default(uuid()) @db.Uuid
+  buyerId String @db.Uuid
 
-  cropKey                String   @db.VarChar(30)
-  customCropName         String?  @db.VarChar(100)
-  variety                String?  @db.VarChar(100)
+  cropKey        String  @db.VarChar(30)
+  customCropName String? @db.VarChar(100)
+  variety        String? @db.VarChar(100)
 
-  quantity               Float
-  unit                   String   @db.VarChar(20)
+  quantity Float
+  unit     String @db.VarChar(20)
 
-  district               String   @db.VarChar(100)
-  taluka                 String?  @db.VarChar(100)
-  village                String?  @db.VarChar(100)
+  district String  @db.VarChar(100)
+  taluka   String? @db.VarChar(100)
+  village  String? @db.VarChar(100)
 
-  contactNumber          String   @db.VarChar(20)
+  contactNumber String @db.VarChar(20)
 
-  additionalRequirements String?  @db.VarChar(1000)
+  additionalRequirements String? @db.VarChar(1000)
 
-  status                 String   @default("active") @db.VarChar(20)
-  submissionKey          String?  @unique @db.VarChar(64)
+  status        String  @default("active") @db.VarChar(20)
+  submissionKey String? @unique @db.VarChar(64)
 
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   buyer User @relation(fields: [buyerId], references: [id], onDelete: Cascade)
 
@@ -281,22 +319,21 @@ model BuyerRequirement {
   @@map("buyer_requirements")
 }
 
-
 // Farmer-facing crop cultivation guides. Content is versioned by locale and
 // kept separate from government market-price/commodity records.
 model CropGuide {
-  id          String             @id @default(uuid()) @db.Uuid
-  slug        String             @unique @db.VarChar(80)
-  image       String             @db.VarChar(300)
-  imageAlt    String             @db.VarChar(200)
-  category    String             @db.VarChar(60)
-  seasonKeys  String[]           @default([])
-  sortOrder   Int                @default(0)
-  isPublished Boolean            @default(true)
-  sourceName  String             @db.VarChar(200)
-  sourceUrl   String             @db.VarChar(500)
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id          String   @id @default(uuid()) @db.Uuid
+  slug        String   @unique @db.VarChar(80)
+  image       String   @db.VarChar(300)
+  imageAlt    String   @db.VarChar(200)
+  category    String   @db.VarChar(60)
+  seasonKeys  String[] @default([])
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  sourceName  String   @db.VarChar(200)
+  sourceUrl   String   @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   contents CropGuideContent[]
 
@@ -305,17 +342,17 @@ model CropGuide {
 }
 
 model CropGuideContent {
-  id                  String    @id @default(uuid()) @db.Uuid
-  cropGuideId         String    @db.Uuid
-  locale              String    @db.VarChar(10)
-  name                String    @db.VarChar(120)
-  aliases             String[]  @default([])
-  searchText          String    @db.VarChar(500)
-  shortDescription    String    @db.VarChar(300)
-  suitableSeason      String?   @db.VarChar(200)
-  sections            Json
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id               String   @id @default(uuid()) @db.Uuid
+  cropGuideId      String   @db.Uuid
+  locale           String   @db.VarChar(10)
+  name             String   @db.VarChar(120)
+  aliases          String[] @default([])
+  searchText       String   @db.VarChar(500)
+  shortDescription String   @db.VarChar(300)
+  suitableSeason   String?  @db.VarChar(200)
+  sections         Json
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   cropGuide CropGuide @relation(fields: [cropGuideId], references: [id], onDelete: Cascade)
 
@@ -325,24 +362,23 @@ model CropGuideContent {
   @@map("crop_guide_contents")
 }
 
-
 // Farmer-facing government schemes. Scheme facts are stored in the database so
 // content can be reviewed and updated without changing frontend code.
 model GovernmentScheme {
-  id                  String                    @id @default(uuid()) @db.Uuid
-  slug                String                    @unique @db.VarChar(100)
-  governmentLevel     String                    @db.VarChar(20)
-  department          String                    @db.VarChar(200)
-  category            String                    @db.VarChar(60)
-  status              String                    @default("active") @db.VarChar(20)
-  availableStates     String[]                  @default(["Gujarat"])
-  applicationUrl      String?                   @db.VarChar(500)
-  sourceUrl           String                    @db.VarChar(500)
-  lastVerifiedAt      DateTime?
-  isPublished         Boolean                   @default(true)
-  sortOrder           Int                       @default(0)
-  createdAt           DateTime                  @default(now())
-  updatedAt           DateTime                  @updatedAt
+  id              String    @id @default(uuid()) @db.Uuid
+  slug            String    @unique @db.VarChar(100)
+  governmentLevel String    @db.VarChar(20)
+  department      String    @db.VarChar(200)
+  category        String    @db.VarChar(60)
+  status          String    @default("active") @db.VarChar(20)
+  availableStates String[]  @default(["Gujarat"])
+  applicationUrl  String?   @db.VarChar(500)
+  sourceUrl       String    @db.VarChar(500)
+  lastVerifiedAt  DateTime?
+  isPublished     Boolean   @default(true)
+  sortOrder       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   contents GovernmentSchemeContent[]
 
@@ -352,21 +388,21 @@ model GovernmentScheme {
 }
 
 model GovernmentSchemeContent {
-  id                  String           @id @default(uuid()) @db.Uuid
-  schemeId            String           @db.Uuid
-  locale              String           @db.VarChar(10)
-  name                String           @db.VarChar(200)
-  shortDescription    String           @db.VarChar(500)
-  description         String           @db.Text
-  benefits            Json
-  eligibility         Json
-  documents           Json
-  applicationSteps    Json
-  conditions          Json
-  keywords            String[]         @default([])
-  searchText          String           @db.Text
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  id               String   @id @default(uuid()) @db.Uuid
+  schemeId         String   @db.Uuid
+  locale           String   @db.VarChar(10)
+  name             String   @db.VarChar(200)
+  shortDescription String   @db.VarChar(500)
+  description      String   @db.Text
+  benefits         Json
+  eligibility      Json
+  documents        Json
+  applicationSteps Json
+  conditions       Json
+  keywords         String[] @default([])
+  searchText       String   @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   scheme GovernmentScheme @relation(fields: [schemeId], references: [id], onDelete: Cascade)
 
@@ -376,15 +412,14 @@ model GovernmentSchemeContent {
   @@map("government_scheme_contents")
 }
 
-
 model TransportProvider {
-  id               String   @id @default(uuid()) @db.Uuid
-  ownerId          String?  @db.Uuid
-  businessName     String   @db.VarChar(120)
-  contactName      String?  @db.VarChar(100)
-  phoneNumber      String   @db.VarChar(15)
-  vehicleType      String   @db.VarChar(40)
-  customVehicleType String?  @db.VarChar(100)
+  id                String  @id @default(uuid()) @db.Uuid
+  ownerId           String? @db.Uuid
+  businessName      String  @db.VarChar(120)
+  contactName       String? @db.VarChar(100)
+  phoneNumber       String  @db.VarChar(15)
+  vehicleType       String  @db.VarChar(40)
+  customVehicleType String? @db.VarChar(100)
   additionalDetails String? @db.VarChar(500)
 
   districtId String  @db.Uuid
@@ -406,33 +441,32 @@ model TransportProvider {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([businessName, phoneNumber, vehicleType, districtId, talukaId, villageId])
   @@index([ownerId, isActive, createdAt])
   @@index([districtId, isActive, isAvailable])
   @@index([talukaId, isActive, isAvailable])
   @@index([villageId, isActive, isAvailable])
   @@index([vehicleType, isActive, isAvailable])
   @@index([businessName])
-  @@unique([businessName, phoneNumber, vehicleType, districtId, talukaId, villageId])
   @@map("transport_providers")
 }
-
 
 // User-scoped in-app notifications generated by real business events.
 // Titles and messages are stored as i18n keys so the same notification can
 // be rendered in English, Gujarati, or Hindi without duplicating content.
 model Notification {
-  id           String    @id @default(uuid()) @db.Uuid
-  userId       String    @db.Uuid
-  type         String    @db.VarChar(40)
-  titleKey     String    @db.VarChar(160)
-  messageKey   String    @db.VarChar(160)
-  data         Json?
-  relatedPath  String?   @db.VarChar(300)
-  relatedType  String?   @db.VarChar(60)
-  relatedId    String?   @db.VarChar(100)
-  dedupeKey    String?   @unique @db.VarChar(200)
-  readAt       DateTime?
-  createdAt    DateTime  @default(now())
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @db.Uuid
+  type        String    @db.VarChar(40)
+  titleKey    String    @db.VarChar(160)
+  messageKey  String    @db.VarChar(160)
+  data        Json?
+  relatedPath String?   @db.VarChar(300)
+  relatedType String?   @db.VarChar(60)
+  relatedId   String?   @db.VarChar(100)
+  dedupeKey   String?   @unique @db.VarChar(200)
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

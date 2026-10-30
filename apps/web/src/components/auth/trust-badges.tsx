@@ -32,7 +32,7 @@ export function TrustBadges() {
                     transition={{ delay: 0.6 + index * 0.15, duration: 0.5 }}
                     className="flex items-start gap-3"
                 >
-                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm">
                         <badge.icon className="h-4 w-4 text-white" />
                     </div>
                     <div>

@@ -75,9 +75,7 @@ function formatDateTime(value: string | null | undefined, locale: string): strin
 
 /** Format a price (₹/quintal) clearly for Admin display. */
 function formatPrice(value: number, locale: string): string {
-  return `₹${new Intl.NumberFormat(getIntlLocale(locale), {
-    maximumFractionDigits: 2,
-  }).format(value)}`;
+  return `₹${new Intl.NumberFormat(getIntlLocale(locale), { maximumFractionDigits: 2, }).format(value)}`;
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -86,7 +84,7 @@ function SkeletonRows() {
   return (
     <div className="space-y-2 p-4 sm:p-5" aria-busy="true" aria-label="Loading market prices">
       {Array.from({ length: 8 }).map((_, i) => (
-        <div key={i} className="h-[60px] animate-pulse rounded-xl border border-slate-200 bg-white" />
+        <div key={i} className="h-[60px] animate-pulse rounded-xl border border-border bg-surface" />
       ))}
     </div>
   );
@@ -112,7 +110,7 @@ function SortButton({
       onClick={() => onSort(field)}
       className={cn(
         'flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.1em] transition-colors',
-        active ? 'text-emerald-700' : 'text-slate-500 hover:text-slate-700',
+        active ? 'text-accent' : 'text-muted-foreground hover:text-foreground',
       )}
       aria-label={`${label} ${active ? (sortDir === 'asc' ? '(ascending)' : '(descending)') : ''}`}
     >
@@ -166,12 +164,12 @@ function SyncInfoBar({
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
       {items.map(({ icon: Icon, label, value, highlight }) => (
         <div key={label} className="flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden="true" />
-          <span className="text-xs text-slate-500">{label}:</span>
+          <Icon className="h-3.5 w-3.5 shrink-0 text-accent" aria-hidden="true" />
+          <span className="text-xs text-muted-foreground">{label}:</span>
           <span
             className={cn(
               'text-xs font-bold',
-              highlight ? 'text-emerald-800' : 'text-slate-700',
+              highlight ? 'text-accent' : 'text-foreground',
             )}
           >
             {value}
@@ -214,15 +212,15 @@ function DetailDrawer({
       }}
     >
       <aside
-        className="flex h-full w-full max-w-lg flex-col overflow-hidden bg-[#f7f9f5] shadow-2xl"
+        className="flex h-full w-full max-w-lg flex-col overflow-hidden bg-[var(--surface)] shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="mp-details-title"
       >
         {/* Drawer header */}
-        <div className="flex shrink-0 items-center justify-between border-b border-white/10 bg-[#123b2b] px-5 py-4 text-white">
+        <div className="flex shrink-0 items-center justify-between border-b border-border bg-[var(--hero)] px-5 py-4 text-[var(--hero-foreground)]">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-200">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--hero-muted)]">
               {t('marketPrices.detailsEyebrow')}
             </p>
             <h2 id="mp-details-title" className="mt-0.5 truncate text-lg font-bold">
@@ -232,7 +230,7 @@ function DetailDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-emerald-100 hover:bg-white/10"
+            className="rounded-lg p-2 text-[var(--hero-muted)] hover:bg-surface/10"
             aria-label={t('marketPrices.closeDetails')}
           >
             <X className="h-5 w-5" aria-hidden="true" />
@@ -243,20 +241,20 @@ function DetailDrawer({
         <div className="min-h-0 flex-1 overflow-y-auto p-5 sm:p-6">
           {loading ? (
             <div className="space-y-4" aria-busy="true">
-              <div className="h-28 animate-pulse rounded-2xl bg-white" />
-              <div className="h-40 animate-pulse rounded-2xl bg-white" />
-              <div className="h-32 animate-pulse rounded-2xl bg-white" />
+              <div className="h-28 animate-pulse rounded-2xl bg-surface" />
+              <div className="h-40 animate-pulse rounded-2xl bg-surface" />
+              <div className="h-32 animate-pulse rounded-2xl bg-surface" />
             </div>
           ) : error || !record ? (
-            <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-center">
-              <AlertCircle className="mx-auto h-6 w-6 text-red-600" aria-hidden="true" />
-              <p className="mt-3 text-sm font-bold text-red-900">
+            <div className="rounded-2xl border border-danger/30 bg-danger-soft p-5 text-center">
+              <AlertCircle className="mx-auto h-6 w-6 text-danger" aria-hidden="true" />
+              <p className="mt-3 text-sm font-bold text-danger">
                 {t('marketPrices.detailsError')}
               </p>
               <button
                 type="button"
                 onClick={onRetry}
-                className="mt-3 text-sm font-bold text-red-700 underline-offset-2 hover:underline"
+                className="mt-3 text-sm font-bold text-danger underline-offset-2 hover:underline"
               >
                 {t('marketPrices.retry')}
               </button>
@@ -264,41 +262,41 @@ function DetailDrawer({
           ) : (
             <div className="space-y-4">
               {/* Commodity */}
-              <section className="rounded-2xl border border-slate-200 bg-white p-4">
+              <section className="rounded-2xl border border-border bg-surface p-4">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-emerald-700" aria-hidden="true" />
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <TrendingUp className="h-4 w-4 text-accent" aria-hidden="true" />
+                  <h3 className="text-sm font-bold text-foreground">
                     {t('marketPrices.details.commoditySection')}
                   </h3>
                 </div>
                 <dl className="mt-4 grid grid-cols-2 gap-4">
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.columns.commodity')}
                     </dt>
-                    <dd className="mt-1 text-sm font-bold text-slate-800">{getLocalizedDomainName(record.commodity, locale, 'commodity')}</dd>
+                    <dd className="mt-1 text-sm font-bold text-foreground">{getLocalizedDomainName(record.commodity, locale, 'commodity')}</dd>
                   </div>
                   {record.variety ? (
                     <div>
-                      <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                      <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         {t('marketPrices.columns.variety')}
                       </dt>
-                      <dd className="mt-1 text-sm font-bold text-slate-800">{getLocalizedDomainName(record.variety, locale, 'marketVariety')}</dd>
+                      <dd className="mt-1 text-sm font-bold text-foreground">{getLocalizedDomainName(record.variety, locale, 'marketVariety')}</dd>
                     </div>
                   ) : null}
                   {record.grade ? (
                     <div>
-                      <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                      <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                         {t('marketPrices.details.grade')}
                       </dt>
-                      <dd className="mt-1 text-sm font-semibold text-slate-700">{getLocalizedDomainName(record.grade, locale, 'grade')}</dd>
+                      <dd className="mt-1 text-sm font-semibold text-foreground">{getLocalizedDomainName(record.grade, locale, 'grade')}</dd>
                     </div>
                   ) : null}
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.columns.dataDate')}
                     </dt>
-                    <dd className="mt-1 text-sm font-bold text-emerald-700">
+                    <dd className="mt-1 text-sm font-bold text-accent">
                       {formatDate(record.dataDate, locale)}
                     </dd>
                   </div>
@@ -306,29 +304,29 @@ function DetailDrawer({
               </section>
 
               {/* Prices */}
-              <section className="rounded-2xl border border-slate-200 bg-white p-4">
-                <h3 className="text-sm font-bold text-slate-900">
+              <section className="rounded-2xl border border-border bg-surface p-4">
+                <h3 className="text-sm font-bold text-foreground">
                   {t('marketPrices.details.pricesSection')}
                 </h3>
-                <p className="mt-0.5 text-[11px] text-slate-400">
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
                   {t('marketPrices.details.priceUnit')}
                 </p>
                 <div className="mt-4 grid grid-cols-3 gap-3">
                   {[
-                    { key: 'minimumPrice', value: record.minimumPrice, color: 'text-slate-700' },
-                    { key: 'modalPrice', value: record.modalPrice, color: 'text-emerald-700 text-base' },
-                    { key: 'maximumPrice', value: record.maximumPrice, color: 'text-slate-700' },
+                    { key: 'minimumPrice', value: record.minimumPrice, color: 'text-foreground' },
+                    { key: 'modalPrice', value: record.modalPrice, color: 'text-accent text-base' },
+                    { key: 'maximumPrice', value: record.maximumPrice, color: 'text-foreground' },
                   ].map(({ key, value, color }) => (
                     <div
                       key={key}
                       className={cn(
                         'rounded-xl border p-3 text-center',
                         key === 'modalPrice'
-                          ? 'border-emerald-200 bg-emerald-50/70'
-                          : 'border-slate-100 bg-slate-50',
+                          ? 'border-accent/30 bg-accent-soft/70'
+                          : 'border-border bg-surface-subtle',
                       )}
                     >
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                         {t(`marketPrices.columns.${key}` as never)}
                       </p>
                       <p className={cn('mt-1 font-bold', color)}>
@@ -340,49 +338,49 @@ function DetailDrawer({
               </section>
 
               {/* Location */}
-              <section className="rounded-2xl border border-slate-200 bg-white p-4">
-                <h3 className="text-sm font-bold text-slate-900">
+              <section className="rounded-2xl border border-border bg-surface p-4">
+                <h3 className="text-sm font-bold text-foreground">
                   {t('marketPrices.details.locationSection')}
                 </h3>
                 <dl className="mt-4 grid grid-cols-2 gap-4">
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.columns.market')}
                     </dt>
-                    <dd className="mt-1 text-sm font-bold text-slate-800">{getLocalizedDomainName(record.market, locale, 'market')}</dd>
+                    <dd className="mt-1 text-sm font-bold text-foreground">{getLocalizedDomainName(record.market, locale, 'market')}</dd>
                   </div>
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.columns.district')}
                     </dt>
-                    <dd className="mt-1 text-sm font-semibold text-slate-700">{getLocalizedDomainName(record.district, locale, 'district')}</dd>
+                    <dd className="mt-1 text-sm font-semibold text-foreground">{getLocalizedDomainName(record.district, locale, 'district')}</dd>
                   </div>
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.details.state')}
                     </dt>
-                    <dd className="mt-1 text-sm font-semibold text-slate-700">{getLocalizedDomainName(record.state, locale, 'state')}</dd>
+                    <dd className="mt-1 text-sm font-semibold text-foreground">{getLocalizedDomainName(record.state, locale, 'state')}</dd>
                   </div>
                 </dl>
               </section>
 
               {/* Source */}
-              <section className="rounded-2xl border border-slate-200 bg-white p-4">
-                <h3 className="text-sm font-bold text-slate-900">
+              <section className="rounded-2xl border border-border bg-surface p-4">
+                <h3 className="text-sm font-bold text-foreground">
                   {t('marketPrices.details.sourceSection')}
                 </h3>
                 <dl className="mt-4 grid grid-cols-2 gap-4">
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.details.source')}
                     </dt>
-                    <dd className="mt-1 text-sm font-semibold text-slate-700">{record.source}</dd>
+                    <dd className="mt-1 text-sm font-semibold text-foreground">{record.source}</dd>
                   </div>
                   <div>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {t('marketPrices.details.fetchedAt')}
                     </dt>
-                    <dd className="mt-1 text-sm font-semibold text-slate-700">
+                    <dd className="mt-1 text-sm font-semibold text-foreground">
                       {formatDateTime(record.fetchedAt, locale)}
                     </dd>
                   </div>
@@ -549,36 +547,36 @@ export function AdminMarketPrices() {
     <>
       <div className="space-y-5">
         {/* ── Header section ── */}
-        <section className="rounded-2xl border border-[#cbd7cf] bg-[#f6f8f3] p-5 shadow-[0_12px_32px_rgba(20,55,38,0.06)] sm:p-6">
+        <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_12px_32px_rgba(20,55,38,0.06)] sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-700">
+              <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-accent">
                 <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
                 {t('marketPrices.eyebrow')}
               </p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-950 sm:text-[28px]">
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-[28px]">
                 {t('marketPrices.title')}
               </h1>
-              <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-500">
+              <p className="mt-1.5 max-w-2xl text-sm leading-6 text-muted-foreground">
                 {t('marketPrices.subtitle')}
               </p>
             </div>
           </div>
 
           {/* Sync info */}
-          <div className="mt-4 border-t border-[#d7e3d7] pt-4">
+          <div className="mt-4 border-t border-[var(--border)] pt-4">
             {syncInfo ? (
               <SyncInfoBar info={syncInfo} locale={locale} t={t} />
             ) : !loading ? (
-              <p className="text-xs text-slate-400">{t('marketPrices.syncInfo.unavailable')}</p>
+              <p className="text-xs text-muted-foreground">{t('marketPrices.syncInfo.unavailable')}</p>
             ) : (
-              <div className="h-4 w-72 animate-pulse rounded bg-slate-200" />
+              <div className="h-4 w-72 animate-pulse rounded bg-surface-subtle" />
             )}
           </div>
         </section>
 
         {/* ── Search + Filter toolbar ── */}
-        <section className="rounded-2xl border border-[#cbd7cf] bg-[#f6f8f3] p-3 shadow-[0_10px_28px_rgba(20,55,38,0.045)] sm:p-4">
+        <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_10px_28px_rgba(20,55,38,0.045)] sm:p-4">
           <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
             {/* Search */}
             <div className="min-w-0 flex-1">
@@ -587,7 +585,7 @@ export function AdminMarketPrices() {
               </label>
               <div className="relative">
                 <Search
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <input
@@ -595,7 +593,7 @@ export function AdminMarketPrices() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder={t('marketPrices.searchPlaceholder')}
-                  className="min-h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50"
+                  className="min-h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-focus focus:ring-4 focus:ring-focus"
                 />
               </div>
             </div>
@@ -606,7 +604,7 @@ export function AdminMarketPrices() {
                 aria-label={t('marketPrices.commodityFilter')}
                 value={commodity}
                 onChange={(e) => setCommodity(e.target.value)}
-                className="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 outline-none focus:border-emerald-500"
+                className="min-h-11 rounded-xl border border-border bg-surface px-3 text-sm font-medium text-foreground outline-none focus:border-focus"
               >
                 <option value="">{t('marketPrices.allCommodities')}</option>
                 {filters?.commodities.map((c) => (
@@ -617,7 +615,7 @@ export function AdminMarketPrices() {
                 aria-label={t('marketPrices.dateFilter')}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 outline-none focus:border-emerald-500"
+                className="min-h-11 rounded-xl border border-border bg-surface px-3 text-sm font-medium text-foreground outline-none focus:border-focus"
               >
                 <option value="">{t('marketPrices.allDates')}</option>
                 {filters?.availableDates.map((d) => (
@@ -631,12 +629,12 @@ export function AdminMarketPrices() {
               type="button"
               onClick={() => setFiltersOpen((v) => !v)}
               aria-expanded={filtersOpen}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-bold text-slate-700 hover:border-emerald-200 hover:bg-emerald-50/50"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface px-3.5 text-sm font-bold text-foreground hover:border-accent/30 hover:bg-accent-soft/50"
             >
               <Filter className="h-4 w-4" aria-hidden="true" />
               {t('marketPrices.filters')}
               {filterCount > 0 ? (
-                <span className="inline-flex min-w-5 justify-center rounded-full bg-emerald-700 px-1.5 py-0.5 text-[10px] text-white">
+                <span className="inline-flex min-w-5 justify-center rounded-full bg-accent px-1.5 py-0.5 text-[10px] text-accent-foreground">
                   {filterCount}
                 </span>
               ) : null}
@@ -646,7 +644,7 @@ export function AdminMarketPrices() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-bold text-slate-500 hover:bg-slate-100"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-bold text-muted-foreground hover:bg-surface-subtle"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
                 {t('marketPrices.clearFilters')}
@@ -656,17 +654,17 @@ export function AdminMarketPrices() {
 
           {/* Expanded filter panel */}
           {filtersOpen ? (
-            <div className="mt-3 grid gap-3 border-t border-slate-200/80 pt-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="mt-3 grid gap-3 border-t border-border/80 pt-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
               {/* Commodity (mobile) */}
               <div className="xl:hidden">
-                <label className="mb-1.5 block text-xs font-bold text-slate-600" htmlFor="mp-commodity">
+                <label className="mb-1.5 block text-xs font-bold text-muted-foreground" htmlFor="mp-commodity">
                   {t('marketPrices.commodityFilter')}
                 </label>
                 <select
                   id="mp-commodity"
                   value={commodity}
                   onChange={(e) => setCommodity(e.target.value)}
-                  className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500"
+                  className="min-h-10 w-full rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:border-focus"
                 >
                   <option value="">{t('marketPrices.allCommodities')}</option>
                   {filters?.commodities.map((c) => (
@@ -677,14 +675,14 @@ export function AdminMarketPrices() {
 
               {/* Date (mobile) */}
               <div className="xl:hidden">
-                <label className="mb-1.5 block text-xs font-bold text-slate-600" htmlFor="mp-date-mobile">
+                <label className="mb-1.5 block text-xs font-bold text-muted-foreground" htmlFor="mp-date-mobile">
                   {t('marketPrices.dateFilter')}
                 </label>
                 <select
                   id="mp-date-mobile"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500"
+                  className="min-h-10 w-full rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:border-focus"
                 >
                   <option value="">{t('marketPrices.allDates')}</option>
                   {filters?.availableDates.map((d) => (
@@ -695,14 +693,14 @@ export function AdminMarketPrices() {
 
               {/* District */}
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-slate-600" htmlFor="mp-district">
+                <label className="mb-1.5 block text-xs font-bold text-muted-foreground" htmlFor="mp-district">
                   {t('marketPrices.districtFilter')}
                 </label>
                 <select
                   id="mp-district"
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
-                  className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500"
+                  className="min-h-10 w-full rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:border-focus"
                 >
                   <option value="">{t('marketPrices.allDistricts')}</option>
                   {filters?.districts.map((d) => (
@@ -713,14 +711,14 @@ export function AdminMarketPrices() {
 
               {/* Market */}
               <div>
-                <label className="mb-1.5 block text-xs font-bold text-slate-600" htmlFor="mp-market">
+                <label className="mb-1.5 block text-xs font-bold text-muted-foreground" htmlFor="mp-market">
                   {t('marketPrices.marketFilter')}
                 </label>
                 <select
                   id="mp-market"
                   value={market}
                   onChange={(e) => setMarket(e.target.value)}
-                  className="min-h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-emerald-500"
+                  className="min-h-10 w-full rounded-lg border border-border bg-surface px-3 text-sm outline-none focus:border-focus"
                 >
                   <option value="">{t('marketPrices.allMarkets')}</option>
                   {filters?.markets.map((m) => (
@@ -730,7 +728,7 @@ export function AdminMarketPrices() {
               </div>
 
               {filtersError ? (
-                <p className="flex items-center gap-1.5 text-xs font-medium text-amber-700 sm:col-span-2 xl:col-span-5">
+                <p className="flex items-center gap-1.5 text-xs font-medium text-warning sm:col-span-2 xl:col-span-5">
                   <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />
                   {t('marketPrices.filtersError')}
                 </p>
@@ -740,14 +738,14 @@ export function AdminMarketPrices() {
         </section>
 
         {/* ── Table section ── */}
-        <section className="overflow-hidden rounded-2xl border border-[#cbd7cf] bg-[#f8faf7] shadow-[0_12px_32px_rgba(20,55,38,0.05)]">
+        <section className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_rgba(20,55,38,0.05)]">
           {/* Table toolbar */}
-          <div className="flex flex-col gap-2 border-b border-slate-200/80 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <div className="flex flex-col gap-2 border-b border-border/80 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <div>
-              <p className="text-sm font-bold text-slate-900">
+              <p className="text-sm font-bold text-foreground">
                 {t('marketPrices.recordCount', { count: pagination.total })}
               </p>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {t('marketPrices.showing', { from, to, total: pagination.total })}
               </p>
             </div>
@@ -755,7 +753,7 @@ export function AdminMarketPrices() {
               type="button"
               disabled={loading}
               onClick={() => void loadRecords(pagination.page)}
-              className="inline-flex min-h-9 items-center gap-1.5 self-start rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 hover:border-emerald-200 hover:text-emerald-700 disabled:opacity-60 sm:self-auto"
+              className="inline-flex min-h-9 items-center gap-1.5 self-start rounded-lg border border-border bg-surface px-3 text-xs font-bold text-muted-foreground hover:border-accent/30 hover:text-accent disabled:opacity-60 sm:self-auto"
             >
               <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} aria-hidden="true" />
               {t('marketPrices.refresh')}
@@ -764,19 +762,19 @@ export function AdminMarketPrices() {
 
           {/* Error */}
           {error ? (
-            <div role="alert" className="m-4 rounded-xl border border-red-200 bg-red-50 p-5 sm:m-5">
+            <div role="alert" className="m-4 rounded-xl border border-danger/30 bg-danger-soft p-5 sm:m-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" aria-hidden="true" />
+                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-danger" aria-hidden="true" />
                   <div>
-                    <p className="text-sm font-bold text-red-900">{t('marketPrices.errorTitle')}</p>
-                    <p className="mt-1 text-sm text-red-700">{t('marketPrices.loadError')}</p>
+                    <p className="text-sm font-bold text-danger">{t('marketPrices.errorTitle')}</p>
+                    <p className="mt-1 text-sm text-danger">{t('marketPrices.loadError')}</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => void loadRecords(pagination.page)}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-red-200 bg-white px-3.5 text-sm font-bold text-red-700"
+                  className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-danger/30 bg-surface px-3.5 text-sm font-bold text-danger"
                 >
                   <RefreshCw className="h-4 w-4" aria-hidden="true" />
                   {t('marketPrices.retry')}
@@ -791,24 +789,24 @@ export function AdminMarketPrices() {
           /* Empty */
           ) : items.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-soft text-accent">
                 {filterCount > 0 ? (
                   <Filter className="h-5 w-5" aria-hidden="true" />
                 ) : (
                   <Database className="h-5 w-5" aria-hidden="true" />
                 )}
               </div>
-              <p className="mt-4 text-sm font-bold text-slate-900">
+              <p className="mt-4 text-sm font-bold text-foreground">
                 {filterCount > 0 ? t('marketPrices.noResults') : t('marketPrices.noData')}
               </p>
-              <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-500">
+              <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-muted-foreground">
                 {filterCount > 0 ? t('marketPrices.noResultsHint') : t('marketPrices.noDataHint')}
               </p>
               {filterCount > 0 ? (
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-4 text-sm font-bold text-emerald-700"
+                  className="mt-4 text-sm font-bold text-accent"
                 >
                   {t('marketPrices.clearFilters')}
                 </button>
@@ -821,7 +819,7 @@ export function AdminMarketPrices() {
               {/* Desktop table */}
               <div className="hidden overflow-x-auto lg:block">
                 <table className="w-full min-w-[900px] text-left" role="table">
-                  <thead className="bg-[#eef3ed]">
+                  <thead className="bg-[var(--surface-subtle)]">
                     <tr>
                       <th className="px-5 py-3.5" scope="col">
                         <SortButton
@@ -851,7 +849,7 @@ export function AdminMarketPrices() {
                         />
                       </th>
                       <th
-                        className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500"
+                        className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground"
                         scope="col"
                       >
                         {t('marketPrices.columns.minimumPrice')}
@@ -866,7 +864,7 @@ export function AdminMarketPrices() {
                         />
                       </th>
                       <th
-                        className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500"
+                        className="px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground"
                         scope="col"
                       >
                         {t('marketPrices.columns.maximumPrice')}
@@ -880,50 +878,50 @@ export function AdminMarketPrices() {
                           onSort={handleSort}
                         />
                       </th>
-                      <th className="px-5 py-3.5 text-right text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500" scope="col">
+                      <th className="px-5 py-3.5 text-right text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground" scope="col">
                         {t('marketPrices.columns.actions')}
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200/70">
+                  <tbody className="divide-y divide-border/70">
                     {items.map((item) => (
                       <tr
                         key={item.id}
-                        className="bg-[#fbfcfa] transition hover:bg-emerald-50/30"
+                        className="bg-[var(--surface)] transition hover:bg-accent-soft/30"
                       >
                         <td className="px-5 py-3.5">
-                          <p className="min-w-[140px] truncate text-sm font-bold text-slate-900">
+                          <p className="min-w-[140px] truncate text-sm font-bold text-foreground">
                             {getLocalizedDomainName(item.commodity, locale, 'commodity')}
                           </p>
                           {item.variety ? (
-                            <p className="mt-0.5 truncate text-xs text-slate-400">{getLocalizedDomainName(item.variety, locale, 'marketVariety')}</p>
+                            <p className="mt-0.5 truncate text-xs text-muted-foreground">{getLocalizedDomainName(item.variety, locale, 'marketVariety')}</p>
                           ) : null}
                         </td>
                         <td className="px-4 py-3.5">
-                          <p className="min-w-[120px] truncate text-sm font-semibold text-slate-800">
+                          <p className="min-w-[120px] truncate text-sm font-semibold text-foreground">
                             {getLocalizedDomainName(item.market, locale, 'market')}
                           </p>
                         </td>
-                        <td className="px-4 py-3.5 text-sm text-slate-600">{getLocalizedDomainName(item.district, locale, 'district')}</td>
-                        <td className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">
+                        <td className="px-4 py-3.5 text-sm text-muted-foreground">{getLocalizedDomainName(item.district, locale, 'district')}</td>
+                        <td className="whitespace-nowrap px-4 py-3.5 text-sm text-muted-foreground">
                           {formatPrice(item.minimumPrice, locale)}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3.5">
-                          <span className="inline-flex items-center rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-sm font-bold text-emerald-800">
+                          <span className="inline-flex items-center rounded-lg border border-accent/30 bg-accent-soft px-2 py-0.5 text-sm font-bold text-accent">
                             {formatPrice(item.modalPrice, locale)}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">
+                        <td className="whitespace-nowrap px-4 py-3.5 text-sm text-muted-foreground">
                           {formatPrice(item.maximumPrice, locale)}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3.5 text-xs font-medium text-slate-500">
+                        <td className="whitespace-nowrap px-4 py-3.5 text-xs font-medium text-muted-foreground">
                           {formatDate(item.dataDate, locale)}
                         </td>
                         <td className="px-5 py-3.5 text-right">
                           <button
                             type="button"
                             onClick={() => void openDetail(item.id)}
-                            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-xs font-bold text-muted-foreground hover:border-accent/30 hover:bg-accent-soft hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                           >
                             <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                             {t('marketPrices.viewDetails')}
@@ -940,44 +938,44 @@ export function AdminMarketPrices() {
                 {items.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-xl border border-slate-200 bg-[#fbfcfa] p-4 shadow-sm"
+                    className="rounded-xl border border-border bg-[var(--surface)] p-4 shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-bold text-slate-900">{getLocalizedDomainName(item.commodity, locale, 'commodity')}</p>
+                        <p className="truncate text-sm font-bold text-foreground">{getLocalizedDomainName(item.commodity, locale, 'commodity')}</p>
                         {item.variety ? (
-                          <p className="mt-0.5 truncate text-xs text-slate-400">{getLocalizedDomainName(item.variety, locale, 'marketVariety')}</p>
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">{getLocalizedDomainName(item.variety, locale, 'marketVariety')}</p>
                         ) : null}
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-muted-foreground">
                           {getLocalizedDomainName(item.market, locale, 'market')} · {getLocalizedDomainName(item.district, locale, 'district')}
                         </p>
                       </div>
-                      <span className="inline-flex shrink-0 items-center rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-sm font-bold text-emerald-800">
+                      <span className="inline-flex shrink-0 items-center rounded-lg border border-accent/30 bg-accent-soft px-2 py-0.5 text-sm font-bold text-accent">
                         {formatPrice(item.modalPrice, locale)}
                       </span>
                     </div>
-                    <div className="mt-3 grid grid-cols-3 gap-2 border-t border-slate-200 pt-3">
+                    <div className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
                       <div>
-                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">
                           {t('marketPrices.columns.minimumPrice')}
                         </p>
-                        <p className="mt-1 text-xs font-bold text-slate-700">
+                        <p className="mt-1 text-xs font-bold text-foreground">
                           {formatPrice(item.minimumPrice, locale)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">
                           {t('marketPrices.columns.maximumPrice')}
                         </p>
-                        <p className="mt-1 text-xs font-bold text-slate-700">
+                        <p className="mt-1 text-xs font-bold text-foreground">
                           {formatPrice(item.maximumPrice, locale)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-bold uppercase text-slate-400">
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground">
                           {t('marketPrices.columns.dataDate')}
                         </p>
-                        <p className="mt-1 text-xs font-bold text-slate-700">
+                        <p className="mt-1 text-xs font-bold text-foreground">
                           {formatDate(item.dataDate, locale)}
                         </p>
                       </div>
@@ -986,7 +984,7 @@ export function AdminMarketPrices() {
                       <button
                         type="button"
                         onClick={() => void openDetail(item.id)}
-                        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-[#15583b] px-3 text-xs font-bold text-white"
+                        className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-bold text-accent-foreground"
                       >
                         <Eye className="h-3.5 w-3.5" aria-hidden="true" />
                         {t('marketPrices.viewDetails')}
@@ -997,8 +995,8 @@ export function AdminMarketPrices() {
               </div>
 
               {/* Pagination */}
-              <div className="flex flex-col gap-3 border-t border-slate-200/80 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-                <p className="text-xs font-medium text-slate-500">
+              <div className="flex flex-col gap-3 border-t border-border/80 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                <p className="text-xs font-medium text-muted-foreground">
                   {t('marketPrices.page', { page: pagination.page, totalPages: pagination.totalPages })}
                 </p>
                 <div className="flex gap-2">
@@ -1006,7 +1004,7 @@ export function AdminMarketPrices() {
                     type="button"
                     disabled={pagination.page <= 1}
                     onClick={() => void loadRecords(pagination.page - 1)}
-                    className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 disabled:opacity-40"
+                    className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-xs font-bold text-muted-foreground disabled:opacity-40"
                   >
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                     {t('marketPrices.previous')}
@@ -1015,7 +1013,7 @@ export function AdminMarketPrices() {
                     type="button"
                     disabled={pagination.page >= pagination.totalPages}
                     onClick={() => void loadRecords(pagination.page + 1)}
-                    className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-600 disabled:opacity-40"
+                    className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-border bg-surface px-3 text-xs font-bold text-muted-foreground disabled:opacity-40"
                   >
                     {t('marketPrices.next')}
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />

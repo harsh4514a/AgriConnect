@@ -48,20 +48,33 @@ export class TransportService {
     return profileName || row.businessName;
   }
 
-  private toDto(row: TransportWithRelations): TransportProviderResponseDto {
+  private toDto(
+    row: TransportWithRelations,
+    includeContact = true,
+  ): TransportProviderResponseDto {
     return {
       id: row.id,
-      businessName: this.providerName(row),
-      contactName: row.contactName ?? undefined,
-      phoneNumber: row.phoneNumber,
+      // New public directory entries currently store the owner's name in
+      // businessName. Use a generic label for guests to avoid exposing it.
+      businessName: includeContact ? this.providerName(row) : 'Transport provider',
+      ...(includeContact
+        ? {
+            contactName: row.contactName ?? undefined,
+            phoneNumber: row.phoneNumber,
+          }
+        : {}),
       vehicleType: row.vehicleType,
       customVehicleType: row.customVehicleType ?? undefined,
       additionalDetails: row.additionalDetails ?? undefined,
       district: row.district,
-      taluka: row.taluka,
-      village: row.village,
-      latitude: row.latitude,
-      longitude: row.longitude,
+      ...(includeContact
+        ? {
+            taluka: row.taluka,
+            village: row.village,
+            latitude: row.latitude,
+            longitude: row.longitude,
+          }
+        : {}),
       isAvailable: row.isAvailable,
       isVerified: row.isVerified,
       isActive: row.isActive,
@@ -92,7 +105,10 @@ export class TransportService {
     },
   } satisfies Prisma.TransportProviderSelect;
 
-  async findAll(query: QueryTransportDto): Promise<TransportListResponseDto> {
+  async findAll(
+    query: QueryTransportDto,
+    includeContact = false,
+  ): Promise<TransportListResponseDto> {
     const page = Math.max(1, query.page ?? 1);
     const limit = Math.min(50, Math.max(1, query.limit ?? 12));
     const skip = (page - 1) * limit;
@@ -109,10 +125,14 @@ export class TransportService {
       ...(search
         ? {
             OR: searchTerms.flatMap((term) => [
-              { businessName: { contains: term, mode: 'insensitive' as const } },
-              { owner: { firstName: { contains: term, mode: 'insensitive' as const } } },
-              { owner: { lastName: { contains: term, mode: 'insensitive' as const } } },
-              { contactName: { contains: term, mode: 'insensitive' as const } },
+              ...(includeContact
+                ? [
+                    { businessName: { contains: term, mode: 'insensitive' as const } },
+                    { owner: { firstName: { contains: term, mode: 'insensitive' as const } } },
+                    { owner: { lastName: { contains: term, mode: 'insensitive' as const } } },
+                    { contactName: { contains: term, mode: 'insensitive' as const } },
+                  ]
+                : []),
               { vehicleType: { contains: term, mode: 'insensitive' as const } },
               { customVehicleType: { contains: term, mode: 'insensitive' as const } },
               { district: { name: { contains: term, mode: 'insensitive' as const } } },
@@ -135,7 +155,9 @@ export class TransportService {
     ]);
 
     return {
-      items: rows.map((row) => this.toDto(row as TransportWithRelations)),
+      items: rows.map((row) =>
+        this.toDto(row as TransportWithRelations, includeContact),
+      ),
       total,
       page,
       limit,
@@ -175,7 +197,10 @@ export class TransportService {
     };
   }
 
-  async findOne(id: string): Promise<TransportProviderResponseDto> {
+  async findOne(
+    id: string,
+    includeContact = false,
+  ): Promise<TransportProviderResponseDto> {
     const row = await this.prisma.transportProvider.findFirst({
       where: { id, isActive: true },
       select: this.select,
@@ -185,7 +210,7 @@ export class TransportService {
       throw new NotFoundException('Transport service not found');
     }
 
-    return this.toDto(row as TransportWithRelations);
+    return this.toDto(row as TransportWithRelations, includeContact);
   }
 
   private async validateLocation(

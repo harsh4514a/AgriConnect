@@ -57,12 +57,12 @@ export function StepCropInfo({
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <label id="crop-select-label" className="block text-sm font-semibold text-white">
-          {t('dashboard.createListing.fields.cropName')} <span className="text-red-400">*</span>
+        <label id="crop-select-label" className="block text-sm font-semibold text-foreground">
+          {t('dashboard.createListing.fields.cropName')} <span className="text-danger">*</span>
         </label>
 
         {errors.cropKey && (
-          <p id="crop-select-error" role="alert" className="text-xs font-medium text-red-400">
+          <p id="crop-select-error" role="alert" className="text-xs font-medium text-danger">
             {errors.cropKey}
           </p>
         )}
@@ -87,19 +87,19 @@ export function StepCropInfo({
                 aria-checked={isSelected}
                 onClick={() => onChange({ cropKey: crop })}
                 className={cn(
-                  'group relative flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-2xl border p-3.5 text-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400',
+                  'group relative flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-2xl border p-3.5 text-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
                   isSelected
-                    ? 'border-green-400 bg-green-900/40 shadow-lg shadow-green-950/50 ring-2 ring-green-400/40'
-                    : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10',
+                    ? 'border-accent bg-accent-soft shadow-sm ring-2 ring-focus'
+                    : 'border-border bg-surface-subtle hover:border-border hover:bg-surface-subtle',
                 )}
               >
                 {isSelected && (
-                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-green-400 text-green-950">
+                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-accent-foreground">
                     <Check className="h-3 w-3 stroke-[3]" />
                   </span>
                 )}
 
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-white/10 p-1.5 transition-transform group-hover:scale-105">
+                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-surface-subtle p-1.5 transition-transform group-hover:scale-105">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={imageSrc} alt="" className="h-full w-full object-contain" />
                 </div>
@@ -107,7 +107,7 @@ export function StepCropInfo({
                 <span
                   className={cn(
                     'truncate text-xs font-bold leading-tight',
-                    isSelected ? 'text-green-300' : 'text-white/90',
+                    isSelected ? 'text-accent' : 'text-foreground',
                   )}
                 >
                   {cropLabel}
@@ -122,14 +122,14 @@ export function StepCropInfo({
             aria-checked={isOtherCrop}
             onClick={() => onChange({ cropKey: 'other' })}
             className={cn(
-              'group relative flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-2xl border p-3.5 text-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400',
+              'group relative flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-2xl border p-3.5 text-center transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
               isOtherCrop
-                ? 'border-green-400 bg-green-900/40 shadow-lg shadow-green-950/50 ring-2 ring-green-400/40'
-                : 'border-dashed border-white/25 bg-white/5 hover:border-white/40 hover:bg-white/10',
+                ? 'border-accent bg-accent-soft shadow-sm ring-2 ring-focus'
+                : 'border-dashed border-border bg-surface-subtle hover:border-border hover:bg-surface-subtle',
             )}
           >
             {isOtherCrop && (
-              <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-green-400 text-green-950">
+              <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-accent-foreground">
                 <Check className="h-3 w-3 stroke-[3]" />
               </span>
             )}
@@ -137,7 +137,7 @@ export function StepCropInfo({
             <div
               className={cn(
                 'flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-105',
-                isOtherCrop ? 'bg-green-500/20 text-green-300' : 'bg-white/10 text-white/70',
+                isOtherCrop ? 'bg-accent-soft text-accent' : 'bg-surface-subtle text-foreground',
               )}
             >
               <Sprout className="h-6 w-6" />
@@ -146,7 +146,7 @@ export function StepCropInfo({
             <span
               className={cn(
                 'truncate text-xs font-bold leading-tight',
-                isOtherCrop ? 'text-green-300' : 'text-white/90',
+                isOtherCrop ? 'text-accent' : 'text-foreground',
               )}
             >
               {t('dashboard.createListing.fields.otherCrop')}
@@ -165,9 +165,9 @@ export function StepCropInfo({
             className="overflow-hidden"
           >
             <div className="space-y-2 pb-1">
-              <label htmlFor="customCropName" className="block text-sm font-semibold text-white">
+              <label htmlFor="customCropName" className="block text-sm font-semibold text-foreground">
                 {t('dashboard.createListing.fields.customCropName')}{' '}
-                <span className="text-red-400">*</span>
+                <span className="text-danger">*</span>
               </label>
               <input
                 ref={customNameRef}
@@ -181,14 +181,14 @@ export function StepCropInfo({
                 aria-invalid={errors.customCropName ? 'true' : 'false'}
                 aria-describedby={errors.customCropName ? 'custom-crop-error' : undefined}
                 className={cn(
-                  'h-12 w-full rounded-xl border bg-white/5 px-4 text-sm text-white placeholder-white/40 backdrop-blur-xl transition-all focus:bg-white/10 focus:outline-none focus:ring-2',
+                  'h-12 w-full rounded-xl border bg-surface-subtle px-4 text-sm text-foreground placeholder-muted-foreground backdrop-blur-xl transition-all focus:bg-surface-subtle focus:outline-none focus:ring-2',
                   errors.customCropName
-                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30'
-                    : 'border-white/15 focus:border-green-400 focus:ring-green-400/30',
+                    ? 'border-red-400 focus:border-red-400 focus:ring-danger/30'
+                    : 'border-border focus:border-focus focus:ring-focus',
                 )}
               />
               {errors.customCropName && (
-                <p id="custom-crop-error" role="alert" className="text-xs font-medium text-red-400">
+                <p id="custom-crop-error" role="alert" className="text-xs font-medium text-danger">
                   {errors.customCropName}
                 </p>
               )}
@@ -198,7 +198,7 @@ export function StepCropInfo({
       </AnimatePresence>
 
       <div className="space-y-2">
-        <label htmlFor="variety" className="block text-sm font-semibold text-white">
+        <label htmlFor="variety" className="block text-sm font-semibold text-foreground">
           {t('dashboard.createListing.fields.varietyOptional')}
         </label>
 
@@ -208,13 +208,13 @@ export function StepCropInfo({
           value={variety}
           onChange={(e) => onChange({ variety: e.target.value })}
           placeholder={t('dashboard.createListing.fields.varietyPlaceholder')}
-          className="h-12 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm text-white placeholder-white/40 backdrop-blur-xl transition-all focus:border-green-400 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-green-400/30"
+          className="h-12 w-full rounded-xl border border-border bg-surface-subtle px-4 text-sm text-foreground placeholder-muted-foreground backdrop-blur-xl transition-all focus:border-focus focus:bg-surface-subtle focus:outline-none focus:ring-2 focus:ring-focus"
         />
 
         {suggestions.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            <span className="flex items-center gap-1 text-[11px] text-white/50">
-              <Sparkles className="h-3 w-3 text-amber-300" aria-hidden />
+            <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Sparkles className="h-3 w-3 text-warning" aria-hidden />
               <span>{t('dashboard.createListing.fields.suggestions')}</span>
             </span>
             {suggestions.map((sug) => (
@@ -223,10 +223,10 @@ export function StepCropInfo({
                 type="button"
                 onClick={() => onChange({ variety: sug })}
                 className={cn(
-                  'min-h-8 rounded-full px-3 py-1 text-[11px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400',
+                  'min-h-8 rounded-full px-3 py-1 text-[11px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
                   variety === sug
-                    ? 'border border-green-400/50 bg-green-500/30 text-green-200'
-                    : 'border border-white/5 bg-white/10 text-white/70 hover:bg-white/15 hover:text-white',
+                    ? 'border border-accent/30 bg-accent-soft text-accent'
+                    : 'border border-border bg-surface-subtle text-foreground hover:bg-surface-subtle hover:text-foreground',
                 )}
               >
                 {sug}

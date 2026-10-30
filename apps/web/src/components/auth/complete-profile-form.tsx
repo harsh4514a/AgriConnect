@@ -20,7 +20,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
 import { completeProfile as completeProfileApi } from '@/services/api/auth.api';
-import { storeTokens } from '@/services/api/token';
+import { storeTokens, syncSessionHintFromStorage } from '@/services/api/token';
 import { cacheUser } from '@/lib/auth/session';
 import { useLocale, useSetLocale } from '@/i18n/locale-provider';
 
@@ -271,6 +271,7 @@ export function CompleteProfileForm() {
             } else {
                 if (result.tokens?.accessToken) localStorage.setItem('accessToken', result.tokens.accessToken);
                 if (result.tokens?.refreshToken) localStorage.setItem('refreshToken', result.tokens.refreshToken);
+                syncSessionHintFromStorage();
             }
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('registrationToken');
@@ -316,7 +317,7 @@ export function CompleteProfileForm() {
                     transition={{ delay: 0.15, duration: 0.5, type: 'spring', stiffness: 150, damping: 15 }}
                 >
                     <div className="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center">
-                        <CheckCircle2 className="w-14 h-14 text-green-600" />
+                        <CheckCircle2 className="w-14 h-14 text-accent" />
                     </div>
                 </motion.div>
                 <motion.h2
@@ -341,7 +342,7 @@ export function CompleteProfileForm() {
                     transition={{ delay: 0.7, duration: 0.4 }}
                     className="mt-8"
                 >
-                    <Loader2 className="w-6 h-6 text-brand-600 animate-spin" />
+                    <Loader2 className="w-6 h-6 text-accent animate-spin" />
                 </motion.div>
             </motion.div>
         );
@@ -368,14 +369,14 @@ export function CompleteProfileForm() {
                         <div
                             className={cn(
                                 'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300',
-                                step.done ? 'bg-green-100 text-green-700' : 'bg-brand-100 text-brand-700',
+                                step.done ? 'bg-green-100 text-accent' : 'bg-brand-100 text-accent',
                             )}
                         >
                             {step.done ? (
                                 <CheckCircle2 className="w-3.5 h-3.5" />
                             ) : (
                                 <span className="w-3.5 h-3.5 rounded-full bg-brand-500 flex items-center justify-center">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-surface" />
                                 </span>
                             )}
                             <span>{step.label}</span>
@@ -429,7 +430,7 @@ export function CompleteProfileForm() {
                             autoComplete="given-name"
                             maxLength={50}
                             className={cn(
-                                'w-full h-14 pl-12 pr-4 rounded-xl border-2 bg-white text-gray-900 text-base font-medium',
+                                'w-full h-14 pl-12 pr-4 rounded-xl border-2 bg-surface text-gray-900 text-base font-medium',
                                 'transition-all duration-200 outline-none',
                                 'placeholder:text-gray-400 placeholder:font-normal',
                                 'focus:border-brand-500 focus:ring-4 focus:ring-brand-100',
@@ -460,7 +461,7 @@ export function CompleteProfileForm() {
                             autoComplete="family-name"
                             maxLength={50}
                             className={cn(
-                                'w-full h-14 pl-12 pr-4 rounded-xl border-2 bg-white text-gray-900 text-base font-medium',
+                                'w-full h-14 pl-12 pr-4 rounded-xl border-2 bg-surface text-gray-900 text-base font-medium',
                                 'transition-all duration-200 outline-none',
                                 'placeholder:text-gray-400 placeholder:font-normal',
                                 'focus:border-brand-500 focus:ring-4 focus:ring-brand-100',
@@ -503,7 +504,7 @@ export function CompleteProfileForm() {
                                     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
                                     isSelected
                                         ? 'border-green-500 bg-green-50/80 shadow-sm'
-                                        : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50',
+                                        : 'border-gray-200 bg-surface hover:border-gray-300 hover:bg-gray-50/50',
                                 )}
                                 aria-pressed={isSelected}
                                 aria-label={`Select ${lang.label}`}
@@ -511,7 +512,7 @@ export function CompleteProfileForm() {
                                 <span className={cn('text-lg font-semibold transition-colors duration-200', isSelected ? 'text-gray-900' : 'text-gray-600')}>
                                     {lang.native}
                                 </span>
-                                <span className={cn('text-xs transition-colors duration-200', isSelected ? 'text-green-700 font-medium' : 'text-gray-400')}>
+                                <span className={cn('text-xs transition-colors duration-200', isSelected ? 'text-accent font-medium' : 'text-gray-400')}>
                                     {lang.label}
                                 </span>
                                 <motion.div
@@ -536,7 +537,7 @@ export function CompleteProfileForm() {
                 transition={{ delay: 0.32, duration: 0.4 }}
                 className="mt-8"
             >
-                <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6">
+                <div className="rounded-2xl border border-gray-200 bg-surface p-5 sm:p-6">
                     <div className="flex items-start gap-3 mb-5">
                         <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
                             <MapPin className="w-5 h-5 text-amber-600" />
@@ -557,7 +558,7 @@ export function CompleteProfileForm() {
                             className={cn(
                                 'w-full flex items-center justify-center gap-2.5 h-12 rounded-xl border-2 font-semibold text-sm transition-all duration-200',
                                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
-                                'border-brand-200 bg-brand-50 text-brand-700 hover:border-brand-300 hover:bg-brand-100',
+                                'border-brand-200 bg-brand-50 text-accent hover:border-brand-300 hover:bg-brand-100',
                                 isDetecting && 'opacity-50 cursor-not-allowed',
                             )}
                         >
@@ -572,7 +573,7 @@ export function CompleteProfileForm() {
                                 animate={{ rotate: 360 }}
                                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                             >
-                                <Navigation className="w-8 h-8 text-brand-600" />
+                                <Navigation className="w-8 h-8 text-accent" />
                             </motion.div>
                             <p className="mt-3 text-sm font-medium text-gray-600">{t('profile.detecting')}</p>
                             <p className="mt-1 text-xs text-gray-400">{t('profile.allowAccess')}</p>
@@ -583,10 +584,10 @@ export function CompleteProfileForm() {
                         <div className="space-y-3">
                             <div className="rounded-xl bg-green-50 border border-green-200 p-4">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                                    <span className="text-sm font-semibold text-green-700">{t('profile.locationDetected')}</span>
+                                    <CheckCircle2 className="w-4 h-4 text-accent" />
+                                    <span className="text-sm font-semibold text-accent">{t('profile.locationDetected')}</span>
                                 </div>
-                                <p className="text-xs text-green-600">{t('profile.youCanEdit')}</p>
+                                <p className="text-xs text-accent">{t('profile.youCanEdit')}</p>
                             </div>
                             {(['state', 'district', 'taluka', 'village'] as const).map((type) => (
                                 <div key={type} className="relative" ref={(el) => { dropdownRefs.current[type] = el; }}>
@@ -597,7 +598,7 @@ export function CompleteProfileForm() {
                                         type="button"
                                         onClick={() => toggleDropdown(type)}
                                         className={cn(
-                                            'w-full flex items-center justify-between h-11 px-4 rounded-xl border-2 bg-white text-sm font-medium transition-all duration-200',
+                                            'w-full flex items-center justify-between h-11 px-4 rounded-xl border-2 bg-surface text-sm font-medium transition-all duration-200',
                                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
                                             openDropdown === type ? 'border-brand-400 ring-2 ring-brand-100' : 'border-gray-200 hover:border-gray-300',
                                         )}
@@ -614,7 +615,7 @@ export function CompleteProfileForm() {
                                                 animate={{ opacity: 1, y: 0, scaleY: 1 }}
                                                 exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
                                                 transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                                                className="absolute z-20 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden"
+                                                className="absolute z-20 mt-1 w-full rounded-xl border border-gray-200 bg-surface shadow-lg overflow-hidden"
                                             >
                                                 {mockOptions[type].map((option) => (
                                                     <button
@@ -623,8 +624,8 @@ export function CompleteProfileForm() {
                                                         onClick={() => handleManualSelect(type, option)}
                                                         className={cn(
                                                             'w-full text-left px-4 py-2.5 text-sm transition-colors duration-100',
-                                                            'hover:bg-brand-50 hover:text-brand-700',
-                                                            locationData[type] === option && 'bg-brand-50 text-brand-700 font-medium',
+                                                            'hover:bg-brand-50 hover:text-accent',
+                                                            locationData[type] === option && 'bg-brand-50 text-accent font-medium',
                                                         )}
                                                     >
                                                         {option}
@@ -640,7 +641,7 @@ export function CompleteProfileForm() {
                                 onClick={handleUseCurrentLocation}
                                 disabled={isDetecting}
                                 whileHover={{ x: 2 }}
-                                className="flex items-center gap-1.5 text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors mt-2"
+                                className="flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent transition-colors mt-2"
                             >
                                 <RefreshCw className="w-3.5 h-3.5" />
                                 {t('profile.reDetect')}
@@ -666,7 +667,7 @@ export function CompleteProfileForm() {
                                         type="button"
                                         onClick={() => toggleDropdown(type)}
                                         className={cn(
-                                            'w-full flex items-center justify-between h-11 px-4 rounded-xl border-2 bg-white text-sm font-medium transition-all duration-200',
+                                            'w-full flex items-center justify-between h-11 px-4 rounded-xl border-2 bg-surface text-sm font-medium transition-all duration-200',
                                             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500',
                                             openDropdown === type ? 'border-brand-400 ring-2 ring-brand-100' : 'border-gray-200 hover:border-gray-300',
                                         )}
@@ -683,7 +684,7 @@ export function CompleteProfileForm() {
                                                 animate={{ opacity: 1, y: 0, scaleY: 1 }}
                                                 exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
                                                 transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                                                className="absolute z-20 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden max-h-48 overflow-y-auto"
+                                                className="absolute z-20 mt-1 w-full rounded-xl border border-gray-200 bg-surface shadow-lg overflow-hidden max-h-48 overflow-y-auto"
                                             >
                                                 {mockOptions[type].map((option) => (
                                                     <button
@@ -692,8 +693,8 @@ export function CompleteProfileForm() {
                                                         onClick={() => handleManualSelect(type, option)}
                                                         className={cn(
                                                             'w-full text-left px-4 py-2.5 text-sm transition-colors duration-100',
-                                                            'hover:bg-brand-50 hover:text-brand-700',
-                                                            locationData?.[type] === option && 'bg-brand-50 text-brand-700 font-medium',
+                                                            'hover:bg-brand-50 hover:text-accent',
+                                                            locationData?.[type] === option && 'bg-brand-50 text-accent font-medium',
                                                         )}
                                                     >
                                                         {option}
@@ -710,7 +711,7 @@ export function CompleteProfileForm() {
                                 disabled={isDetecting}
                                 whileHover={{ y: -1 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="flex items-center justify-center gap-2 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors mt-2 w-full"
+                                className="flex items-center justify-center gap-2 text-sm font-medium text-accent hover:text-accent transition-colors mt-2 w-full"
                             >
                                 <RefreshCw className="w-4 h-4" />
                                 {t('profile.tryAgain')}
